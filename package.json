@@ -1,0 +1,33 @@
+{
+  "name": "ALLIN",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "craft": "node inquirer.mjs && pnpm i",
+    "dev": "pnpm ladle serve",
+    "build": "turbo run build",
+    "build:core": "pnpm --filter '@core/*' build && pnpm i",
+    "build:story": "turbo run build && pnpm ladle build",
+    "update:core": "pnpm build:core && pnpm i",
+    "clean": "turbo run clean && rimraf build",
+    "clean:hard": "turbo run clean:hard && rimraf build node_modules",
+    "ts-check": "tsc --noEmit",
+    "test": "turbo run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "catalog:lint",
+    "@ladle/react": "catalog:dev",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "rimraf": "catalog:build",
+    "tsup": "catalog:build",
+    "turbo": "catalog:cli",
+    "typescript": "catalog:types",
+    "inquirer": "catalog:cli"
+  },
+  "packageManager": "pnpm@9.6.0"
+}
