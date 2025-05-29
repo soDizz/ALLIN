@@ -13,7 +13,8 @@
     "clean": "turbo run clean && rimraf build",
     "clean:hard": "turbo run clean:hard && rimraf build node_modules",
     "ts-check": "tsc --noEmit",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "dev:server": "pnpm --filter 'server*' dev"
   },
   "keywords": [],
   "author": "",
