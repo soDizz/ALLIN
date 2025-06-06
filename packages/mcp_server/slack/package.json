@@ -1,0 +1,35 @@
+{
+  "name": "@mcp-server/slack",
+  "description": "MCP server for Slack with AI SDK",
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "test": "vitest --watch"
+  },
+  "dependencies": {
+    "@agentic/ai-sdk": "^7.6.5",
+    "@agentic/core": "^7.6.5",
+    "ai": "^4.3.16",
+    "dotenv": "^16.5.0",
+    "zod": "^3.25.28"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

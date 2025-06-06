@@ -1,9 +1,10 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
+export default defineConfig(options => ({
   entry: ['src/index.ts'],
   clean: true,
-  target: 'es2020',
+  target: 'es2022',
   format: ['cjs', 'esm'],
-  banner: { js: '"use client";' },
-});
+  dts: true,
+  minify: !options.watch,
+}));

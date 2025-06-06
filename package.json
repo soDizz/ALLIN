@@ -4,17 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "craft": "node inquirer.mjs && pnpm i",
-    "dev": "pnpm ladle serve",
-    "build": "turbo run build",
-    "build:core": "pnpm --filter '@core/*' build && pnpm i",
-    "build:story": "turbo run build && pnpm ladle build",
-    "update:core": "pnpm build:core && pnpm i",
-    "clean": "turbo run clean && rimraf build",
-    "clean:hard": "turbo run clean:hard && rimraf build node_modules",
-    "ts-check": "tsc --noEmit",
-    "test": "turbo run test",
-    "dev:server": "pnpm --filter 'server*' dev"
+    "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
+    "dev:ai": "pnpm --filter '@ai/agent' watch"
   },
   "keywords": [],
   "author": "",
