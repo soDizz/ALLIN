@@ -11,8 +11,9 @@
     }
   },
   "scripts": {
-    "build": "tsup",
-    "watch": "tsup --watch"
+    "dev": "tsup --watch",
+    "start": "node --watch dist/index.js",
+    "build": "tsup"
   },
   "dependencies": {
     "@agentic/ai-sdk": "^7.6.5",

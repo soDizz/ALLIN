@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { type Tool, tool } from 'ai';
 import { SlackClient, type SlackClientConfig } from './SlackClient';
 
+export { SlackClient };
+
 export class SlackMCPServer {
   private slackClient: SlackClient;
 
@@ -13,11 +15,14 @@ export class SlackMCPServer {
     return tool({
       description: 'List public or pre-defined channels in the workspace with pagination',
       parameters: z.object({
-        limit: z.number().describe('Maximum number of channels to return (default 100, max 200)').default(100),
+        limit: z
+          .number()
+          .describe('Maximum number of channels to return (default 100, max 200)')
+          .default(100),
         cursor: z.string().describe('Pagination cursor for next page of results'),
       }),
       execute: async ({ limit, cursor }) => {
-        const response = await this.slackClient.getChannels(limit, cursor);
+        const response = await this.slackClient.getChannels({ limit, cursor });
         return {
           content: [{ type: 'text', text: JSON.stringify(response) }],
         };
@@ -87,7 +92,7 @@ export class SlackMCPServer {
         limit: z.number().describe('Number of messages to retrieve (default 10)').default(10),
       }),
       execute: async ({ channel_id, limit }) => {
-        const response = await this.slackClient.getChannelHistory(channel_id, limit);
+        const response = await this.slackClient.getChannelHistory({ channel_id, limit });
         return {
           content: [{ type: 'text', text: JSON.stringify(response) }],
         };
@@ -120,7 +125,10 @@ export class SlackMCPServer {
       description: 'Get a list of all users in the workspace with their basic profile information',
       parameters: z.object({
         cursor: z.string().describe('Pagination cursor for next page of results'),
-        limit: z.number().describe('Maximum number of users to return (default 100, max 200)').default(100),
+        limit: z
+          .number()
+          .describe('Maximum number of users to return (default 100, max 200)')
+          .default(100),
       }),
       execute: async ({ cursor, limit }) => {
         const response = await this.slackClient.getUsers(limit, cursor);
