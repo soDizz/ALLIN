@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "turbo dev",
     "start": "turbo start",
-    "test": "turbo test",
+    "test": "pnpm --filter '@mcp-server/slack' test",
     "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
     "dev:ai": "pnpm --filter '@ai/agent' watch"
   },

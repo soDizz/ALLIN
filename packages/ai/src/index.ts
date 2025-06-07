@@ -2,7 +2,7 @@
 import { anthropic } from '@ai-sdk/anthropic';
 import { generateText } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
-import { SlackClient, SlackMCPServer } from '@mcp-server/slack';
+import { SlackClient } from '@mcp-server/slack';
 import dotenv from 'dotenv';
 
 dotenv.config();

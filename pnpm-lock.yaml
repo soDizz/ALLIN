@@ -5,6 +5,16 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  ai:
+    '@agentic/ai-sdk':
+      specifier: ^7.6.5
+      version: 7.6.5
+    '@agentic/core':
+      specifier: ^7.6.5
+      version: 7.6.5
+    ai:
+      specifier: ^4.3.16
+      version: 4.3.16
   build:
     rimraf:
       specifier: ^6.0.1
@@ -38,6 +48,16 @@ catalogs:
     typescript:
       specifier: ^5.8.3
       version: 5.8.3
+  utils:
+    dotenv:
+      specifier: ^16.5.0
+      version: 16.5.0
+    rxjs:
+      specifier: ^7.8.2
+      version: 7.8.2
+    zod:
+      specifier: ^3.25.28
+      version: 3.25.36
 
 pnpmfileChecksum: ispnqhbvg4laq6ierkkioe35ku
 
@@ -112,29 +132,7 @@ importers:
         specifier: ^3.25.28
         version: 3.25.36
 
-  packages/mcp_server/slack:
-    dependencies:
-      '@agentic/ai-sdk':
-        specifier: ^7.6.5
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
-      '@agentic/core':
-        specifier: ^7.6.5
-        version: 7.6.5(zod@3.25.36)
-      ai:
-        specifier: ^4.3.16
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
-      dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
-      zod:
-        specifier: ^3.25.28
-        version: 3.25.36
-    devDependencies:
-      vitest:
-        specifier: ^3.1.4
-        version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.24)(msw@2.7.4(@types/node@22.15.24)(typescript@5.8.3))
-
-  packages/server:
+  packages/backend:
     dependencies:
       cors:
         specifier: ^2.8.5
@@ -164,6 +162,31 @@ importers:
       '@types/lowdb':
         specifier: ^2.0.3
         version: 2.0.3
+
+  packages/mcp_server/slack:
+    dependencies:
+      '@agentic/ai-sdk':
+        specifier: catalog:ai
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+      '@agentic/core':
+        specifier: catalog:ai
+        version: 7.6.5(zod@3.25.36)
+      ai:
+        specifier: catalog:ai
+        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+      dotenv:
+        specifier: catalog:utils
+        version: 16.5.0
+      rxjs:
+        specifier: catalog:utils
+        version: 7.8.2
+      zod:
+        specifier: catalog:utils
+        version: 3.25.36
+    devDependencies:
+      vitest:
+        specifier: ^3.1.4
+        version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.24)(msw@2.7.4(@types/node@22.15.24)(typescript@5.8.3))
 
 packages:
 

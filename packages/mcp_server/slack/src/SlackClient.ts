@@ -1,13 +1,31 @@
 import { aiFunction, AIFunctionsProvider, assert } from '@agentic/core';
 import {
+  AddReactionInputSchema,
+  type AddReactionResponse,
+  AddReactionResponseSchema,
+  GetChannelHistoryInputSchema,
+  GetSlackChannelsInputSchema,
   type GetSlackChannelsResponse,
   GetSlackChannelsResponseSchema,
+  GetThreadRepliesInputSchema,
+  GetUserProfileInputSchema,
+  type GetUserProfileResponse,
+  GetUserProfileResponseSchema,
+  type GetUsersResponse,
+  GetUsersResponseSchema,
+  PostMessageInputSchema,
+  type PostMessageResponse,
+  PostMessageResponseSchema,
+  ReplyToThreadInputSchema,
+  type SlackChannel,
   type SlackChannelHistoryResponse,
-  SlackChannelHistorySchema,
+  SlackChannelHistoryResponseSchema,
   type SlackRepliesResponse,
-  SlackRepliesSchema,
+  SlackRepliesResponseSchema,
+  type SlackUser,
 } from './slack';
 import z from 'zod';
+import { defer, EMPTY, expand, filter, lastValueFrom, map, reduce } from 'rxjs';
 
 export type SlackClientConfig = {
   token: string;
@@ -31,111 +49,144 @@ export class SlackClient extends AIFunctionsProvider {
     this.slackTeamId = slackTeamId;
   }
 
-  @aiFunction({
-    name: 'get_slack_channels',
-    description: 'Get slack channels',
-    inputSchema: z.object({
-      limit: z
-        .number()
-        .describe('Maximum number of channels to return (default 100, max 200)')
-        .default(100),
-      cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
-    }),
-  })
-  async getChannels({
-    limit = 100,
-    cursor,
-  }: { limit?: number; cursor?: string }): Promise<GetSlackChannelsResponse> {
+  private async _fetchChannelsPage(cursor?: string): Promise<GetSlackChannelsResponse> {
     const params = new URLSearchParams({
       types: 'public_channel',
       exclude_archived: 'true',
-      limit: Math.min(limit, 200).toString(),
+      limit: '200',
       team_id: this.slackTeamId,
     });
 
     if (cursor) {
       params.append('cursor', cursor);
     }
+
     const response = await fetch(`https://slack.com/api/conversations.list?${params}`, {
       headers: this.headers,
     });
+
     const data = await response.json();
     return GetSlackChannelsResponseSchema.parse(data);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  async postMessage(channel_id: string, text: string): Promise<any> {
+  /**
+   * It returns a list of ALL channels that the current user is a member of.
+   */
+  @aiFunction({
+    name: 'get_slack_channels_for_current_user',
+    description:
+      'Get a list of public channels in the Slack workspace.' +
+      'It returns all channels that the current user is a member of.',
+    inputSchema: GetSlackChannelsInputSchema,
+  })
+  async getChannels(): Promise<GetSlackChannelsResponse> {
+    const allChannels$ = defer(() => this._fetchChannelsPage()).pipe(
+      expand(response => {
+        if (response.ok && response.response_metadata.next_cursor) {
+          return this._fetchChannelsPage(response.response_metadata.next_cursor);
+        }
+        return EMPTY;
+      }),
+      map(response => response.channels as SlackChannel[]),
+      reduce<SlackChannel[], SlackChannel[]>(
+        (allChannels, pageChannels) => allChannels.concat(pageChannels),
+        [],
+      ),
+    );
+
+    const allChannels = await lastValueFrom(allChannels$);
+
+    return {
+      ok: true,
+      channels: allChannels.filter(channel => channel.is_member),
+      response_metadata: { next_cursor: '' },
+    };
+  }
+
+  @aiFunction({
+    name: 'send_slack_message',
+    description: 'Sends a message to a public slack channel.',
+    inputSchema: PostMessageInputSchema,
+  })
+  async postMessage({
+    channel,
+    text,
+  }: z.infer<typeof PostMessageInputSchema>): Promise<PostMessageResponse> {
     const response = await fetch('https://slack.com/api/chat.postMessage', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
-        channel: channel_id,
+        channel: channel,
         text: text,
       }),
     });
 
-    return response.json();
+    const data = await response.json();
+    return PostMessageResponseSchema.parse(data);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  async postReply(channel_id: string, thread_ts: string, text: string): Promise<any> {
+  @aiFunction({
+    name: 'reply_to_slack_thread',
+    description: 'Sends a reply to a specific thread in a public slack channel.',
+    inputSchema: ReplyToThreadInputSchema,
+  })
+  async postReply({
+    channel,
+    thread_ts,
+    text,
+  }: z.infer<typeof ReplyToThreadInputSchema>): Promise<PostMessageResponse> {
     const response = await fetch('https://slack.com/api/chat.postMessage', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
-        channel: channel_id,
+        channel: channel,
         thread_ts: thread_ts,
         text: text,
       }),
     });
 
-    return response.json();
+    const data = await response.json();
+    return PostMessageResponseSchema.parse(data);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  async addReaction(channel_id: string, timestamp: string, reaction: string): Promise<any> {
+  @aiFunction({
+    name: 'add_slack_reaction',
+    description:
+      'Adds a reaction (emoji) to a message in a slack channel.' +
+      'You can use thumbsup, bow, cry, eyes',
+    inputSchema: AddReactionInputSchema,
+  })
+  async addReaction({
+    channel,
+    timestamp,
+    reaction,
+  }: z.infer<typeof AddReactionInputSchema>): Promise<AddReactionResponse> {
     const response = await fetch('https://slack.com/api/reactions.add', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
-        channel: channel_id,
+        channel: channel,
         timestamp: timestamp,
         name: reaction,
       }),
     });
 
-    return response.json();
+    const data = await response.json();
+    return AddReactionResponseSchema.parse(data);
   }
 
-  /**
-   * @param channel_id - The ID of the channel to get the history for.
-   * @param limit - The maximum number of items to return (default 10, max 100).
-   * @param cursor - The cursor to start from (default: empty).
-   * @returns The messages of the channel.
-   */
   @aiFunction({
     name: 'get_slack_channel_history',
-    description: 'Get the history(messages) of a specific slack channel',
-    inputSchema: z.object({
-      channel_id: z.string().describe('The ID of the channel to get the history for'),
-      limit: z
-        .number()
-        .describe('The maximum number of items to return (default 30, max 100)')
-        .default(30),
-      cursor: z.string().optional().describe('The cursor to start from (default: empty)'),
-    }),
+    description: "Fetches a conversation's history of messages and events.",
+    inputSchema: GetChannelHistoryInputSchema,
   })
   async getChannelHistory({
-    channel_id,
+    channel,
     limit = 30,
     cursor,
-  }: {
-    channel_id: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<SlackChannelHistoryResponse> {
+  }: z.infer<typeof GetChannelHistoryInputSchema>): Promise<SlackChannelHistoryResponse> {
     const params = new URLSearchParams({
-      channel: channel_id,
+      channel: channel,
       limit: limit.toString(),
     });
 
@@ -148,37 +199,24 @@ export class SlackClient extends AIFunctionsProvider {
     });
 
     const data = await response.json();
-    return SlackChannelHistorySchema.parse(data);
+    return SlackChannelHistoryResponseSchema.parse(data);
   }
 
   @aiFunction({
     name: 'get_slack_thread_replies',
-    description: 'Get the replies of a specific slack thread',
-    inputSchema: z.object({
-      channel_id: z.string().describe('The ID of the channel to get the replies for'),
-      thread_ts: z.string().describe('The timestamp of the thread to get the replies for'),
-      limit: z
-        .number()
-        .describe('The maximum number of items to return (default 10, max 100)')
-        .default(10),
-      cursor: z.string().optional().describe('The cursor to start from (default: empty)'),
-    }),
+    description: 'Fetches replies to a message thread.',
+    inputSchema: GetThreadRepliesInputSchema,
   })
   async getThreadReplies({
-    channel_id,
-    thread_ts,
+    channel,
+    ts,
     limit = 10,
     cursor,
-  }: {
-    channel_id: string;
-    thread_ts: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<SlackRepliesResponse> {
+  }: z.infer<typeof GetThreadRepliesInputSchema>): Promise<SlackRepliesResponse> {
     const params = new URLSearchParams({
-      channel: channel_id,
-      ts: thread_ts,
-      limit: limit.toString(),
+      channel: channel,
+      ts: ts,
+      // limit: limit.toString(),
     });
 
     if (cursor) {
@@ -190,13 +228,12 @@ export class SlackClient extends AIFunctionsProvider {
     });
 
     const data = await response.json();
-    return SlackRepliesSchema.parse(data);
+    return SlackRepliesResponseSchema.parse(data);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  async getUsers(limit = 100, cursor?: string): Promise<any> {
+  private async _fetchUsersPage(cursor?: string): Promise<GetUsersResponse> {
     const params = new URLSearchParams({
-      limit: Math.min(limit, 200).toString(),
+      limit: '200',
       team_id: this.slackTeamId,
     });
 
@@ -208,13 +245,47 @@ export class SlackClient extends AIFunctionsProvider {
       headers: this.headers,
     });
 
-    return response.json();
+    const data = await response.json();
+    return GetUsersResponseSchema.parse(data);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  async getUserProfile(user_id: string): Promise<any> {
+  @aiFunction({
+    name: 'get_slack_users',
+    description:
+      'Get a list of ALL users in the Slack workspace. It does not return deleted users.',
+    inputSchema: z.object({}).describe('No input is required.'),
+  })
+  async getAllUsers(): Promise<GetUsersResponse> {
+    const allUsers$ = defer(() => this._fetchUsersPage()).pipe(
+      expand(response => {
+        if (response.ok && response.response_metadata?.next_cursor) {
+          return this._fetchUsersPage(response.response_metadata?.next_cursor);
+        }
+        return EMPTY;
+      }),
+      map(response => response.members as SlackUser[]),
+      filter(users => !users.some(user => user.deleted)),
+      reduce<SlackUser[], SlackUser[]>((allUsers, pageUsers) => allUsers.concat(pageUsers), []),
+    );
+
+    const allUsers = await lastValueFrom(allUsers$);
+
+    return {
+      ok: true,
+      members: allUsers,
+    };
+  }
+
+  @aiFunction({
+    name: 'get_slack_user_profile',
+    description: 'Get a user profile in the Slack workspace.',
+    inputSchema: GetUserProfileInputSchema,
+  })
+  async getUserProfile({
+    userId,
+  }: z.infer<typeof GetUserProfileInputSchema>): Promise<GetUserProfileResponse> {
     const params = new URLSearchParams({
-      user: user_id,
+      user: userId,
       include_labels: 'true',
     });
 
@@ -222,6 +293,7 @@ export class SlackClient extends AIFunctionsProvider {
       headers: this.headers,
     });
 
-    return response.json();
+    const data = await response.json();
+    return GetUserProfileResponseSchema.parse(data);
   }
 }
