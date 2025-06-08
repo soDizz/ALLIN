@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "turbo dev",
+    "start": "turbo start",
+    "test": "pnpm --filter '@mcp-server/slack' test",
     "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
     "dev:ai": "pnpm --filter '@ai/agent' watch"
   },

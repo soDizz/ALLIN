@@ -10,6 +10,11 @@
       "cache": false,
       "persistent": true
     },
+    "start": {
+      "cache": true,
+      "persistent": true,
+      "inputs": ["!packages/backend/**/*"]
+    },
     "clean": {
       "cache": false
     },
@@ -17,7 +22,8 @@
       "cache": false
     },
     "test": {
-      "cache": false
+      "cache": false,
+      "persistent": false
     }
   }
 }

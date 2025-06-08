@@ -1,5 +1,6 @@
 packages:
   - packages/**
+  - apps/**
 
 catalogs:
   react19:
@@ -27,3 +28,10 @@ catalogs:
     'es-toolkit': ^1.36.0
     rxjs: ^7.8.2
     usehooks-ts: ^3.1.1
+    zod: ^3.25.28
+    dotenv: ^16.5.0
+  ai:
+    '@agentic/ai-sdk': ^7.6.5
+    '@agentic/core': ^7.6.5
+    ai: ^4.3.16
+  

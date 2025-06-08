@@ -1,82 +1,86 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { SlackMCPServer } from '../index';
 import dotenv from 'dotenv';
 import { SlackClient } from 'src/SlackClient';
-import { inspect } from 'node:util';
 
 dotenv.config();
 
+/**
+ * important:
+ * ** To run this test, you need to set the following environment variables. (`.env` file)
+ * -   `SLACK_BOT_TOKEN`
+ * -   `SLACK_TEAM_ID`
+ * -   `__TEST_USER_ID`
+ * -   `__TEST_CHANNEL_ID`
+ * -   `__TEST_THREAD_TS`
+ */
 describe('SlackMCPServer', () => {
   it('should be defined', () => {
     expect(SlackMCPServer).toBeDefined();
   });
 
   it('if botToken or slackTeamId are empty, it should throw an error', () => {
-    expect(() => new SlackMCPServer({ botToken: '', slackTeamId: 'test' })).toThrow();
-    expect(() => new SlackMCPServer({ botToken: 'test', slackTeamId: '' })).toThrow();
-    expect(() => new SlackMCPServer({ botToken: '', slackTeamId: '' })).toThrow();
+    expect(() => new SlackMCPServer({ token: '', slackTeamId: 'test' })).toThrow();
+    expect(() => new SlackMCPServer({ token: 'test', slackTeamId: '' })).toThrow();
+    expect(() => new SlackMCPServer({ token: '', slackTeamId: '' })).toThrow();
   });
 
-  it('if botToken and slackTeamId are provided, it should not throw an error', async () => {
-    const botToken = process.env.SLACK_BOT_TOKEN;
-    const slackTeamId = process.env.SLACK_TEAM_ID;
+  describe('SlackBot API test', () => {
+    let slackClient: SlackClient;
+    let userId: string;
+    let channelId: string;
+    let threadTs: string;
 
-    if (!botToken || !slackTeamId) {
-      throw new Error('SLACK_BOT_TOKEN and SLACK_TEAM_ID must be set');
-    }
+    beforeEach(() => {
+      if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_TEAM_ID) {
+        throw new Error('SLACK_BOT_TOKEN and SLACK_TEAM_ID must be set');
+      }
 
-    const slackClient = new SlackClient({ botToken, slackTeamId });
+      if (
+        !process.env.__TEST_USER_ID ||
+        !process.env.__TEST_CHANNEL_ID ||
+        !process.env.__TEST_THREAD_TS
+      ) {
+        throw new Error('__TEST_USER_ID, __TEST_CHANNEL_ID, __TEST_THREAD_TS must be set');
+      }
 
-    // {
-    //     id: 'C08L5KUGQKX',
-    //     name: '인터렉션-좋아요',
-    //     is_channel: true,
-    //     is_group: false,
-    //     is_im: false,
-    //     is_mpim: false,
-    //     is_private: false,
-    //     created: 1743501950,
-    //     is_archived: false,
-    //     is_general: false,
-    //     unlinked: 0,
-    //     name_normalized: '인터렉션-좋아요',
-    //     is_shared: false,
-    //     is_org_shared: false,
-    //     is_pending_ext_shared: false,
-    //     pending_shared: [],
-    //     context_team_id: 'T04HSP44K',
-    //     updated: 1746661696861,
-    //     parent_conversation: null,
-    //     creator: 'U047A2WSSG1',
-    //     is_ext_shared: false,
-    //     shared_team_ids: [ 'T04HSP44K' ],
-    //     pending_connected_team_ids: [],
-    //     is_member: true,
-    //     topic: { value: '', creator: '', last_set: 0 },
-    //     purpose: {
-    //       value: '인터렉션관련 리소스, 레퍼런스 공유하면서 영감받는채널',
-    //       creator: 'U047A2WSSG1',
-    //       last_set: 1743502054
-    //     },
-    //     properties: {
-    //       tabs: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
-    //       tabz: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
-    //     },
-    //     previous_names: [],
-    //     num_members: 6
-    //   }
+      slackClient = new SlackClient({
+        token: process.env.SLACK_BOT_TOKEN,
+        slackTeamId: process.env.SLACK_TEAM_ID,
+      });
 
-    const response1 = await slackClient.getChannels(100, 'dGVhbTpDMDhHM0I4MkozRQ==');
-    const { channels, response_metadata } = response1;
-
-    console.log(response_metadata);
-    const target = channels.find(channel => {
-      console.log(channel.name);
-      return channel.name.includes('인터렉션');
+      userId = process.env.__TEST_USER_ID;
+      channelId = process.env.__TEST_CHANNEL_ID;
+      threadTs = process.env.__TEST_THREAD_TS;
     });
 
-    console.log(target);
+    it('should be able to get channels', async () => {
+      const response = await slackClient.getChannels();
+      expect(response.ok).toBe(true);
+    });
 
-    // const response2 = await slackClient.getChannelHistory(100, response1.response_metadata.next_cursor);
+    it('should be able to get users', async () => {
+      const response = await slackClient.getAllUsers();
+      expect(response.ok).toBe(true);
+    });
+
+    it('should be able to get user profile', async () => {
+      const response = await slackClient.getUserProfile({ userId });
+      expect(response.ok).toBe(true);
+    });
+
+    it('should be able to get channel history', async () => {
+      const response = await slackClient.getChannelHistory({ channel: channelId, limit: 100 });
+      expect(response.ok).toBe(true);
+    });
+
+    it('should be able to get thread replies', async () => {
+      const response = await slackClient.getThreadReplies({
+        channel: channelId,
+        ts: threadTs,
+        limit: 100,
+      });
+      expect(response.ok).toBe(true);
+    });
   });
 });

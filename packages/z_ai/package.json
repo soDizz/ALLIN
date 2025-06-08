@@ -10,10 +10,7 @@
       "default": "./dist/index.mjs"
     }
   },
-  "scripts": {
-    "build": "tsup",
-    "watch": "tsup --watch"
-  },
+  "scripts": {},
   "dependencies": {
     "@agentic/ai-sdk": "^7.6.5",
     "@agentic/stdlib": "^7.6.5",
