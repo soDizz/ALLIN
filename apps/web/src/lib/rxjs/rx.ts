@@ -7,7 +7,7 @@ export type ReadonlyRx<T> = {
 };
 
 export type Rx<T> = ReadonlyRx<T> & {
-  set: (value: T) => void;
+  set: (value: RxSetterParam<T>) => void;
 };
 
 export function rx<T>(input: Observable<T>, initialValue: T): ReadonlyRx<T>;
@@ -38,7 +38,9 @@ export function rx<T>(input: T | Observable<T>, initialValue?: T) {
 
   return {
     get: () => prevValue,
-    set: (value: T) => subject.next(value),
+    set: (setter: RxSetterParam<T>) => {
+      subject.next(typeof setter === 'function' ? (setter as (prev: T) => T)(prevValue) : setter);
+    },
     $: subject,
     dispose: () => {
       subject.complete();
@@ -46,3 +48,5 @@ export function rx<T>(input: T | Observable<T>, initialValue?: T) {
     },
   };
 }
+
+export type RxSetterParam<T> = T | ((prev: T) => T);

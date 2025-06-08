@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { type Rx, rx } from './rx';
 
-type Keys = 'on_question_submit' | 'on_question_change';
+type Keys = 'open_left_panel';
 
 const channelMap = new Map<string, Rx<number>>();
 

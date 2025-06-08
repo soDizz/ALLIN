@@ -66,6 +66,11 @@ export class SlackClient extends AIFunctionsProvider {
     });
 
     const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(data.error);
+    }
+
     return GetSlackChannelsResponseSchema.parse(data);
   }
 
