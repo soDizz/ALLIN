@@ -1,5 +1,4 @@
-import { rx } from '@/lib/rxjs/rx';
-import { distinctUntilChanged, map } from 'rxjs';
+import { type Rx, rx } from '@/lib/rxjs/rx';
 
 type PluginName = 'slack';
 
@@ -24,28 +23,20 @@ type PluginDecorator<
   },
 > = T & PluginState;
 
-type Plugin = PluginDecorator<{
+type SlackPlugin = PluginDecorator<{
   name: 'slack';
 }>;
 
-type PluginMap = Map<PluginName, Plugin>;
-
-const initialState: PluginMap = new Map([
-  ['slack', { name: 'slack', verified: false, active: false, apiKey: '', teamId: '' }],
-]);
-
-export const plugins$$ = rx<PluginMap>(initialState);
-
-export const slackPlugin$$ = rx(
-  plugins$$.$.asObservable().pipe(
-    map(plugins => plugins.get('slack')),
-    distinctUntilChanged(
-      (prev, curr) => prev?.verified === curr?.verified && prev?.active === curr?.active,
-    ),
-  ),
-  {
+export class Plugins {
+  private slackPlugin$$: Rx<SlackPlugin> = rx<SlackPlugin>({
     name: 'slack',
     verified: false,
     active: false,
-  },
-);
+  });
+
+  public get slack$$() {
+    return this.slackPlugin$$;
+  }
+}
+
+export const plugins = new Plugins();

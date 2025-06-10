@@ -3,7 +3,7 @@
 import { useRx } from '@/lib/rxjs/useRx';
 import { leftPanel$$ } from '../store/leftPanelStore';
 
-import { SlackPanel } from './SlackPanel';
+import { SlackPanel } from './slack/SlackPanel';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
