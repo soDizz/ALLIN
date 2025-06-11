@@ -10,7 +10,6 @@ export const useRxValue = <T>(rx: ReadonlyRx<T>): T => {
     const sub = rx.$.subscribe(setValue);
     return () => {
       sub.unsubscribe();
-      rx.dispose();
     };
   }, [rx]);
 
@@ -24,7 +23,6 @@ export const useRx = <T>(rx: Rx<T>): [T, (value: RxSetterParam<T>) => void] => {
     const sub = rx.$.subscribe(setValue);
     return () => {
       sub.unsubscribe();
-      rx.dispose();
     };
   }, [rx]);
 

@@ -5,14 +5,13 @@ import { ContextMenuShortcut } from '@/components/ui/context-menu';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { SlackToggleButton } from '@/components/icon/slack';
 import { useChat } from '@ai-sdk/react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageItem } from './messageItem';
 import { toast } from 'sonner';
-import { leftPanel$$ } from './store/leftPanelStore';
+import { PluginList } from './PluginList';
 
 export const Main = () => {
   const {
@@ -90,14 +89,7 @@ export const Main = () => {
               </TooltipContent>
             </Tooltip>
           </div>
-          <div aria-label='plugin group' className='flex flex-row gap-1 items-center'>
-            <SlackToggleButton
-              onToggle={() => {
-                leftPanel$$.set(prev => !prev);
-              }}
-              size={10}
-            />
-          </div>
+          <PluginList />
         </motion.section>
       </div>
     </motion.main>

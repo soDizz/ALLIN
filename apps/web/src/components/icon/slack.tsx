@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 
 type SlackProps = {
   size?: number;
@@ -39,40 +38,35 @@ export const Slack = ({ size = 24, className }: SlackProps) => {
 };
 
 type SlackToggleButtonProps = {
+  value: boolean;
+  onClick: () => void;
   size?: number;
   className?: string;
-  initialState?: boolean;
-  onToggle?: (isOn: boolean) => void;
 };
 
 export const SlackToggleButton = ({
   size = 16,
   className,
-  initialState = false,
-  onToggle,
+  onClick,
+  value,
 }: SlackToggleButtonProps) => {
-  const [isOn, setIsOn] = useState(initialState);
-
-  const handleClick = () => {
-    const newState = !isOn;
-    setIsOn(newState);
-    onToggle?.(newState);
-  };
-
   return (
     <button
       type='button'
-      onClick={handleClick}
+      onClick={onClick}
       className={cn(
         'rounded-full p-1.5 transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        isOn
+        value
           ? 'bg-green-100 ring-2 ring-green-500 hover:bg-green-200 focus-visible:ring-green-500'
           : 'bg-gray-100 hover:bg-gray-200 focus-visible:ring-gray-400',
         className,
       )}
-      aria-pressed={isOn}
+      aria-pressed={value}
     >
-      <Slack size={size} className={cn('transition-opacity duration-200', !isOn && 'opacity-40')} />
+      <Slack
+        size={size}
+        className={cn('transition-opacity duration-200', !value && 'opacity-40')}
+      />
     </button>
   );
 };
