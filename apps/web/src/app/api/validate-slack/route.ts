@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       slackTeamId: teamId,
     });
 
-    const data = await client.getChannels();
+    const data = await client.getChannels(1);
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

@@ -23,7 +23,8 @@
     "ai": "catalog:ai",
     "dotenv": "catalog:utils",
     "zod": "catalog:utils",
-    "rxjs": "catalog:utils"
+    "rxjs": "catalog:utils",
+    "ky": "catalog:utils"
   },
   "devDependencies": {
     "vitest": "^3.1.4"

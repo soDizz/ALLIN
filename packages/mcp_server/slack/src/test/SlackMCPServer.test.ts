@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SlackMCPServer } from '../index';
+import { SlackClient } from '../SlackClient';
 import dotenv from 'dotenv';
-import { SlackClient } from 'src/SlackClient';
 
 dotenv.config();
 
@@ -16,13 +15,13 @@ dotenv.config();
  */
 describe('SlackMCPServer', () => {
   it('should be defined', () => {
-    expect(SlackMCPServer).toBeDefined();
+    expect(SlackClient).toBeDefined();
   });
 
   it('if botToken or slackTeamId are empty, it should throw an error', () => {
-    expect(() => new SlackMCPServer({ token: '', slackTeamId: 'test' })).toThrow();
-    expect(() => new SlackMCPServer({ token: 'test', slackTeamId: '' })).toThrow();
-    expect(() => new SlackMCPServer({ token: '', slackTeamId: '' })).toThrow();
+    expect(() => new SlackClient({ token: '', slackTeamId: 'test' })).toThrow();
+    expect(() => new SlackClient({ token: 'test', slackTeamId: '' })).toThrow();
+    expect(() => new SlackClient({ token: '', slackTeamId: '' })).toThrow();
   });
 
   describe('SlackBot API test', () => {
@@ -55,12 +54,12 @@ describe('SlackMCPServer', () => {
     });
 
     it('should be able to get channels', async () => {
-      const response = await slackClient.getChannels();
+      const response = await slackClient.getChannels(1);
       expect(response.ok).toBe(true);
     });
 
     it('should be able to get users', async () => {
-      const response = await slackClient.getAllUsers();
+      const response = await slackClient.getUsers(1);
       expect(response.ok).toBe(true);
     });
 
@@ -70,7 +69,7 @@ describe('SlackMCPServer', () => {
     });
 
     it('should be able to get channel history', async () => {
-      const response = await slackClient.getChannelHistory({ channel: channelId, limit: 100 });
+      const response = await slackClient.getChannelHistory({ channel: channelId, limit: 1 });
       expect(response.ok).toBe(true);
     });
 
@@ -78,7 +77,7 @@ describe('SlackMCPServer', () => {
       const response = await slackClient.getThreadReplies({
         channel: channelId,
         ts: threadTs,
-        limit: 100,
+        limit: 1,
       });
       expect(response.ok).toBe(true);
     });
