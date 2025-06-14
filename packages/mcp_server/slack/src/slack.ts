@@ -114,9 +114,10 @@ export type SlackChannelHistoryResponse = z.infer<typeof SlackChannelHistoryResp
 
 export const SlackRepliesResponseSchema = z.object({
   ok: z.boolean(),
-  messages: z.array(SlackMessageSchemaForMCP),
-  has_more: z.boolean(),
+  messages: z.array(SlackMessageSchemaForMCP).optional(),
+  has_more: z.boolean().optional(),
   response_metadata: SlackResponseMetadataSchema.optional(),
+  error: z.string().optional(),
 });
 export type SlackRepliesResponse = z.infer<typeof SlackRepliesResponseSchema>;
 

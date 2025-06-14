@@ -54,6 +54,8 @@ export const UserInput = ({
     handleSubmit();
   };
 
+  const isStreamingOrSubmitting = status === 'streaming' || status === 'submitted';
+
   return (
     <motion.section layout={'position'} className={cn('w-full flex flex-col gap-2 mt-[12px]')}>
       <form
@@ -77,9 +79,9 @@ export const UserInput = ({
               onClick={onSubmit}
               className='cursor-pointer absolute right-3 size-8'
               variant={'outline'}
-              aria-label={status === 'streaming' ? 'Stop' : 'Submit'}
+              aria-label={isStreamingOrSubmitting ? 'Stop' : 'Submit'}
             >
-              {status === 'streaming' ? <Square onClick={stop} /> : <ChevronUp />}
+              {isStreamingOrSubmitting ? <Square onClick={stop} /> : <ChevronUp />}
             </Button>
           </TooltipTrigger>
           <TooltipContent>

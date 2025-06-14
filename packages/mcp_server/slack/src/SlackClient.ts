@@ -37,6 +37,8 @@ export type SlackClientConfig = {
 export class SlackClient extends AIFunctionsProvider {
   private api: KyInstance;
   private slackTeamId: string;
+  // for test
+  private token: string;
 
   constructor({ token, slackTeamId }: SlackClientConfig) {
     assert(token, 'slack Token is required');
@@ -47,9 +49,11 @@ export class SlackClient extends AIFunctionsProvider {
       prefixUrl: 'https://slack.com/api/',
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
     this.slackTeamId = slackTeamId;
+    this.token = token;
   }
 
   public async getChannels(limit = 200, cursor?: string): Promise<GetSlackChannelsResponse> {
@@ -152,6 +156,10 @@ export class SlackClient extends AIFunctionsProvider {
       .get('conversations.replies', { searchParams })
       .json<SlackRepliesResponse>();
 
+    if (!data.ok) {
+      return { ok: false, error: data.error };
+    }
+
     return SlackRepliesResponseSchema.parse(data);
   }
 
@@ -221,15 +229,19 @@ export class SlackClient extends AIFunctionsProvider {
     channel,
     text,
   }: z.infer<typeof PostMessageInputSchema>): Promise<PostMessageResponse> {
-    const data = await this.api
-      .post('chat.postMessage', {
-        json: {
-          channel,
-          text,
-        },
-      })
-      .json<PostMessageResponse>();
-    return PostMessageResponseSchema.parse(data);
+    const data = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      body: JSON.stringify({
+        channel,
+        text,
+      }),
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const json = await data.json();
+    return PostMessageResponseSchema.parse(json);
   }
 
   @aiFunction({
@@ -242,17 +254,20 @@ export class SlackClient extends AIFunctionsProvider {
     thread_ts,
     text,
   }: z.infer<typeof ReplyToThreadInputSchema>): Promise<PostMessageResponse> {
-    const data = await this.api
-      .post('chat.postMessage', {
-        json: {
-          channel,
-          thread_ts,
-          text,
-        },
-      })
-      .json<PostMessageResponse>();
-
-    return PostMessageResponseSchema.parse(data);
+    const response = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      body: JSON.stringify({
+        channel,
+        thread_ts,
+        text,
+      }),
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const json = await response.json();
+    return PostMessageResponseSchema.parse(json);
   }
 
   @aiFunction({
@@ -267,16 +282,19 @@ export class SlackClient extends AIFunctionsProvider {
     timestamp,
     reaction,
   }: z.infer<typeof AddReactionInputSchema>): Promise<AddReactionResponse> {
-    const data = await this.api
-      .post('reactions.add', {
-        json: {
-          channel,
-          timestamp,
-          name: reaction,
-        },
-      })
-      .json<AddReactionResponse>();
-
-    return AddReactionResponseSchema.parse(data);
+    const response = await fetch('https://slack.com/api/reactions.add', {
+      method: 'POST',
+      body: JSON.stringify({
+        channel,
+        timestamp,
+        name: reaction,
+      }),
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const json = await response.json();
+    return AddReactionResponseSchema.parse(json);
   }
 }

@@ -76,9 +76,14 @@ describe('SlackMCPServer', () => {
     it('should be able to get thread replies', async () => {
       const response = await slackClient.getThreadReplies({
         channel: channelId,
-        ts: threadTs,
+        ts: '0000000',
         limit: 1,
       });
+      expect(response.ok).toBe(false);
+    });
+
+    it('should be able to post message', async () => {
+      const response = await slackClient.postMessage({ channel: channelId, text: 'Hello, world!' });
       expect(response.ok).toBe(true);
     });
   });

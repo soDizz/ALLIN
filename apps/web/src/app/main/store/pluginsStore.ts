@@ -1,4 +1,5 @@
 import { type Rx, rx } from '@/lib/rxjs/rx';
+import { slackKey$$ } from './slackKey';
 
 type PluginName = 'slack';
 
@@ -36,6 +37,20 @@ export class Plugins {
 
   public get slack$$() {
     return this.slackPlugin$$;
+  }
+
+  public get enabledPlugins() {
+    const plugins = [];
+
+    if (this.slackPlugin$$.get().active) {
+      plugins.push({
+        name: 'slack',
+        token: slackKey$$.get().token,
+        teamId: slackKey$$.get().teamId,
+      });
+    }
+
+    return plugins;
   }
 }
 

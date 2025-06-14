@@ -2,8 +2,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageItem } from './Message';
 import { useChat } from '@ai-sdk/react';
 import { UserInput } from './UserInput';
-import { slackKey$$ } from '../store/slackKey';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
+import { plugins } from '../store/pluginsStore';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
@@ -17,17 +18,10 @@ export const Chat = () => {
   } = useChat({
     api: '/api/chat',
     body: {
-      enabledTools: [
-        {
-          name: 'slack',
-          key: slackKey$$.get().token,
-          teamId: slackKey$$.get().teamId,
-        },
-      ],
+      enabledTools: plugins.enabledPlugins,
     },
     maxSteps: 6,
-    onFinish: (message, options) => {
-      console.log(message, options);
+    onFinish: () => {
       scrollViewRef.current?.scrollIntoView({ behavior: 'smooth' });
     },
     onError: e => {
@@ -35,6 +29,12 @@ export const Chat = () => {
     },
     experimental_throttle: 100,
   });
+
+  useEffect(() => {
+    if (status === 'error') {
+      toast.error('Error occurred while processing your request.');
+    }
+  }, [status]);
 
   return (
     <>
