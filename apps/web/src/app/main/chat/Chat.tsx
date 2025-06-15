@@ -20,14 +20,13 @@ export const Chat = () => {
     body: {
       enabledTools: plugins.enabledPlugins,
     },
-    maxSteps: 6,
+    maxSteps: 5,
     onFinish: () => {
       scrollViewRef.current?.scrollIntoView({ behavior: 'smooth' });
     },
     onError: e => {
       console.log(e);
     },
-    experimental_throttle: 100,
   });
 
   useEffect(() => {

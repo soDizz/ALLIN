@@ -2,6 +2,7 @@ import { openai } from '@ai-sdk/openai';
 import { type Message, streamText, type ToolSet } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
 import { SlackClient } from '@mcp-server/slack';
+import { TimeClient } from '@mcp-server/time';
 
 export const maxDuration = 30;
 
@@ -26,6 +27,12 @@ const createTools = (param: SlackTool) => {
 
     return createAISDKTools(slackClient);
   }
+
+  if (param.name === 'time') {
+    const timeClient = new TimeClient();
+    return createAISDKTools(timeClient);
+  }
+
   return null;
 };
 

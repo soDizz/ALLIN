@@ -1,12 +1,12 @@
 'use client';
 
 import type { ReadonlyRx, Rx, RxSetterParam } from './rx';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 
 export const useRxValue = <T>(rx: ReadonlyRx<T>): T => {
   const [value, setValue] = useState(rx.get());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const sub = rx.$.subscribe(setValue);
     return () => {
       sub.unsubscribe();
@@ -19,7 +19,7 @@ export const useRxValue = <T>(rx: ReadonlyRx<T>): T => {
 export const useRx = <T>(rx: Rx<T>): [T, (value: RxSetterParam<T>) => void] => {
   const [value, setValue] = useState(rx.get());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const sub = rx.$.subscribe(setValue);
     return () => {
       sub.unsubscribe();

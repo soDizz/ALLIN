@@ -9,8 +9,7 @@
     "build": "turbo build",
     "test": "turbo test",
     "create:mcp": "node inquirer.mjs",
-    "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
-    "dev:ai": "pnpm --filter '@ai/agent' watch",
+    "build:tools": "pnpm --filter '@mcp-server/*' build",
     "prepare": "husky"
   },
   "keywords": [],

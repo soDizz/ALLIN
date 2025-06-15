@@ -1,14 +1,15 @@
 import { type Rx, rx } from '@/lib/rxjs/rx';
 import { slackKey$$ } from './slackKey';
 
-type PluginName = 'slack';
+type PluginName = 'slack' | 'time';
 
 type PluginState = {
   /**
    * if true, the plugin is verified
    * if false, the plugin is not verified
+   *
    */
-  verified: boolean;
+  verified: boolean | true;
   /**
    * if true, the plugin is active
    * if false, the plugin is inactive
@@ -28,17 +29,13 @@ type SlackPlugin = PluginDecorator<{
   name: 'slack';
 }>;
 
+type TimePlugin = PluginDecorator<{
+  name: 'time';
+  verified: true;
+}>;
+
 export class Plugins {
-  private slackPlugin$$: Rx<SlackPlugin> = rx<SlackPlugin>({
-    name: 'slack',
-    verified: false,
-    active: false,
-  });
-
-  public get slack$$() {
-    return this.slackPlugin$$;
-  }
-
+  /////////////// common ///////////////
   public get enabledPlugins() {
     const plugins = [];
 
@@ -50,7 +47,34 @@ export class Plugins {
       });
     }
 
+    if (this.timePlugin$$.get().active) {
+      plugins.push({
+        name: 'time',
+      });
+    }
+
     return plugins;
+  }
+  /////////////// slack plugin ///////////////
+  private slackPlugin$$: Rx<SlackPlugin> = rx<SlackPlugin>({
+    name: 'slack',
+    verified: false,
+    active: false,
+  });
+
+  public get slack$$() {
+    return this.slackPlugin$$;
+  }
+
+  /////////////// time plugin ///////////////
+  private timePlugin$$: Rx<TimePlugin> = rx<TimePlugin>({
+    name: 'time',
+    verified: true,
+    active: false,
+  });
+
+  public get time$$() {
+    return this.timePlugin$$;
   }
 }
 

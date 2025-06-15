@@ -1,10 +1,9 @@
-import { SlackToggleButton } from '@/components/icon/slack';
+import { leftPanel$$ } from './store/leftPanelStore';
+import { plugins } from './store/pluginsStore';
 import { useRx } from '@/lib/rxjs/useRx';
 import { toast } from 'sonner';
-import { plugins } from '../store/pluginsStore';
-import { leftPanel$$ } from '../store/leftPanelStore';
 
-export const ToolList = () => {
+export const PluginList = () => {
   const [slackPlugin, setSlackPlugin] = useRx(plugins.slack$$);
 
   const onClick = () => {
@@ -22,9 +21,5 @@ export const ToolList = () => {
     }
   };
 
-  return (
-    <div aria-label='plugin group' className='flex flex-row gap-1 items-center'>
-      <SlackToggleButton value={slackPlugin.active} onClick={onClick} size={10} />
-    </div>
-  );
+  return <div aria-label='plugin group' className='flex flex-row gap-1 items-center'></div>;
 };
