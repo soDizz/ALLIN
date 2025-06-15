@@ -40,7 +40,7 @@ const getConfig = (slug, description) => {
     scripts: {
       dev: 'tsup --watch',
       build: 'tsup',
-      test: 'vitest',
+      test: 'vitest run',
     },
     dependencies: {
       '@agentic/ai-sdk': 'catalog:ai',
@@ -88,88 +88,6 @@ export default defineConfig(options => ({
   },
 };`;
 
-  // src/index.ts
-  const indexTs = `export { ${pascalCaseName}Client } from './${pascalCaseName}Client';`;
-
-  // src/[Name]Client.ts
-  const clientTs = `import { aiFunction, AIFunctionsProvider, assert } from '@agentic/core';
-import {
-  // Import your schemas here
-} from './${slug}';
-import z from 'zod';
-import ky, { type KyInstance } from 'ky';
-
-export type ${pascalCaseName}ClientConfig = {
-  token: string;
-  // Add other config properties as needed
-};
-
-export class ${pascalCaseName}Client extends AIFunctionsProvider {
-  private api: KyInstance;
-  private token: string;
-
-  constructor({ token }: ${pascalCaseName}ClientConfig) {
-    assert(token, '${slug} Token is required');
-
-    super();
-    this.api = ky.create({
-      prefixUrl: 'https://api.${slug}.com/', // Update with actual API URL
-      headers: {
-        Authorization: \`Bearer \${token}\`,
-        'Content-Type': 'application/json',
-      },
-      timeout: 30000,
-    });
-    this.token = token;
-  }
-
-  @aiFunction({
-    name: 'example_${slug}_function',
-    description: 'Example function for ${slug} integration.',
-    inputSchema: z.object({
-      message: z.string().describe('Message to send'),
-    }),
-  })
-  async exampleFunction({
-    message,
-  }: z.infer<typeof z.object({ message: z.string() })>): Promise<{ success: boolean; message: string }> {
-    console.log('Example function called with:', message);
-    
-    // TODO: Implement your API call here
-    // const response = await this.api.post('endpoint', {
-    //   json: { message },
-    // }).json();
-    
-    return {
-      success: true,
-      message: \`Processed: \${message}\`,
-    };
-  }
-}`;
-
-  // src/[slug].ts (schemas file)
-  const schemasTs = `import { z } from 'zod';
-
-//<--------------------------------------------------------------------->
-// Schemas for ${pascalCaseName} API Objects
-//<--------------------------------------------------------------------->
-
-// Example schema - replace with actual API response schemas
-export const ExampleResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string(),
-  data: z.record(z.unknown()).optional(),
-});
-
-export type ExampleResponse = z.infer<typeof ExampleResponseSchema>;
-
-// Input schemas for AI functions
-export const ExampleInputSchema = z.object({
-  message: z.string().describe('Message to process'),
-});
-
-export type ExampleInput = z.infer<typeof ExampleInputSchema>;`;
-
   // README.md
   const readme = `# @mcp-server/${slug}
 
@@ -213,59 +131,12 @@ const result = await client.exampleFunction({
 \`\`\`
 `;
 
-  // Test file
-  const testFile = `import { describe, it, expect, beforeEach } from 'vitest';
-import { ${pascalCaseName}Client } from '../${pascalCaseName}Client';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-/**
- * important:
- * ** To run this test, you need to set the following environment variables. (\`.env\` file)
- * - \`${slug.toUpperCase()}_TOKEN\`
- */
-describe('${pascalCaseName}Client', () => {
-  it('should be defined', () => {
-    expect(${pascalCaseName}Client).toBeDefined();
-  });
-
-  it('if token is empty, it should throw an error', () => {
-    expect(() => new ${pascalCaseName}Client({ token: '' })).toThrow();
-  });
-
-  describe('${pascalCaseName} API test', () => {
-    let client: ${pascalCaseName}Client;
-
-    beforeEach(() => {
-      if (!process.env.${slug.toUpperCase()}_TOKEN) {
-        throw new Error('${slug.toUpperCase()}_TOKEN must be set');
-      }
-
-      client = new ${pascalCaseName}Client({
-        token: process.env.${slug.toUpperCase()}_TOKEN,
-      });
-    });
-
-    it('should be able to call example function', async () => {
-      const response = await client.exampleFunction({
-        message: 'test message',
-      });
-      expect(response.success).toBe(true);
-    });
-  });
-});`;
-
   return {
     packageJson,
     tsconfig,
     tsupConfig,
     vitestConfig,
-    indexTs,
-    clientTs,
-    schemasTs,
     readme,
-    testFile,
   };
 };
 
@@ -281,27 +152,17 @@ const changeToPascal = slug => {
 
 const createDirectory = async (slug, description) => {
   try {
-    const {
-      packageJson,
-      tsconfig,
-      tsupConfig,
-      vitestConfig,
-      indexTs,
-      clientTs,
-      schemasTs,
-      readme,
-      testFile,
-    } = getConfig(slug, description);
+    const { packageJson, tsconfig, tsupConfig, vitestConfig, readme } = getConfig(
+      slug,
+      description,
+    );
 
     const componentDir = dirPath(slug);
     const srcPath = path.join(componentDir, 'src');
-    const testPath = path.join(srcPath, 'test');
-    const pascalFileName = changeToPascal(slug);
 
     // Create directories
     await fs.mkdir(componentDir, { recursive: true });
     await fs.mkdir(srcPath, { recursive: true });
-    await fs.mkdir(testPath, { recursive: true });
 
     // Create files
     await fs.writeFile(
@@ -312,14 +173,6 @@ const createDirectory = async (slug, description) => {
     await fs.writeFile(path.join(componentDir, 'tsup.config.ts'), tsupConfig);
     await fs.writeFile(path.join(componentDir, 'vitest.config.js'), vitestConfig);
     await fs.writeFile(path.join(componentDir, 'README.md'), readme);
-
-    // Source files
-    await fs.writeFile(path.join(srcPath, 'index.ts'), indexTs);
-    await fs.writeFile(path.join(srcPath, `${pascalFileName}Client.ts`), clientTs);
-    await fs.writeFile(path.join(srcPath, `${slug}.ts`), schemasTs);
-
-    // Test file
-    await fs.writeFile(path.join(testPath, `${pascalFileName}Client.test.ts`), testFile);
 
     return true;
   } catch (error) {
@@ -334,9 +187,8 @@ const prettyLog = slug => {
   console.log(`📦 패키지 이름: @mcp-server/${slug}`);
   console.log('\n🚀 다음 단계:');
   console.log(`1. cd ${dirPath(slug)}`);
-  console.log(`2. API 스키마를 src/${slug}.ts 파일에 정의하세요`);
-  console.log(`3. src/${changeToPascal(slug)}Client.ts 파일에 실제 API 호출 로직을 구현하세요`);
-  console.log('4. npm run dev 로 개발 모드를 시작하세요');
+  console.log('2. src/ 디렉토리에 필요한 파일들을 추가하세요');
+  console.log('3. npm run dev 로 개발 모드를 시작하세요');
 };
 
 async function createProject() {

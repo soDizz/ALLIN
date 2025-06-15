@@ -13,7 +13,7 @@ dotenv.config();
  * -   `__TEST_CHANNEL_ID`
  * -   `__TEST_THREAD_TS`
  */
-describe('SlackMCPServer', () => {
+describe('SlackClient test', () => {
   it('should be defined', () => {
     expect(SlackClient).toBeDefined();
   });

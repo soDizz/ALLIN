@@ -1,6 +1,6 @@
 {
-  "name": "@mcp-server/slack",
-  "description": "MCP server for Slack with AI SDK",
+  "name": "@mcp-server/time",
+  "description": "Get current Time ",
   "version": "1.0.0",
   "type": "module",
   "files": ["dist"],

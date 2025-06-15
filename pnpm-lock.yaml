@@ -327,6 +327,34 @@ importers:
         specifier: ^3.1.4
         version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.24)(jiti@2.4.2)(lightningcss@1.30.1)(msw@2.7.4(@types/node@22.15.24)(typescript@5.8.3))
 
+  packages/mcp_server/time:
+    dependencies:
+      '@agentic/ai-sdk':
+        specifier: catalog:ai
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+      '@agentic/core':
+        specifier: catalog:ai
+        version: 7.6.5(zod@3.25.36)
+      ai:
+        specifier: catalog:ai
+        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+      dotenv:
+        specifier: catalog:utils
+        version: 16.5.0
+      ky:
+        specifier: catalog:utils
+        version: 1.8.1
+      rxjs:
+        specifier: catalog:utils
+        version: 7.8.2
+      zod:
+        specifier: catalog:utils
+        version: 3.25.36
+    devDependencies:
+      vitest:
+        specifier: ^3.1.4
+        version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.24)(jiti@2.4.2)(lightningcss@1.30.1)(msw@2.7.4(@types/node@22.15.24)(typescript@5.8.3))
+
 packages:
 
   '@agentic/ai-sdk@7.6.5':
