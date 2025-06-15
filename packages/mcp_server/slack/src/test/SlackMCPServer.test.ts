@@ -70,7 +70,6 @@ describe('SlackMCPServer', () => {
 
     it('should be able to get channel history', async () => {
       const response = await slackClient.getChannelHistory({ channel: channelId, limit: 1 });
-      console.log(response);
       expect(response.ok).toBe(true);
     });
 

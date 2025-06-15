@@ -9,7 +9,8 @@
     "build": "turbo build",
     "test": "pnpm --filter '@mcp-server/slack' test",
     "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
-    "dev:ai": "pnpm --filter '@ai/agent' watch"
+    "dev:ai": "pnpm --filter '@ai/agent' watch",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -17,13 +18,14 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:lint",
     "@ladle/react": "catalog:dev",
+    "husky": "^9.1.7",
+    "inquirer": "catalog:cli",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "rimraf": "catalog:build",
     "tsup": "catalog:build",
     "turbo": "catalog:cli",
-    "typescript": "catalog:types",
-    "inquirer": "catalog:cli"
+    "typescript": "catalog:types"
   },
   "packageManager": "pnpm@9.6.0"
 }
