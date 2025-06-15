@@ -125,6 +125,7 @@ export const PostMessageResponseSchema = z.object({
   ok: z.boolean(),
   channel: z.string(),
   ts: z.string(),
+  text: z.string().optional(),
   message: SlackMessageSchemaForMCP,
 });
 export type PostMessageResponse = z.infer<typeof PostMessageResponseSchema>;

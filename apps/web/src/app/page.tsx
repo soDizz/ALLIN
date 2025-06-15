@@ -7,7 +7,7 @@ export default function Home() {
     <div className='flex flex-row h-0 items-center justify-center min-h-screen font-[family-name:var(--font-geist-sans)]'>
       <LeftPanel />
       <Main />
-      <Toaster richColors />
+      <Toaster richColors closeButton />
     </div>
   );
 }
