@@ -70,6 +70,7 @@ describe('SlackMCPServer', () => {
 
     it('should be able to get channel history', async () => {
       const response = await slackClient.getChannelHistory({ channel: channelId, limit: 1 });
+      console.log(response);
       expect(response.ok).toBe(true);
     });
 
@@ -82,8 +83,43 @@ describe('SlackMCPServer', () => {
       expect(response.ok).toBe(false);
     });
 
+    let treadTs: string;
+
     it('should be able to post message', async () => {
-      const response = await slackClient.postMessage({ channel: channelId, text: 'Hello, world!' });
+      const response = await slackClient.postMessage({
+        channel: channelId,
+        text: `${new Date().toISOString()} message test`,
+      });
+      treadTs = response.ts;
+      expect(response.ok).toBe(true);
+    });
+
+    let replyTs: string;
+    it('should be able to post message to thread', async () => {
+      const response = await slackClient.postReply({
+        channel: channelId,
+        text: 'reply test',
+        thread_ts: treadTs,
+      });
+      replyTs = response.ts;
+      expect(response.ok).toBe(true);
+    });
+
+    it('should be able to add reaction to message', async () => {
+      const response = await slackClient.postReaction({
+        channel: channelId,
+        timestamp: replyTs,
+        reaction: 'thumbsup',
+      });
+      expect(response.ok).toBe(true);
+    });
+
+    it('should be able to get thread replies', async () => {
+      const response = await slackClient.getThreadReplies({
+        channel: channelId,
+        ts: treadTs,
+        limit: 1,
+      });
       expect(response.ok).toBe(true);
     });
   });

@@ -41,6 +41,8 @@ export const LocalStorageSlack = () => {
     };
 
     verifySlack();
+    // 마운트 될때 한번만 실행
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <></>;
 };

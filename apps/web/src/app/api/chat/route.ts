@@ -49,6 +49,9 @@ export async function POST(req: Request) {
         ...tool,
       };
     }, {} as ToolSet),
+    onError: err => {
+      console.error('Error occurred in /api/chat', err);
+    },
   });
 
   return result.toDataStreamResponse();
