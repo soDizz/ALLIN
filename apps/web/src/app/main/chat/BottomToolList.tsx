@@ -32,8 +32,6 @@ export const BottomToolList = () => {
     }));
   };
 
-  console.log('==rerender', timePlugin, slackPlugin);
-
   return (
     <div aria-label='plugin group' className='flex flex-row gap-1 items-center'>
       <ToolToggleButton value={slackPlugin.active} onClick={onClick}>
