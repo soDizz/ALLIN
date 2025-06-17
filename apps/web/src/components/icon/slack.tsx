@@ -36,37 +36,3 @@ export const Slack = ({ size = 24, className }: SlackProps) => {
     </svg>
   );
 };
-
-type SlackToggleButtonProps = {
-  value: boolean;
-  onClick: () => void;
-  size?: number;
-  className?: string;
-};
-
-export const SlackToggleButton = ({
-  size = 16,
-  className,
-  onClick,
-  value,
-}: SlackToggleButtonProps) => {
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className={cn(
-        'rounded-full p-1.5 transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        value
-          ? 'bg-green-100 ring-2 ring-green-500 hover:bg-green-200 focus-visible:ring-green-500'
-          : 'bg-gray-100 hover:bg-gray-200 focus-visible:ring-gray-400',
-        className,
-      )}
-      aria-pressed={value}
-    >
-      <Slack
-        size={size}
-        className={cn('transition-opacity duration-200', !value && 'opacity-40')}
-      />
-    </button>
-  );
-};

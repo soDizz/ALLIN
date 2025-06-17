@@ -14,7 +14,7 @@ export const LeftPanel = () => {
     <>
       <div
         className={cn(
-          'w-[480px] h-full rounded-md border flex flex-col gap-4 overflow-y-scroll',
+          'w-[480px] h-full rounded-md border flex flex-col gap-4 overflow-y-auto',
           !open && 'hidden',
         )}
       >

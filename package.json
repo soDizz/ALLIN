@@ -7,9 +7,9 @@
     "dev": "turbo dev",
     "start": "turbo start",
     "build": "turbo build",
-    "test": "pnpm --filter '@mcp-server/slack' test",
-    "build:mcp-server": "pnpm --filter '@mcp-server/*' build",
-    "dev:ai": "pnpm --filter '@ai/agent' watch",
+    "test": "turbo test",
+    "create:mcp": "node inquirer.mjs",
+    "build:tools": "pnpm --filter '@mcp-server/*' build",
     "prepare": "husky"
   },
   "keywords": [],
