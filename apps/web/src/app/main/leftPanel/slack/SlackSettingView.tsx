@@ -20,6 +20,7 @@ import {
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useLocalStorage } from 'usehooks-ts';
 import { LOCAL_STORAGE_KEY } from '../../localStorageKey';
+import { SlackChannelSelect } from './SlackChannelSelect';
 
 export const SlackSettingView = () => {
   const [slackPlugin, setSlackPlugin] = useRx(plugins.slack$$);
@@ -53,6 +54,7 @@ export const SlackSettingView = () => {
 
   return (
     <div className='flex flex-col gap-4 px-4 grow'>
+      <SlackChannelSelect />
       <p className='text-lg'>Settings</p>
       <div className='flex w-full items-center justify-between rounded-lg border p-3 shadow-xs gap-2'>
         <div className='flex flex-col items-start gap-2'>

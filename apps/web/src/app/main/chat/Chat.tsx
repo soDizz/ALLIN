@@ -15,6 +15,7 @@ export const Chat = () => {
     handleSubmit: handleSubmitChat,
     stop,
     status,
+    // setMessages,
   } = useChat({
     api: '/api/chat',
     body: {
