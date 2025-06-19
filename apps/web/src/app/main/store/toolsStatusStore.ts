@@ -1,7 +1,7 @@
 import { type Rx, rx } from '@/lib/rxjs/rx';
 import { slack$$ } from './slackStore';
 
-type ToolName = 'slack' | 'time';
+export type ToolName = 'slack' | 'time';
 
 type Status = {
   verified: boolean | true;
@@ -69,4 +69,4 @@ export class ToolsStatus {
   }
 }
 
-export const plugins = new ToolsStatus();
+export const toolsStatus = new ToolsStatus();

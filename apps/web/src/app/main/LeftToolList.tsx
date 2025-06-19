@@ -1,10 +1,10 @@
 import { leftPanel$$ } from './store/leftPanelStore';
-import { plugins } from './store/pluginsStore';
+import { toolsStatus } from './store/toolsStatusStore';
 import { useRx } from '@/lib/rxjs/useRx';
 import { toast } from 'sonner';
 
 export const PluginList = () => {
-  const [slackPlugin, setSlackPlugin] = useRx(plugins.slack$$);
+  const [slackPlugin, setSlackPlugin] = useRx(toolsStatus.slack$$);
 
   const onClick = () => {
     if (!slackPlugin.verified) {

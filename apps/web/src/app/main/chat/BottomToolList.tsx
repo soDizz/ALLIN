@@ -1,14 +1,15 @@
 import { Slack } from '@/components/icon/slack';
-import { useRx } from '@/lib/rxjs/useRx';
-import { toast } from 'sonner';
-import { plugins } from '../store/pluginsStore';
-import { leftPanel$$ } from '../store/leftPanelStore';
 import { ToolToggleButton } from '@/components/ui/tool-toggle-button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useRx } from '@/lib/rxjs/useRx';
 import { Clock2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { leftPanel$$ } from '../store/leftPanelStore';
+import { toolsStatus } from '../store/toolsStatusStore';
 
 export const BottomToolList = () => {
-  const [slackPlugin, setSlackPlugin] = useRx(plugins.slack$$);
-  const [timePlugin, setTimePlugin] = useRx(plugins.time$$);
+  const [slackPlugin, setSlackPlugin] = useRx(toolsStatus.slack$$);
+  const [timePlugin, setTimePlugin] = useRx(toolsStatus.time$$);
 
   const onClick = () => {
     if (!slackPlugin.verified) {
@@ -34,11 +35,16 @@ export const BottomToolList = () => {
 
   return (
     <div aria-label='plugin group' className='flex flex-row gap-1 items-center'>
-      <ToolToggleButton value={slackPlugin.active} onClick={onClick}>
-        <Slack />
-      </ToolToggleButton>
-      <ToolToggleButton value={timePlugin.active} onClick={onClickTime}>
-        <Clock2 />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <ToolToggleButton className={'size-8'} value={slackPlugin.active} onClick={onClick}>
+            <Slack className={'size-4'} />
+          </ToolToggleButton>
+        </TooltipTrigger>
+        <TooltipContent>Slack</TooltipContent>
+      </Tooltip>
+      <ToolToggleButton className={'size-8 p-1'} value={timePlugin.active} onClick={onClickTime}>
+        <img src={'/clock.png'} alt={'clock'}></img>
       </ToolToggleButton>
     </div>
   );
