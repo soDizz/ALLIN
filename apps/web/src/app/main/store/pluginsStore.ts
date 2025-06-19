@@ -34,7 +34,7 @@ export class ToolsStatus {
       plugins.push({
         name: 'slack',
         token: slack$$.get().token,
-        teamId: slack$$.get().teamId,
+        teamId: slack$$.get().workspaceId,
       });
     }
 
