@@ -1,17 +1,18 @@
+import type { SlackValidateBodyParams } from '@/app/api/slack/validate/route';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useRxSet } from '@/lib/rxjs/useRx';
-import { Loader2Icon } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { slackKey$$ } from '../../store/slackKey';
-import { plugins } from '../../store/pluginsStore';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { useRxSet } from '@/lib/rxjs/useRx';
 import ky from 'ky';
+import { Loader2Icon } from 'lucide-react';
+import { type FormEvent, useState } from 'react';
+import { toast } from 'sonner';
 import { useLocalStorage } from 'usehooks-ts';
 import { LOCAL_STORAGE_KEY, type LocalStorageData } from '../../localStorageKey';
+import { slack$$ } from '../../store/slackStore';
+import { toolsStatus } from '../../store/toolsStatusStore';
 import { SlackGuide } from './SlackGuide';
-import { Separator } from '@/components/ui/separator';
 
 export const SlackLoginView = () => {
   const [, setLocalStorageSlack] = useLocalStorage<LocalStorageData['slack'] | null>(
@@ -19,16 +20,16 @@ export const SlackLoginView = () => {
     null,
   );
   const [isChecking, setIsChecking] = useState(false);
-  const setSlackCredentials = useRxSet(slackKey$$);
-  const setPlugins = useRxSet(plugins.slack$$);
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const setSlack = useRxSet(slack$$);
+  const setPlugins = useRxSet(toolsStatus.slack$$);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
     const token = formData.get('apiKey') as string;
-    const teamId = formData.get('teamId') as string;
+    const workspaceId = formData.get('workspaceId') as string;
 
-    if (!token || !teamId) {
+    if (!token || !workspaceId) {
       toast.warning('Please enter a valid API Key and Team ID', {
         position: 'top-center',
         duration: 3000,
@@ -39,20 +40,20 @@ export const SlackLoginView = () => {
     setIsChecking(true);
 
     try {
-      await ky.post('/api/validate-slack', {
+      await ky.post('/api/slack/validate', {
         json: {
           token,
-          teamId,
-        },
+          workspaceId,
+        } as SlackValidateBodyParams,
       });
 
-      setSlackCredentials({ token, teamId });
+      setSlack({ token, workspaceId: workspaceId, selectedChannels: [] });
       setPlugins({
         name: 'slack',
         verified: true,
         active: true,
       });
-      setLocalStorageSlack({ token, teamId });
+      setLocalStorageSlack({ token, workspaceId: workspaceId, selectedChannels: [] });
 
       toast.success('Slack connected successfully!', {
         position: 'top-center',
@@ -76,8 +77,8 @@ export const SlackLoginView = () => {
           <Input disabled={isChecking} id='apiKey' name='apiKey' />
         </div>
         <div className='grid w-full max-w-sm items-center gap-3'>
-          <Label htmlFor='teamId'>Workspace ID</Label>
-          <Input disabled={isChecking} id='teamId' name='teamId' />
+          <Label htmlFor='workspaceId'>Workspace ID</Label>
+          <Input disabled={isChecking} id='workspaceId' name='workspaceId' />
         </div>
         <Button disabled={isChecking} type='submit'>
           <>

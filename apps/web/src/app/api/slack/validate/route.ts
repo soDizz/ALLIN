@@ -1,17 +1,22 @@
-import { NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import { SlackClient } from '@mcp-server/slack';
 
-export async function POST(request: Request) {
-  try {
-    const { token, teamId } = await request.json();
+export type SlackValidateBodyParams = {
+  token: string;
+  workspaceId: string;
+}
 
-    if (!token || !teamId) {
+export async function POST(request: NextRequest) {
+  try {
+    const { token, workspaceId } = await request.json() as SlackValidateBodyParams;
+
+    if (!token || !workspaceId) {
       return NextResponse.json({ error: 'Token and Team ID are required' }, { status: 400 });
     }
 
     const client = new SlackClient({
       token,
-      slackTeamId: teamId,
+      slackTeamId: workspaceId,
     });
 
     const data = await client.getChannels(1);

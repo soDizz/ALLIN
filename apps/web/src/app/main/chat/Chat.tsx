@@ -4,7 +4,7 @@ import { useChat } from '@ai-sdk/react';
 import { UserInput } from './UserInput';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { plugins } from '../store/pluginsStore';
+import { toolsStatus } from '../store/toolsStatusStore';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
@@ -19,7 +19,7 @@ export const Chat = () => {
   } = useChat({
     api: '/api/chat',
     body: {
-      enabledTools: plugins.enabledPlugins,
+      enabledTools: toolsStatus.getEnabledTools(),
     },
     maxSteps: 5,
     onFinish: () => {

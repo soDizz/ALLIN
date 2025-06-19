@@ -13,6 +13,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Plus, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import { slack$$ } from '../../store/slackStore';
+import type { GetSlackChannelsResponse } from '@mcp-server/slack';
+
 type Status = {
   value: string;
   label: string;
@@ -50,6 +54,19 @@ const MAX_CHANNELS = 3;
 export function SlackChannelSelect() {
   const [open, setOpen] = React.useState(false);
   const [selectedChannels, setSelectedChannels] = React.useState<Channel[]>([]);
+  const { data, isLoading } = useQuery<GetSlackChannelsResponse['channels']>({
+    queryKey: ['slack', 'channels'],
+    queryFn: () => {
+      return fetch(`/api/slack/channels?workspaceId=${slack$$.get().workspaceId}`, {
+        headers: {
+          Authorization: `Bearer ${slack$$.get().token}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(res => res.json());
+    },
+  });
+
+  console.log(data);
 
   const onAddChannel = (channel: Channel) => {
     if (selectedChannels.length >= MAX_CHANNELS) {
@@ -82,11 +99,11 @@ export function SlackChannelSelect() {
   };
 
   return (
-    <div className='flex items-center space-x-4'>
+    <div className='flex items-start flex-col gap-4'>
       <p className='text-muted-foreground text-sm'>Channels</p>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant='outline' className='w-[150px] justify-start h-fit'>
+          <Button variant='outline' className='w-full justify-start h-fit'>
             {selectedChannels.length > 0 ? (
               <div className='flex flex-col items-start gap-1'>
                 {selectedChannels.map(channel => (
@@ -118,19 +135,19 @@ export function SlackChannelSelect() {
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
-                {statuses.map(status => (
+                {data?.map(channel => (
                   <CommandItem
-                    key={status.value}
-                    value={status.value}
-                    onSelect={value => {
+                    key={channel.id}
+                    value={channel.name}
+                    onSelect={channelName => {
                       onAddChannel({
-                        channelName: value,
-                        channelId: value,
+                        channelName,
+                        channelId: channel.id,
                       });
                       setOpen(false);
                     }}
                   >
-                    {status.label}
+                    {channel.name}
                   </CommandItem>
                 ))}
               </CommandGroup>

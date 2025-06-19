@@ -1,11 +1,11 @@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { plugins } from '../../store/pluginsStore';
+import { toolsStatus } from '../../store/toolsStatusStore';
 import { useRx } from '@/lib/rxjs/useRx';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
-import { slackKey$$ } from '../../store/slackKey';
+import { slack$$ } from '../../store/slackStore';
 import { useState } from 'react';
 import {
   AlertDialog,
@@ -23,8 +23,8 @@ import { LOCAL_STORAGE_KEY } from '../../localStorageKey';
 import { SlackChannelSelect } from './SlackChannelSelect';
 
 export const SlackSettingView = () => {
-  const [slackPlugin, setSlackPlugin] = useRx(plugins.slack$$);
-  const [{ token, teamId }, setSlackKey] = useRx(slackKey$$);
+  const [slackPlugin, setSlackPlugin] = useRx(toolsStatus.slack$$);
+  const [{ token, workspaceId }, setSlackKey] = useRx(slack$$);
   const [isAPIKeyVisible, setIsAPIKeyVisible] = useState(false);
   const [isTeamIDVisible, setIsTeamIDVisible] = useState(false);
   const [, , removeSlackKey] = useLocalStorage(LOCAL_STORAGE_KEY.SLACK, {
@@ -40,7 +40,7 @@ export const SlackSettingView = () => {
     }));
     setSlackKey({
       token: '',
-      teamId: '',
+      workspaceId: '',
     });
     removeSlackKey();
   };
@@ -86,7 +86,7 @@ export const SlackSettingView = () => {
       <div className='flex w-full items-center justify-between rounded-lg border p-3 shadow-xs gap-2'>
         <div className='flex flex-col items-start gap-2'>
           <Label htmlFor='slack-active-status'>Your Team ID</Label>
-          <p className='text-xs text-muted-foreground'>{isTeamIDVisible ? teamId : '********'}</p>
+          <p className='text-xs text-muted-foreground'>{isTeamIDVisible ? workspaceId : '********'}</p>
         </div>
         <Toggle onClick={() => setIsTeamIDVisible(!isTeamIDVisible)}>
           {isTeamIDVisible ? <Eye className='w-4 h-4' /> : <EyeOff className='w-4 h-4' />}

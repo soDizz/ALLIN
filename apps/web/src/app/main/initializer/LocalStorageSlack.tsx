@@ -1,42 +1,54 @@
+import type { SlackValidateBodyParams } from '@/app/api/slack/validate/route';
+import { useRxSet } from '@/lib/rxjs/useRx';
+import { assert } from '@agentic/core';
+import ky from 'ky';
+import { useEffect } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 import { LOCAL_STORAGE_KEY, type LocalStorageData } from '../localStorageKey';
-import { useEffect } from 'react';
-import ky from 'ky';
-import { useRxSet } from '@/lib/rxjs/useRx';
-import { slackKey$$ } from '../store/slackKey';
-import { plugins } from '../store/pluginsStore';
-import { toast } from 'sonner';
+import { slack$$ } from '../store/slackStore';
+import { toolsStatus } from '../store/toolsStatusStore';
 
 export const LocalStorageSlack = () => {
-  const [slackKey] = useLocalStorage<LocalStorageData['slack'] | null>(
-    LOCAL_STORAGE_KEY.SLACK,
-    null,
-  );
-  const setSlackCredentials = useRxSet(slackKey$$);
-  const setPlugins = useRxSet(plugins.slack$$);
+  const [localStorageSlackData, setLocalStorageSlackData] = useLocalStorage<
+    LocalStorageData['slack'] | null
+  >(LOCAL_STORAGE_KEY.SLACK, null);
+  const [localStorageActiveTools, setLocalStorageActiveTools] = useLocalStorage<
+    LocalStorageData['activeTools']
+  >(LOCAL_STORAGE_KEY.ACTIVE_TOOLS, []);
+
+  const setSlackData = useRxSet(slack$$);
+  const setToolsStatus = useRxSet(toolsStatus.slack$$);
 
   useEffect(() => {
     const verifySlack = async () => {
-      if (slackKey?.token && slackKey?.teamId && !plugins.slack$$.get().verified) {
-        try {
-          await ky.post('/api/validate-slack', {
-            json: {
-              token: slackKey.token,
-              teamId: slackKey.teamId,
-            },
-          });
+      try {
+        assert(localStorageSlackData?.token);
+        assert(localStorageSlackData?.workspaceId);
+        assert(localStorageSlackData.selectedChannels);
 
-          setSlackCredentials({ token: slackKey.token, teamId: slackKey.teamId });
-          setPlugins({
-            name: 'slack',
-            verified: true,
-            active: true,
-          });
-          toast.success('Slack is Connected', {
-            position: 'top-center',
-            duration: 2500,
-          });
-        } catch {}
+        const { token, workspaceId, selectedChannels } = localStorageSlackData;
+        await ky.post('/api/slack/validate', {
+          json: {
+            token,
+            workspaceId,
+          } as SlackValidateBodyParams,
+        });
+
+        const wasActive = localStorageActiveTools.includes('slack');
+
+        setSlackData({ token, workspaceId, selectedChannels });
+        setToolsStatus({
+          name: 'slack',
+          verified: true,
+          active: wasActive,
+        });
+      } catch {
+        setLocalStorageSlackData({
+          token: '',
+          workspaceId: '',
+          selectedChannels: [],
+        });
+        setLocalStorageActiveTools(prev => [...prev.filter(name => name !== 'slack')]);
       }
     };
 

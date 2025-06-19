@@ -1,49 +1,40 @@
 import { type Rx, rx } from '@/lib/rxjs/rx';
-import { slackKey$$ } from './slackKey';
+import { slack$$ } from './slackStore';
 
-type PluginName = 'slack' | 'time';
+export type ToolName = 'slack' | 'time';
 
-type PluginState = {
-  /**
-   * if true, the plugin is verified
-   * if false, the plugin is not verified
-   *
-   */
+type Status = {
   verified: boolean | true;
-  /**
-   * if true, the plugin is active
-   * if false, the plugin is inactive
-   * it never be true when the plugin is not verified
-   */
   active: boolean;
 };
 
-type PluginDecorator<
+type Tool<
   T extends {
-    name: PluginName;
+    name: ToolName;
     [key: string]: unknown;
   },
-> = T & PluginState;
+> = T & Status;
 
-type SlackPlugin = PluginDecorator<{
+type SlackTool = Tool<{
   name: 'slack';
 }>;
 
-type TimePlugin = PluginDecorator<{
+type TimeTool = Tool<{
   name: 'time';
+  // override. because Time doesn't need to be verified.
   verified: true;
 }>;
 
-export class Plugins {
+export class ToolsStatus {
   /////////////// common ///////////////
-  public get enabledPlugins() {
+  public getEnabledTools() {
     const plugins = [];
 
     if (this.slackPlugin$$.get().active) {
       plugins.push({
         name: 'slack',
-        token: slackKey$$.get().token,
-        teamId: slackKey$$.get().teamId,
+        token: slack$$.get().token,
+        teamId: slack$$.get().workspaceId,
       });
     }
 
@@ -56,7 +47,7 @@ export class Plugins {
     return plugins;
   }
   /////////////// slack plugin ///////////////
-  private slackPlugin$$: Rx<SlackPlugin> = rx<SlackPlugin>({
+  private slackPlugin$$: Rx<SlackTool> = rx<SlackTool>({
     name: 'slack',
     verified: false,
     active: false,
@@ -67,7 +58,7 @@ export class Plugins {
   }
 
   /////////////// time plugin ///////////////
-  private timePlugin$$: Rx<TimePlugin> = rx<TimePlugin>({
+  private timePlugin$$: Rx<TimeTool> = rx<TimeTool>({
     name: 'time',
     verified: true,
     active: false,
@@ -78,4 +69,4 @@ export class Plugins {
   }
 }
 
-export const plugins = new Plugins();
+export const toolsStatus = new ToolsStatus();
