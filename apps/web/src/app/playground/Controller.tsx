@@ -9,9 +9,8 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import type { useChat } from '@ai-sdk/react';
-import ky from 'ky';
 import { Plus } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { v4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 

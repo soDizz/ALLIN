@@ -233,6 +233,9 @@ importers:
       rehype-shiki:
         specifier: ^0.0.9
         version: 0.0.9(onigasm@2.2.5)(oniguruma@7.2.3)
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
       rxjs:
         specifier: catalog:utils
         version: 7.8.2

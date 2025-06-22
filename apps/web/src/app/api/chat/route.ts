@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   const tools = enabledTools ? enabledTools.map(createTools).filter(isTrue) : undefined;
 
   const result = streamText({
-    model: openai('gpt-4.1-nano-2025-04-14'),
+    model: openai('gpt-4.1'),
     messages,
     tools: tools?.reduce((acc, tool) => {
       return {

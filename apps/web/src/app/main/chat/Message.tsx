@@ -2,6 +2,7 @@ import type { Message } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import { isInlineCode, ShikiHighlighter } from 'react-shiki';
 import type { Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type MessageItemProps = {
   message: Message;
@@ -36,6 +37,7 @@ export const MessageItem = ({ message }: MessageItemProps) => {
       case 'text':
         return (
           <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
             components={{
               code: CodeHighlight,
               pre: ({ children }) => <div className='not-prose'>{children}</div>,
