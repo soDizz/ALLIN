@@ -43,11 +43,12 @@ function isTrue<T>(argument: T | undefined | null): argument is T {
 export async function POST(req: Request) {
   const data = (await req.json()) as CreateChatBody;
   const { messages, enabledTools } = data;
-  const tools = enabledTools.map(createTools).filter(isTrue);
+  const tools = enabledTools ? enabledTools.map(createTools).filter(isTrue) : undefined;
+
   const result = streamText({
     model: openai('gpt-4.1-nano-2025-04-14'),
     messages,
-    tools: tools.reduce((acc, tool) => {
+    tools: tools?.reduce((acc, tool) => {
       return {
         // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
         ...acc,
