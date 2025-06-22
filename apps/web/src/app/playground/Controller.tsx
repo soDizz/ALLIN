@@ -9,9 +9,11 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import type { useChat } from '@ai-sdk/react';
+import ky from 'ky';
 import { Plus } from 'lucide-react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { v4 } from 'uuid';
+import CryptoJS from 'crypto-js';
 
 type UseChatReturn = ReturnType<typeof useChat>;
 
@@ -21,6 +23,11 @@ type ControllerProps = {
   handleSubmit: UseChatReturn['handleSubmit'];
   reload: UseChatReturn['reload'];
 };
+
+export function decryptData(cipherText: string, key: string) {
+  const bytes = CryptoJS.AES.decrypt(cipherText, key);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
 
 export const Controller = ({ messages, setMessages, handleSubmit, reload }: ControllerProps) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);

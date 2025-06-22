@@ -3,6 +3,7 @@ import { type Message, streamText, type ToolSet } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
 import { SlackClient } from '@mcp-server/slack';
 import { TimeClient } from '@mcp-server/time';
+import { decryptData } from '@/lib/crypo';
 
 export const maxDuration = 30;
 
@@ -19,7 +20,12 @@ type CreateChatBody = {
 
 const createTools = (param: SlackTool) => {
   if (param.name === 'slack') {
-    const { token, teamId } = param;
+    const { token: encryptedToken, teamId } = param;
+    const KEY = process.env.CIPHER_KEY;
+    if (!KEY) {
+      throw Error('NO KEY');
+    }
+    const token = decryptData(encryptedToken, KEY);
     const slackClient = new SlackClient({
       token,
       slackTeamId: teamId,

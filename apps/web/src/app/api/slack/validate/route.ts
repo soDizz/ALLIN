@@ -1,19 +1,22 @@
-import {NextRequest, NextResponse} from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { SlackClient } from '@mcp-server/slack';
+import { decryptData } from '@/lib/crypo';
 
 export type SlackValidateBodyParams = {
   token: string;
   workspaceId: string;
-}
+};
 
 export async function POST(request: NextRequest) {
   try {
-    const { token, workspaceId } = await request.json() as SlackValidateBodyParams;
-
-    if (!token || !workspaceId) {
+    const { token: encryptedToken, workspaceId } =
+      (await request.json()) as SlackValidateBodyParams;
+    const KEY = process.env.CIPHER_KEY;
+    if (!encryptedToken || !workspaceId || !KEY) {
       return NextResponse.json({ error: 'Token and Team ID are required' }, { status: 400 });
     }
 
+    const token = decryptData(encryptedToken, KEY);
     const client = new SlackClient({
       token,
       slackTeamId: workspaceId,
