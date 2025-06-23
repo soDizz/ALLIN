@@ -1,5 +1,5 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageItem } from './Message';
+import { Message } from './Message';
 import { useChat } from '@ai-sdk/react';
 import { UserInput } from './UserInput';
 import { useEffect, useRef } from 'react';
@@ -8,15 +8,8 @@ import { toolsStatus } from '../store/toolsStatusStore';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit: handleSubmitChat,
-    stop,
-    status,
-    setMessages,
-  } = useChat({
+  const { messages, status, setMessages } = useChat({
+    id: 'chat',
     api: '/api/chat',
     body: {
       enabledTools: toolsStatus.getEnabledTools(),
@@ -26,6 +19,9 @@ export const Chat = () => {
     onError: e => {
       console.log(e);
     },
+    //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
+    // Throttle the messages and data updates to 50ms
+    experimental_throttle: 10,
   });
 
   useEffect(() => {
@@ -69,24 +65,18 @@ export const Chat = () => {
               '--data-streaming': status === 'streaming',
             } as React.CSSProperties
           }
-          className='w-full max-h-[100%] h-0 min-h-0 grow mb-4 [&>div>div]:block!'
+          className='prose w-full max-h-[100%] h-0 min-h-0 grow mb-4 [&>div>div]:block!'
         >
           <div className='p-4 gap-4 flex flex-col'>
             {messages
               .filter(msg => msg.role !== 'system')
               .map(message => (
-                <MessageItem key={message.id} message={message} />
+                <Message key={message.id} message={message} />
               ))}
           </div>
         </ScrollArea>
       )}
-      <UserInput
-        input={input}
-        handleInputChange={handleInputChange}
-        stop={stop}
-        handleSubmit={handleSubmitChat}
-        status={status}
-      />
+      <UserInput />
     </>
   );
 };
