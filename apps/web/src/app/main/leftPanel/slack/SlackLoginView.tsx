@@ -26,7 +26,7 @@ export const SlackLoginView = () => {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const token = formData.get('apiKey') as string;
+    const token = formData.get('token') as string;
     const workspaceId = formData.get('workspaceId') as string;
 
     if (!token || !workspaceId) {
@@ -40,20 +40,32 @@ export const SlackLoginView = () => {
     setIsChecking(true);
 
     try {
+      const { encrypted: encryptedToken } = await ky
+        .post('/api/cipher', {
+          json: {
+            token,
+          },
+        })
+        .json<{ encrypted: string }>();
+
       await ky.post('/api/slack/validate', {
         json: {
-          token,
+          token: encryptedToken,
           workspaceId,
         } as SlackValidateBodyParams,
       });
 
-      setSlack({ token, workspaceId: workspaceId, selectedChannels: [] });
+      setSlack({ token: encryptedToken, workspaceId: workspaceId, selectedChannels: [] });
       setPlugins({
         name: 'slack',
         verified: true,
         active: true,
       });
-      setLocalStorageSlack({ token, workspaceId: workspaceId, selectedChannels: [] });
+      setLocalStorageSlack({
+        token: encryptedToken,
+        workspaceId: workspaceId,
+        selectedChannels: [],
+      });
 
       toast.success('Slack connected successfully!', {
         position: 'top-center',
@@ -73,8 +85,8 @@ export const SlackLoginView = () => {
     <>
       <form className='flex flex-col gap-4 p-6' onSubmit={onSubmit}>
         <div className='grid w-full max-w-sm items-center gap-3'>
-          <Label htmlFor='apiKey'>API Token</Label>
-          <Input disabled={isChecking} id='apiKey' name='apiKey' />
+          <Label htmlFor='token'>API Token</Label>
+          <Input disabled={isChecking} id='token' name='token' />
         </div>
         <div className='grid w-full max-w-sm items-center gap-3'>
           <Label htmlFor='workspaceId'>Workspace ID</Label>

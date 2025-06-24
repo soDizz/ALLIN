@@ -3,6 +3,7 @@ import { type Message, streamText, type ToolSet } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
 import { SlackClient } from '@mcp-server/slack';
 import { TimeClient } from '@mcp-server/time';
+import { decryptData } from '@/lib/crypo';
 
 export const maxDuration = 30;
 
@@ -19,7 +20,12 @@ type CreateChatBody = {
 
 const createTools = (param: SlackTool) => {
   if (param.name === 'slack') {
-    const { token, teamId } = param;
+    const { token: encryptedToken, teamId } = param;
+    const KEY = process.env.CIPHER_KEY;
+    if (!KEY) {
+      throw Error('NO KEY');
+    }
+    const token = decryptData(encryptedToken, KEY);
     const slackClient = new SlackClient({
       token,
       slackTeamId: teamId,
@@ -43,11 +49,12 @@ function isTrue<T>(argument: T | undefined | null): argument is T {
 export async function POST(req: Request) {
   const data = (await req.json()) as CreateChatBody;
   const { messages, enabledTools } = data;
-  const tools = enabledTools.map(createTools).filter(isTrue);
+  const tools = enabledTools ? enabledTools.map(createTools).filter(isTrue) : undefined;
+
   const result = streamText({
-    model: openai('gpt-4.1-nano-2025-04-14'),
+    model: openai('gpt-4.1'),
     messages,
-    tools: tools.reduce((acc, tool) => {
+    tools: tools?.reduce((acc, tool) => {
       return {
         // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
         ...acc,

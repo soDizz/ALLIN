@@ -7,25 +7,12 @@ import { ContextMenuShortcut } from '@/components/ui/context-menu';
 import { BottomToolList } from './BottomToolList';
 import { ChevronUp, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { useChat } from '@ai-sdk/react';
+import { useChat } from '@ai-sdk/react';
 import { toast } from 'sonner';
 import { useRef } from 'react';
 
-type UserInputProps = {
-  input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleSubmit: ReturnType<typeof useChat>['handleSubmit'];
-  status: ReturnType<typeof useChat>['status'];
-  stop: () => void;
-};
-
-export const UserInput = ({
-  input,
-  handleInputChange,
-  handleSubmit,
-  status,
-  stop,
-}: UserInputProps) => {
+export const UserInput = () => {
+  const { input, handleSubmit, handleInputChange, status, stop } = useChat({ id: 'chat' });
   const submitRef = useRef<HTMLFormElement>(null);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
