@@ -12,7 +12,12 @@ export const Message = ({ message }: MessageItemProps) => {
   }
 
   if (message.role === 'assistant') {
-    return <MemoizedAssistantMessage content={message.content}></MemoizedAssistantMessage>;
+    return (
+      <MemoizedAssistantMessage
+        id={message.id}
+        content={message.content}
+      ></MemoizedAssistantMessage>
+    );
   }
 
   return null;
