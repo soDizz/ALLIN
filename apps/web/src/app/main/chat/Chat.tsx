@@ -58,8 +58,9 @@ export const Chat = () => {
 
   return (
     <>
-      {messages.length > 0 && (
+      {messages.filter(msg => msg.role !== 'system').length > 0 && (
         <ScrollArea
+          ref={scrollViewRef}
           style={
             {
               '--data-streaming': status === 'streaming',
