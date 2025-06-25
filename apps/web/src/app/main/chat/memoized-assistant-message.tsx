@@ -1,10 +1,10 @@
 import { memo } from 'react';
 import { MemoizedMarkdown } from './memoized-markdown';
 
-export const MemoizedAssistantMessage = memo(({ content }: { content: string }) => {
+export const MemoizedAssistantMessage = memo(({ content, id }: { content: string; id: string }) => {
   return (
     <div>
-      <MemoizedMarkdown content={content}></MemoizedMarkdown>
+      <MemoizedMarkdown id={id} content={content}></MemoizedMarkdown>
     </div>
   );
 });

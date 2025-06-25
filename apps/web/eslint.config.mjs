@@ -15,7 +15,9 @@ const eslintConfig = [
     // TypeScript 파일에만 적용
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
-      '@typescript-eslint/no-unused-vars': 'warn', // 이 줄이 핵심입니다
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@next/next/no-img-element': 'warn',
     },
   },
 ];

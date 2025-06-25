@@ -21,7 +21,7 @@ export const Chat = () => {
     },
     //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
     // Throttle the messages and data updates to 50ms
-    experimental_throttle: 10,
+    experimental_throttle: 50,
   });
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const Chat = () => {
               '--data-streaming': status === 'streaming',
             } as React.CSSProperties
           }
-          className='prose w-full max-h-[100%] h-0 min-h-0 grow mb-4 [&>div>div]:block!'
+          className='prose lg:px-6 max-w-none w-full max-h-[100%] h-0 min-h-0 grow mb-4 [&>div>div]:block! prose-p:my-4 prose-hr:my-4 prose-hr:invisible prose-headings:my-6 prose-li:my-1.5'
         >
           <div className='p-4 gap-4 flex flex-col'>
             {messages
