@@ -66,8 +66,6 @@ export function SlackChannelSelect() {
     },
   });
 
-  console.log(data);
-
   const onAddChannel = (channel: Channel) => {
     if (selectedChannels.length >= MAX_CHANNELS) {
       toast.warning(`You can only add up to ${MAX_CHANNELS} channels`, {
