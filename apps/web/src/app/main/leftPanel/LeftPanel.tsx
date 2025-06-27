@@ -6,17 +6,27 @@ import { leftPanel$$ } from '../store/leftPanelStore';
 import { SlackPanel } from './slack/SlackPanel';
 import { cn } from '@/lib/utils';
 import { TypographyH3 } from '@/components/ui/typographyH3';
+import { useEffect, useRef } from 'react';
 
 export const LeftPanel = () => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const open = useRxValue(leftPanel$$);
+
+  useEffect(() => {
+    if (open) {
+      wrapperRef.current?.focus();
+    }
+  }, [open]);
 
   return (
     <>
       <div
+        ref={wrapperRef}
         className={cn(
           'w-[480px] h-full rounded-md border flex flex-col gap-4 overflow-y-auto',
           !open && 'hidden',
         )}
+        tabIndex={-1}
       >
         <div className='w-full h-[60px] flex flex-row px-4  border-b border-gray-200 items-center shrink-0'>
           {
