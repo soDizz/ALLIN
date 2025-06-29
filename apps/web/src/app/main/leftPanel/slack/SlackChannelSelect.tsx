@@ -10,39 +10,12 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Plus, X } from 'lucide-react';
+import { LoaderCircle, Plus, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { slack$$ } from '../../store/slackStore';
 import type { GetSlackChannelsResponse } from '@mcp-server/slack';
-
-type Status = {
-  value: string;
-  label: string;
-};
-const statuses: Status[] = [
-  {
-    value: 'backlog',
-    label: 'Backlog',
-  },
-  {
-    value: 'todo',
-    label: 'Todo',
-  },
-  {
-    value: 'in progress',
-    label: 'In Progress',
-  },
-  {
-    value: 'done',
-    label: 'Done',
-  },
-  {
-    value: 'canceled',
-    label: 'Canceled',
-  },
-];
 
 type Channel = {
   channelName: string;
@@ -54,7 +27,11 @@ const MAX_CHANNELS = 3;
 export function SlackChannelSelect() {
   const [open, setOpen] = React.useState(false);
   const [selectedChannels, setSelectedChannels] = React.useState<Channel[]>([]);
-  const { data, isLoading } = useQuery<GetSlackChannelsResponse['channels']>({
+  const {
+    data: channels,
+    isLoading,
+    isError,
+  } = useQuery<GetSlackChannelsResponse['channels']>({
     queryKey: ['slack', 'channels'],
     queryFn: () => {
       return fetch(`/api/slack/channels?workspaceId=${slack$$.get().workspaceId}`, {
@@ -80,8 +57,8 @@ export function SlackChannelSelect() {
     setSelectedChannels(prev => prev.filter(c => c.channelId !== channel.channelId));
     toast.message(
       <p>
-        Channel <span className='font-bold text-blue-400 italic'>{`${channel.channelName}`}</span>{' '}
-        removed from list
+        Channel <span className='font-bold italic'>{`${channel.channelName}`}</span> removed from
+        list
       </p>,
       {
         duration: 3500,
@@ -129,25 +106,35 @@ export function SlackChannelSelect() {
         </PopoverTrigger>
         <PopoverContent className='p-0' side='right' align='start'>
           <Command>
-            <CommandInput placeholder='Search' />
+            <CommandInput placeholder={isLoading || isError ? 'Loading...' : 'Search'} />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>
+                {isLoading ? (
+                  <div className='w-full h-full flex items-center justify-center'>
+                    <LoaderCircle className='animate-spin text-secondary-foreground' />
+                  </div>
+                ) : (
+                  <>No results found.</>
+                )}
+              </CommandEmpty>
               <CommandGroup>
-                {data?.map(channel => (
-                  <CommandItem
-                    key={channel.id}
-                    value={channel.name}
-                    onSelect={channelName => {
-                      onAddChannel({
-                        channelName,
-                        channelId: channel.id,
-                      });
-                      setOpen(false);
-                    }}
-                  >
-                    {channel.name}
-                  </CommandItem>
-                ))}
+                {channels
+                  ?.filter(c => !selectedChannels.map(tempC => tempC.channelId).includes(c.id))
+                  .map(channel => (
+                    <CommandItem
+                      key={channel.id}
+                      value={channel.name}
+                      onSelect={channelName => {
+                        onAddChannel({
+                          channelName,
+                          channelId: channel.id,
+                        });
+                        setOpen(false);
+                      }}
+                    >
+                      {channel.name}
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </CommandList>
           </Command>
