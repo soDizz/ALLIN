@@ -4,7 +4,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion } from 'motion/react';
 import { ContextMenuShortcut } from '@/components/ui/context-menu';
-import { BottomToolList } from './BottomToolList';
 import { ChevronUp, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
@@ -77,7 +76,7 @@ export const UserInput = () => {
           </TooltipContent>
         </Tooltip>
       </form>
-      <BottomToolList />
+      {/* <BottomToolList /> */}
     </motion.section>
   );
 };
