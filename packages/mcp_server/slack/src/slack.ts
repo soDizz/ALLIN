@@ -174,9 +174,10 @@ export const SlackUserProfileSchema = z.object({
 export const SlackUserProfileSchemaForMCP = SlackUserProfileSchema.pick({
   real_name: true,
   email: true,
-  phone: true,
+  // 개인정보라서 일단 주석처리
+  // phone: true,
+  // image_48: true,
   title: true,
-  image_48: true,
   status_text: true,
 });
 
@@ -218,11 +219,19 @@ export const GetUsersResponseSchema = z.object({
 export const GetUserProfileResponseSchema = z.object({
   ok: z.boolean(),
   profile: SlackUserProfileSchemaForMCP,
+  error: z.string().optional(),
+});
+
+export const GetUserProfileFail = z.object({
+  ok: z.boolean(),
+  reason: z.string().optional(),
 });
 
 export type SlackUser = z.infer<typeof SlackUserSchema>;
 export type GetUsersResponse = z.infer<typeof GetUsersResponseSchema>;
-export type GetUserProfileResponse = z.infer<typeof GetUserProfileResponseSchema>;
+export type GetUserProfileResponse =
+  | z.infer<typeof GetUserProfileResponseSchema>
+  | z.infer<typeof GetUserProfileFail>;
 
 //<--------------------------------------------------------------------->
 // Schemas for AI Function Inputs
