@@ -4,16 +4,13 @@ import { useChat } from '@ai-sdk/react';
 import { UserInput } from './UserInput';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { toolsStatus } from '../store/toolsStatusStore';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
-  const { messages, status, setMessages } = useChat({
+
+  const { messages, status, setMessages, reload, stop } = useChat({
     id: 'chat',
     api: '/api/chat',
-    body: {
-      enabledTools: toolsStatus.getEnabledTools(),
-    },
     maxSteps: 5,
     onFinish: () => {},
     onError: e => {
@@ -26,7 +23,7 @@ export const Chat = () => {
 
   useEffect(() => {
     const presetPrompt =
-      '답변은 최대한 구체적이고 길게 대답해야해. 답변하기 전에 내용이 정확한지 꼭 다시 한번 생각해줘. 할루시네이션을 절대 만들면 안돼' +
+      '답변은 최대한 구체적이고 길게 대답해야해. 답변하기 전에 내용이 정확한지 꼭 다시 한번 생각해줘.' +
       '답변에서 중요한 부분에는 마크다운 문법을 사용해서 강조해줘. 하지만, 너무 남용하진 마.' +
       '유저는 한국인이니깐 특별한 지시사항이 없다면 한국을 기준으로 대답해줘.' +
       '최대한 친절한 어투로 대답해.' +
@@ -38,7 +35,6 @@ export const Chat = () => {
         role: 'system',
         id: crypto.randomUUID(),
         content: presetPrompt,
-
         parts: [
           {
             type: 'text',
@@ -76,7 +72,13 @@ export const Chat = () => {
           </div>
         </ScrollArea>
       )}
-      <UserInput />
+      <UserInput
+        messages={messages}
+        setMessages={setMessages}
+        status={status}
+        stop={stop}
+        reload={reload}
+      />
     </>
   );
 };
