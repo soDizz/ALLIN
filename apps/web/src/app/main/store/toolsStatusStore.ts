@@ -43,7 +43,6 @@ export class ToolsStatus {
         name: 'time',
       });
     }
-
     return plugins;
   }
   /////////////// slack plugin ///////////////

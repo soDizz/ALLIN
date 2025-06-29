@@ -16,17 +16,14 @@ import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { slack$$ } from '../../store/slackStore';
 import type { GetSlackChannelsResponse } from '@mcp-server/slack';
-
-type Channel = {
-  channelName: string;
-  channelId: string;
-};
+import { selectedSlackChannels$$, type SlackChannel } from './slackSelectedChannelStore';
+import { useRx } from '@/lib/rxjs/useRx';
 
 const MAX_CHANNELS = 3;
 
 export function SlackChannelSelect() {
   const [open, setOpen] = React.useState(false);
-  const [selectedChannels, setSelectedChannels] = React.useState<Channel[]>([]);
+  const [selectedChannels, setSelectedChannels] = useRx(selectedSlackChannels$$);
   const {
     data: channels,
     isLoading,
@@ -43,7 +40,7 @@ export function SlackChannelSelect() {
     },
   });
 
-  const onAddChannel = (channel: Channel) => {
+  const onAddChannel = (channel: SlackChannel) => {
     if (selectedChannels.length >= MAX_CHANNELS) {
       toast.warning(`You can only add up to ${MAX_CHANNELS} channels`, {
         position: 'top-center',
@@ -53,7 +50,7 @@ export function SlackChannelSelect() {
     setSelectedChannels(prev => [...prev, channel]);
   };
 
-  const onRemoveChannel = (channel: Channel) => {
+  const onRemoveChannel = (channel: SlackChannel) => {
     setSelectedChannels(prev => prev.filter(c => c.channelId !== channel.channelId));
     toast.message(
       <p>
