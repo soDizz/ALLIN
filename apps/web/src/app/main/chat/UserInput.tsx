@@ -62,17 +62,17 @@ export const UserInput = ({ messages, setMessages, stop, reload, status }: UserI
     const systemPrompt = `When execute Slack tool, you must search or post in that channels. channelIds: ${selectedChannelIds} channelNames: ${selectedChannelNames}`;
     setMessages(prev => [
       ...prev,
-      // {
-      //   role: 'system',
-      //   id: crypto.randomUUID(),
-      //   content: systemPrompt,
-      //   parts: [
-      //     {
-      //       type: 'text',
-      //       text: systemPrompt,
-      //     },
-      //   ],
-      // },
+      {
+        role: 'system',
+        id: crypto.randomUUID(),
+        content: systemPrompt,
+        parts: [
+          {
+            type: 'text',
+            text: systemPrompt,
+          },
+        ],
+      },
       {
         role: 'user',
         id: crypto.randomUUID(),
