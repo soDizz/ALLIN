@@ -16,7 +16,10 @@ export const Message = ({ message }: MessageItemProps) => {
       .map(part => {
         if (part.type === 'tool-invocation') {
           return (
-            <div className='text-gray-400 text-xs' key={`tool-${message.id}`}>
+            <div
+              className='text-gray-400 text-xs'
+              key={`tool-${message.id}-${part.toolInvocation.toolCallId}`}
+            >
               {part.toolInvocation.toolName}
             </div>
           );
