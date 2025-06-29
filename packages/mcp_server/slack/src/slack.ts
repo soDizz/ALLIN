@@ -248,21 +248,23 @@ export const ReplyToThreadInputSchema = z.object({
 });
 
 export const GetChannelHistoryInputSchema = z.object({
-  channel: z.string().describe('The conversation ID to fetch history for.'),
+  channel: z.string().describe('The Channel ID to fetch history for. e.g. C1234567890'),
   limit: z.number().optional().default(30).describe('The maximum number of items to return.'),
   cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
 });
 
 export const GetThreadRepliesInputSchema = z.object({
-  channel: z.string().describe('The conversation ID to fetch the thread from.'),
-  ts: z.string().describe("Unique identifier of a thread's parent message."),
+  channel: z.string().describe('The Channel ID to fetch the thread from. e.g. C1234567890'),
+  ts: z.string().describe('Timestamp of the message to get replies e.g. 1751179745.839049'),
   limit: z.number().optional().default(10).describe('The maximum number of items to return.'),
   cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
 });
 
 export const AddReactionInputSchema = z.object({
   channel: z.string().describe('Channel ID where the message is. e.g. C1234567890'),
-  timestamp: z.string().describe('Timestamp of the message to add reaction to.'),
+  timestamp: z
+    .string()
+    .describe('Timestamp of the message to add reaction to. e.g. 1751179745.839049'),
   reaction: z.string().describe('Reaction name. e.g. thumbsup'),
 });
 

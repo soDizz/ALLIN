@@ -110,7 +110,7 @@ export class SlackClient extends AIFunctionsProvider {
 
   @aiFunction({
     name: 'get_slack_channel_history',
-    description: "Fetches a conversation's history of messages and events.",
+    description: "Fetches a conversation's history of messages and events in specific channel.",
     inputSchema: GetChannelHistoryInputSchema,
   })
   async getChannelHistory({
@@ -135,7 +135,7 @@ export class SlackClient extends AIFunctionsProvider {
 
   @aiFunction({
     name: 'get_slack_thread_replies',
-    description: 'Fetches replies to a message thread.',
+    description: 'Retrieve a thread of messages posted to a conversation',
     inputSchema: GetThreadRepliesInputSchema,
   })
   async getThreadReplies({
