@@ -217,6 +217,15 @@ export class SlackClient extends AIFunctionsProvider {
       .get('users.profile.get', { searchParams })
       .json<GetUserProfileResponse>();
 
+    if (!data.ok) {
+      return {
+        ok: false,
+        // 이 API 를 단기간에 여러번 부르면 ratelimited 에러가 떠서 임시로 예외처리함.
+        // @ts-expect-error
+        reason: data.error,
+      };
+    }
+
     return GetUserProfileResponseSchema.parse(data);
   }
 
