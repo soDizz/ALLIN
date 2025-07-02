@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { memo, useDeferredValue, useMemo } from 'react';
 import { marked } from 'marked';
 import { cn } from '@/lib/utils';
+import './shiki.css';
 
 const CodeHighlight: Components['code'] = ({
   className,
@@ -26,7 +27,7 @@ const CodeHighlight: Components['code'] = ({
     </code>
   ) : (
     <ShikiHighlighter
-      className='text-sm border border-gray-200 rounded-md [&>pre]:p-4!'
+      className='shiki-display-animation text-sm border border-gray-200 rounded-md [&>pre]:p-4!'
       addDefaultStyles={true}
       language={language}
       theme='github-dark'
