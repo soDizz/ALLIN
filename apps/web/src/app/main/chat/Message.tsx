@@ -11,13 +11,33 @@ export const Message = ({ message }: MessageItemProps) => {
     return <MemoizedUserMessage content={message.content} />;
   }
 
-  if (message.role === 'assistant') {
-    return (
-      <MemoizedAssistantMessage
-        id={message.id}
-        content={message.content}
-      ></MemoizedAssistantMessage>
-    );
+  if (message.role === 'assistant' && message.parts) {
+    const assistantMessage = message.parts
+      .map(part => {
+        if (part.type === 'tool-invocation') {
+          return (
+            <div
+              className='text-gray-400 text-xs'
+              key={`tool-${message.id}-${part.toolInvocation.toolCallId}`}
+            >
+              {part.toolInvocation.toolName}
+            </div>
+          );
+        }
+        if (part.type === 'text') {
+          return (
+            <MemoizedAssistantMessage
+              key={`text-${message.id}`}
+              id={message.id}
+              content={message.content}
+            ></MemoizedAssistantMessage>
+          );
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    return assistantMessage;
   }
 
   return null;

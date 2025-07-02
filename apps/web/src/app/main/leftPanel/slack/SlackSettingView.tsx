@@ -56,7 +56,7 @@ export const SlackSettingView = () => {
 
   return (
     <div className='flex flex-col gap-4 px-4 grow'>
-      {/*<SlackChannelSelect />*/}
+      <SlackChannelSelect />
       <p className='text-lg'>Settings</p>
       <div className='flex w-full items-center justify-between rounded-lg border p-3 shadow-xs gap-2'>
         <div className='flex flex-col items-start gap-2'>
@@ -79,7 +79,9 @@ export const SlackSettingView = () => {
       <div className='flex w-full items-center justify-between rounded-lg border p-3 shadow-xs gap-2'>
         <div className='flex flex-col items-start gap-2'>
           <Label htmlFor='slack-active-status'>Your API Token</Label>
-          <p className='text-xs text-muted-foreground'>{isAPIKeyVisible ? token : '********'}</p>
+          <p className='text-xs text-muted-foreground break-words'>
+            {isAPIKeyVisible ? token : '********'}
+          </p>
         </div>
         <Toggle onClick={() => setIsAPIKeyVisible(!isAPIKeyVisible)}>
           {isAPIKeyVisible ? <Eye className='w-4 h-4' /> : <EyeOff className='w-4 h-4' />}

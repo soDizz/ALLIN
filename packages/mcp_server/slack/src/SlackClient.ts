@@ -110,7 +110,7 @@ export class SlackClient extends AIFunctionsProvider {
 
   @aiFunction({
     name: 'get_slack_channel_history',
-    description: "Fetches a conversation's history of messages and events.",
+    description: "Fetches a conversation's history of messages and events in specific channel.",
     inputSchema: GetChannelHistoryInputSchema,
   })
   async getChannelHistory({
@@ -135,7 +135,7 @@ export class SlackClient extends AIFunctionsProvider {
 
   @aiFunction({
     name: 'get_slack_thread_replies',
-    description: 'Fetches replies to a message thread.',
+    description: 'Retrieve a thread of messages posted to a conversation',
     inputSchema: GetThreadRepliesInputSchema,
   })
   async getThreadReplies({
@@ -216,6 +216,15 @@ export class SlackClient extends AIFunctionsProvider {
     const data = await this.api
       .get('users.profile.get', { searchParams })
       .json<GetUserProfileResponse>();
+
+    if (!data.ok) {
+      return {
+        ok: false,
+        // 이 API 를 단기간에 여러번 부르면 ratelimited 에러가 떠서 임시로 예외처리함.
+        // @ts-expect-error
+        reason: data.error,
+      };
+    }
 
     return GetUserProfileResponseSchema.parse(data);
   }

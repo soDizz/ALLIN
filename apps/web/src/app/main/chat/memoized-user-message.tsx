@@ -4,7 +4,9 @@ import { memo } from 'react';
 export const MemoizedUserMessage = memo(({ content }: { content: string }) => {
   return (
     <div className='not-prose flex flex-col my-4 ml-auto max-w-[80%]'>
-      <Badge className='text-lg p-3 rounded-3xl text-wrap break-keep'>{content}</Badge>
+      <Badge className='text-sm p-1.5 px-2 rounded-xl text-wrap whitespace-pre-wrap break-keep'>
+        {content}
+      </Badge>
     </div>
   );
 });
