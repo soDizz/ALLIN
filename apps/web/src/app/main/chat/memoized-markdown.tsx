@@ -53,7 +53,15 @@ const MemoizedMarkdownBlock = memo(
 
     return (
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[
+          [
+            remarkGfm,
+            {
+              // 20~23도부터 40~41도 입니다 에서 ~ 로 인해 취소선이 되는 버그 수정
+              singleTilde: false,
+            },
+          ],
+        ]}
         components={{
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
