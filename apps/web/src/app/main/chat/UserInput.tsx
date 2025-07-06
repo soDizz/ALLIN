@@ -17,16 +17,26 @@ type UserInputProps = {
   setMessages: ReturnType<typeof useChat>['setMessages'];
   stop: ReturnType<typeof useChat>['stop'];
   status: ReturnType<typeof useChat>['status'];
-  reload: ReturnType<typeof useChat>['reload'];
+  sendMessage: () => void;
 };
 
-export const UserInput = ({ messages, setMessages, stop, reload, status }: UserInputProps) => {
+export const UserInput = ({
+  messages,
+  setMessages,
+  stop,
+  sendMessage,
+  status,
+}: UserInputProps) => {
   const [input, setInput] = useState<string>('');
   const submitRef = useRef<HTMLFormElement>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // event.key가 'Enter'이고, Cmd(mac) 또는 Ctrl(windows) 키가 함께 눌렸는지 확인
     // 한글 입력 시 keydown 이 2번 호출되는 문제가 있어서, isComposing 체크
-    if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+    if (
+      event.key === 'Enter' &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       event.stopPropagation();
       onSubmit();
@@ -63,17 +73,6 @@ export const UserInput = ({ messages, setMessages, stop, reload, status }: UserI
     setMessages(prev => [
       ...prev,
       {
-        role: 'system',
-        id: crypto.randomUUID(),
-        content: systemPrompt,
-        parts: [
-          {
-            type: 'text',
-            text: systemPrompt,
-          },
-        ],
-      },
-      {
         role: 'user',
         id: crypto.randomUUID(),
         content: input,
@@ -87,18 +86,18 @@ export const UserInput = ({ messages, setMessages, stop, reload, status }: UserI
     ]);
 
     // 요청 할때마다 최신 정보를 가져와서 API 를 호출한다. (이게 없으면 리렌더가 되지 않으면 이전 값을 보냄)
-    reload({
-      body: {
-        enabledTools: toolsStatus.getEnabledTools(),
-      },
-    });
+    sendMessage();
     setInput('');
   };
 
-  const isStreamingOrSubmitting = status === 'streaming' || status === 'submitted';
+  const isStreamingOrSubmitting =
+    status === 'streaming' || status === 'submitted';
 
   return (
-    <motion.section layout={'position'} className={cn('w-full flex flex-col gap-2 mt-[12px]')}>
+    <motion.section
+      layout={'position'}
+      className={cn('w-full flex flex-col gap-2 mt-[12px]')}
+    >
       <form
         ref={submitRef}
         onSubmit={onSubmit}
@@ -122,7 +121,11 @@ export const UserInput = ({ messages, setMessages, stop, reload, status }: UserI
               variant={'outline'}
               aria-label={isStreamingOrSubmitting ? 'Stop' : 'Submit'}
             >
-              {isStreamingOrSubmitting ? <Square onClick={stop} /> : <ChevronUp />}
+              {isStreamingOrSubmitting ? (
+                <Square onClick={stop} />
+              ) : (
+                <ChevronUp />
+              )}
             </Button>
           </TooltipTrigger>
           <TooltipContent>

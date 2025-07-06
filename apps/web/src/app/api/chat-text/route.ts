@@ -77,13 +77,10 @@ export async function POST(req: Request) {
   const { messages, enabledTools } = data;
 
   const result = streamText({
-    model: openai.responses('gpt-4o-mini-search-preview'),
+    model: openai.responses('gpt-4.1-mini'),
     messages,
     tools: {
-      // ...(enabledTools ? createTools(enabledTools) : {}),
-      // web_search_preview: openai.tools.webSearchPreview({
-      //   searchContextSize: 'high',
-      // }),
+      ...(enabledTools ? createTools(enabledTools) : {}),
     },
     // tools: enabledTools ? createTools(enabledTools) : undefined,
     onError: err => {

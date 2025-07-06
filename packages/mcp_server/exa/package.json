@@ -1,9 +1,11 @@
 {
-  "name": "@mcp-server/time",
-  "description": "Get current Time ",
+  "name": "@mcp-server/exa",
+  "description": "Exa",
   "version": "1.0.0",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,9 +24,10 @@
     "@agentic/core": "catalog:ai",
     "ai": "catalog:ai",
     "dotenv": "catalog:utils",
-    "zod": "catalog:utils",
+    "ky": "catalog:utils",
+    "node-fetch": "^3.3.2",
     "rxjs": "catalog:utils",
-    "ky": "catalog:utils"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "vitest": "catalog:test"

@@ -15,6 +15,7 @@
     "@ai-sdk/react": "^1.2.12",
     "@mcp-server/slack": "workspace:*",
     "@mcp-server/time": "workspace:*",
+    "@mcp-server/exa": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-context-menu": "^2.2.15",

@@ -2,8 +2,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Message } from './Message';
 import { useChat } from '@ai-sdk/react';
 import { UserInput } from './UserInput';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
+import { createPrompt } from './prompt';
+import { toolsStatus } from '../store/toolsStatusStore';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
@@ -12,7 +14,9 @@ export const Chat = () => {
     id: 'chat',
     api: '/api/chat',
     maxSteps: 5,
-    onFinish: () => {},
+    onFinish: (m, o) => {
+      console.log('==> token Usage', o.usage.totalTokens);
+    },
     onError: e => {
       console.log(e);
     },
@@ -21,13 +25,16 @@ export const Chat = () => {
     experimental_throttle: 50,
   });
 
+  const sendMessage = useCallback(() => {
+    reload({
+      body: {
+        enabledTools: toolsStatus.getEnabledTools(),
+      },
+    });
+  }, [reload]);
+
   useEffect(() => {
-    const presetPrompt =
-      '답변은 최대한 구체적이고 길게 대답해야해. 답변하기 전에 내용이 정확한지 꼭 다시 한번 생각해줘.' +
-      '답변에서 중요한 부분에는 마크다운 문법을 사용해서 강조해줘. 하지만, 너무 남용하진 마.' +
-      '유저는 한국인이니깐 특별한 지시사항이 없다면 한국을 기준으로 대답해줘.' +
-      '최대한 친절한 어투로 대답해.' +
-      '답변에 약간의 이모지를 추가해줘.';
+    const presetPrompt = createPrompt();
 
     setMessages(prev => [
       ...prev,
@@ -77,7 +84,7 @@ export const Chat = () => {
         setMessages={setMessages}
         status={status}
         stop={stop}
-        reload={reload}
+        sendMessage={sendMessage}
       />
     </>
   );

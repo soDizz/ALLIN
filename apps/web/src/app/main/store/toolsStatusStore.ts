@@ -1,7 +1,7 @@
 import { type Rx, rx } from '@/lib/rxjs/rx';
 import { slack$$ } from './slackStore';
 
-export type ToolName = 'slack' | 'time';
+export type ToolName = 'slack' | 'time' | 'exa';
 
 type Status = {
   verified: boolean | true;
@@ -25,6 +25,11 @@ type TimeTool = Tool<{
   verified: true;
 }>;
 
+type ExaTool = Tool<{
+  name: 'exa';
+  verified: true;
+}>;
+
 export class ToolsStatus {
   /////////////// common ///////////////
   public getEnabledTools() {
@@ -41,6 +46,12 @@ export class ToolsStatus {
     if (this.timePlugin$$.get().active) {
       plugins.push({
         name: 'time',
+      });
+    }
+
+    if (this.exa$$.get().active) {
+      plugins.push({
+        name: 'exa',
       });
     }
     return plugins;
@@ -66,6 +77,13 @@ export class ToolsStatus {
   public get time$$() {
     return this.timePlugin$$;
   }
+
+  /////////////// exa plugin ///////////////
+  public exa$$ = rx<ExaTool>({
+    name: 'exa',
+    verified: true,
+    active: false,
+  });
 }
 
 export const toolsStatus = new ToolsStatus();
