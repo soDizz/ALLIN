@@ -1,11 +1,11 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Message } from './Message';
 import { useChat } from '@ai-sdk/react';
-import { UserInput } from './UserInput';
 import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { createPrompt } from './prompt';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { toolsStatus } from '../store/toolsStatusStore';
+import { Message } from './Message';
+import { createPrompt } from './prompt';
+import { UserInput } from './UserInput';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);

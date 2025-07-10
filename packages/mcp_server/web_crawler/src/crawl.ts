@@ -3,6 +3,12 @@ import TurndownService from 'turndown';
 
 const fetchDocument = async (url: string) => {
   const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch document from ${url}: ${response.statusText}`,
+    );
+  }
   const content = await response.text();
   return content;
 };
@@ -32,7 +38,11 @@ export const crawl = async (url: string) => {
   }
 
   const turndownService = new TurndownService();
-  const markdown = turndownService.turndown(htmlContent);
+  let markdown = turndownService.turndown(htmlContent);
+
+  // 불필요한 공백 제거
+  markdown = markdown.replace(/[\r\n]+/g, ' ');
+  markdown = markdown.replace(/ +/g, ' ');
 
   return markdown;
 };

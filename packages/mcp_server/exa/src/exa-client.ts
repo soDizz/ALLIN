@@ -1,4 +1,4 @@
-import { aiFunction, AIFunctionsProvider, assert, getEnv } from '@agentic/core';
+import { AIFunctionsProvider, aiFunction, assert, getEnv } from '@agentic/core';
 import defaultKy, { type KyInstance } from 'ky';
 import { exa } from './exa';
 
@@ -44,16 +44,14 @@ export class ExaClient extends AIFunctionsProvider {
   @aiFunction({
     name: 'exa_search',
     description:
-      // keywords search 로 질문에 해당하는 페이지들의 url 을 가져온다.
-      // 그럼 agent 가 해당 url 에 접속해 정보를 읽고 대답한다.
-      'Search the web for the given query and return URLs. you should get information from URLs.',
+      'Search the Exa index for the given query. Returns a list of relevant links. After this search, you must use web_crawler tool to fetch the contents of the links.',
     inputSchema: exa.RegularSearchOptionsSchema,
   })
   async search({ query }: exa.RegularSearchOptions) {
     const json = {
       query,
       type: 'keyword',
-      numResults: 5,
+      numResults: 3,
       context: false,
     };
 

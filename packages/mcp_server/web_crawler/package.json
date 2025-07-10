@@ -1,5 +1,5 @@
 {
-  "name": "@mcp-server/web_crawler",
+  "name": "@mcp-server/web-crawler",
   "description": "web crawler for agnet",
   "version": "1.0.0",
   "type": "module",
@@ -24,7 +24,6 @@
     "@agentic/core": "catalog:ai",
     "ai": "catalog:ai",
     "dotenv": "catalog:utils",
-    "jsdom": "^26.1.0",
     "ky": "catalog:utils",
     "rxjs": "catalog:utils",
     "turndown": "^7.2.0",
@@ -34,6 +33,9 @@
     "@types/jsdom": "^21.1.7",
     "@types/turndown": "^5.0.5",
     "vitest": "catalog:test"
+  },
+  "peerDependencies": {
+    "jsdom": "^26.1.0"
   },
   "keywords": [],
   "author": "",

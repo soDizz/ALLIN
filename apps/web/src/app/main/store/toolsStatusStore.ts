@@ -71,7 +71,7 @@ export class ToolsStatus {
   private timePlugin$$: Rx<TimeTool> = rx<TimeTool>({
     name: 'time',
     verified: true,
-    active: false,
+    active: true,
   });
 
   public get time$$() {
@@ -82,7 +82,7 @@ export class ToolsStatus {
   public exa$$ = rx<ExaTool>({
     name: 'exa',
     verified: true,
-    active: false,
+    active: true,
   });
 }
 

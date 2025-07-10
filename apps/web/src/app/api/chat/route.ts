@@ -1,11 +1,12 @@
-import { openai } from '@ai-sdk/openai';
-import { type Message, streamText, type ToolSet } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
+import { assert } from '@agentic/core';
+import { openai } from '@ai-sdk/openai';
+import { ExaClient } from '@mcp-server/exa';
 import { SlackClient } from '@mcp-server/slack';
 import { TimeClient } from '@mcp-server/time';
+import { WebCrawlerClient } from '@mcp-server/web-crawler';
+import { type Message, streamText, type ToolSet } from 'ai';
 import { decryptData } from '@/lib/crypo';
-import { ExaClient } from '@mcp-server/exa';
-import { assert } from '@agentic/core';
 
 export const maxDuration = 30;
 
@@ -64,7 +65,6 @@ const createTools = (tools: Tool[]) => {
   const aiSdkTools = tools.map(t => toolFactory(t)).filter(isDefined);
   return aiSdkTools.reduce(
     (acc, aiSdkTool) => ({
-      // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
       ...acc,
       ...aiSdkTool,
     }),
@@ -75,17 +75,17 @@ const createTools = (tools: Tool[]) => {
 export async function POST(req: Request) {
   const data = (await req.json()) as CreateChatBody;
   const { messages, enabledTools } = data;
+  const clientTools = enabledTools ? createTools(enabledTools) : undefined;
+
+  const crawler = new WebCrawlerClient();
 
   const result = streamText({
-    model: openai.responses('gpt-4o-mini-search-preview'),
+    model: openai.responses('gpt-4.1'),
     messages,
     tools: {
-      // ...(enabledTools ? createTools(enabledTools) : {}),
-      // web_search_preview: openai.tools.webSearchPreview({
-      //   searchContextSize: 'high',
-      // }),
+      ...clientTools,
+      ...createAISDKTools(crawler),
     },
-    // tools: enabledTools ? createTools(enabledTools) : undefined,
     onError: err => {
       console.error('Error occurred in /api/chat', err);
     },

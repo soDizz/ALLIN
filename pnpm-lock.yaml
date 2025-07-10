@@ -138,7 +138,7 @@ importers:
       '@mcp-server/time':
         specifier: workspace:*
         version: link:../../packages/mcp_server/time
-      '@mcp-server/web_crawler':
+      '@mcp-server/web-crawler':
         specifier: workspace:*
         version: link:../../packages/mcp_server/web_crawler
       '@radix-ui/react-accordion':
@@ -207,6 +207,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.1.0)
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
       ky:
         specifier: catalog:utils
         version: 1.7.5
