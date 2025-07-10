@@ -1,4 +1,4 @@
-import { aiFunction, AIFunctionsProvider } from '@agentic/core';
+import { AIFunctionsProvider, aiFunction } from '@agentic/core';
 import z from 'zod';
 import type { GetCurrentTimeResponse } from './time';
 
