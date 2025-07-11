@@ -2,6 +2,7 @@ import type { useChat } from '@ai-sdk/react';
 import { ChevronUp, Square } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
+import { Subject } from 'rxjs';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ContextMenuShortcut } from '@/components/ui/context-menu';
@@ -11,9 +12,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useRxEffect } from '@/lib/rxjs/useRxEffect';
 import { cn } from '@/lib/utils';
 import { selectedSlackChannels$$ } from '../leftPanel/slack/slackSelectedChannelStore';
 import { toolsStatus } from '../store/toolsStatusStore';
+
+export const textAreaFocusTrigger$ = new Subject<void>();
 
 type UserInputProps = {
   messages: ReturnType<typeof useChat>['messages'];
@@ -32,6 +36,7 @@ export const UserInput = ({
 }: UserInputProps) => {
   const [input, setInput] = useState<string>('');
   const submitRef = useRef<HTMLFormElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // event.key가 'Enter'이고, Cmd(mac) 또는 Ctrl(windows) 키가 함께 눌렸는지 확인
     // 한글 입력 시 keydown 이 2번 호출되는 문제가 있어서, isComposing 체크
@@ -45,6 +50,13 @@ export const UserInput = ({
       onSubmit();
     }
   };
+
+  useRxEffect(textAreaFocusTrigger$, () => {
+    // textAreaFocusTrigger$가 발행되면, 텍스트 영역에 포커스를 설정
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  });
 
   const onChange: ChangeEventHandler<HTMLTextAreaElement> = e => {
     setInput(e.target.value);
@@ -107,6 +119,8 @@ export const UserInput = ({
         className='w-full relative flex flex-row gap-2 items-center shrink-0'
       >
         <Textarea
+          ref={textAreaRef}
+          autoFocus
           aria-label='ask to ai'
           placeholder='Ask me'
           value={input}

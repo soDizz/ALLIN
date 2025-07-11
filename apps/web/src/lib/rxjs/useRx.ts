@@ -1,7 +1,7 @@
 'use client';
 
-import type { ReadonlyRx, Rx, RxSetterParam } from './rx';
 import { useCallback, useEffect, useState } from 'react';
+import type { ReadonlyRx, Rx, RxSetterParam } from './rx';
 
 export const useRxValue = <T>(rx: ReadonlyRx<T>): T => {
   const [value, setValue] = useState(rx.get());
