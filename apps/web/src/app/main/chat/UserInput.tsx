@@ -1,14 +1,17 @@
-import { TooltipContent } from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
-import { motion } from 'motion/react';
-import { ContextMenuShortcut } from '@/components/ui/context-menu';
-import { ChevronUp, Square } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { useChat } from '@ai-sdk/react';
-import { toast } from 'sonner';
+import { ChevronUp, Square } from 'lucide-react';
+import { motion } from 'motion/react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { ContextMenuShortcut } from '@/components/ui/context-menu';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { selectedSlackChannels$$ } from '../leftPanel/slack/slackSelectedChannelStore';
 import { toolsStatus } from '../store/toolsStatusStore';
 
@@ -110,7 +113,7 @@ export const UserInput = ({
           onChange={onChange}
           onKeyDown={handleKeyDown}
           maxLength={1000}
-          className='pr-14'
+          className='pr-14 max-h-48'
         />
         <Tooltip>
           <TooltipTrigger asChild>
