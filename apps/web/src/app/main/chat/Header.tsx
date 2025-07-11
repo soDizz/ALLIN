@@ -1,14 +1,19 @@
+import { MessageSquare, PanelLeft } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
-import { CircleHelp, PanelLeft } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useRx } from '@/lib/rxjs/useRx';
-import { leftPanel$$ } from '../store/leftPanelStore';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { customerHelpOpen$$ } from '../store/customerHelpStore';
+import { feedbackPopupOpen$$ } from '../store/feedbackPopup$$';
+import { leftPanel$$ } from '../store/leftPanelStore';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
-  const [customerHelpOpen, setCustomerHelpOpen] = useRx(customerHelpOpen$$);
+  const [isFeedbackPopupOpen, setIsFeedbackPopupOpen] =
+    useRx(feedbackPopupOpen$$);
   return (
     <div className='w-full flex flex-row items-center justify-between'>
       <Tooltip delayDuration={500}>
@@ -30,17 +35,17 @@ export const Header = () => {
       <Tooltip delayDuration={500}>
         <TooltipTrigger>
           <Toggle
-            pressed={customerHelpOpen}
-            onPressedChange={setCustomerHelpOpen}
+            pressed={isFeedbackPopupOpen}
+            onPressedChange={setIsFeedbackPopupOpen}
             aria-label='Help'
             className='cursor-pointer'
             asChild
           >
-            <CircleHelp className='size-5' />
+            <MessageSquare className='size-5' />
           </Toggle>
         </TooltipTrigger>
         <TooltipContent>
-          <p className='text-xs text-gray-300'>Help</p>
+          <p className='text-xs text-gray-300'>Donate Feedback</p>
         </TooltipContent>
       </Tooltip>
     </div>

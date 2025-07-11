@@ -3,8 +3,8 @@
 import { motion } from 'motion/react';
 import { Chat } from './chat/Chat';
 import { Header } from './chat/Header';
+import { FeedbackPopup } from './FeedbackPopup';
 import { Initializer } from './initializer/Initializer';
-import { CustomerHelpPopup } from './CustomerHelpPopup';
 
 export const Main = () => {
   // useEffect(() => {
@@ -33,7 +33,7 @@ export const Main = () => {
           <Chat />
         </div>
       </motion.main>
-      <CustomerHelpPopup />
+      <FeedbackPopup />
     </>
   );
 };
