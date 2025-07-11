@@ -7,8 +7,8 @@ import {
 } from '@/components/ui/tooltip';
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
+import { leftPanel$$ } from '../leftPanel/leftPanelStore';
 import { feedbackPopupOpen$$ } from '../store/feedbackPopup$$';
-import { leftPanel$$ } from '../store/leftPanelStore';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);

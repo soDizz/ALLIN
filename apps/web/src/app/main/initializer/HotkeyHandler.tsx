@@ -1,6 +1,6 @@
 import { useHotkeys } from 'react-hotkeys-hook';
 import { textAreaFocusTrigger$ } from '../chat/UserInput';
-import { leftPanel$$ } from '../store/leftPanelStore';
+import { leftPanel$$ } from '../leftPanel/leftPanelStore';
 
 export const HotkeyHandler = () => {
   useHotkeys('mod+b', () => {

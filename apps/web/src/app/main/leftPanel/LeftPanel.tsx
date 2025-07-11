@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { TypographyH3 } from '@/components/ui/typographyH3';
 import { useRxValue } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
-import { leftPanel$$ } from '../store/leftPanelStore';
+import { leftPanel$$ } from './leftPanelStore';
 import { SlackPanel } from './slack/SlackPanel';
 
 export const LeftPanel = () => {
