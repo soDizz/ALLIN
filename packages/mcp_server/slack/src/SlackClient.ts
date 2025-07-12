@@ -1,4 +1,7 @@
-import { aiFunction, AIFunctionsProvider, assert } from '@agentic/core';
+import { AIFunctionsProvider, aiFunction, assert } from '@agentic/core';
+import ky, { type KyInstance } from 'ky';
+import { defer, EMPTY, expand, filter, lastValueFrom, map, reduce } from 'rxjs';
+import { z } from 'zod';
 import {
   AddReactionInputSchema,
   type AddReactionResponse,
@@ -24,9 +27,6 @@ import {
   SlackRepliesResponseSchema,
   type SlackUser,
 } from './slack';
-import { z } from 'zod';
-import { defer, EMPTY, expand, filter, lastValueFrom, map, reduce } from 'rxjs';
-import ky, { type KyInstance } from 'ky';
 
 export type SlackClientConfig = {
   token: string;
@@ -83,7 +83,7 @@ export class SlackClient extends AIFunctionsProvider {
    * It returns a list of ALL channels that the current user is a member of.
    */
   @aiFunction({
-    name: 'get_slack_channels_for_current_user',
+    name: 'get_all_channels',
     description:
       'Get a list of public channels in the Slack workspace.' +
       'It returns all channels that the current user is a member of.',
@@ -120,15 +120,14 @@ export class SlackClient extends AIFunctionsProvider {
   })
   async getChannelHistory({
     channel,
-    limit,
     cursor,
+    limit = 30,
   }: z.infer<
     typeof GetChannelHistoryInputSchema
   >): Promise<SlackChannelHistoryResponse> {
-    console.log(channel, limit, cursor);
     const searchParams: Record<string, string | number> = {
       channel,
-      limit: limit ?? 30,
+      limit,
     };
     if (cursor) {
       searchParams.cursor = cursor;

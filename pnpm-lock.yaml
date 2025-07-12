@@ -76,7 +76,7 @@ catalogs:
       version: 3.1.1
     zod:
       specifier: ^3.25.28
-      version: 3.25.36
+      version: 3.25.28
 
 pnpmfileChecksum: ispnqhbvg4laq6ierkkioe35ku
 
@@ -119,16 +119,16 @@ importers:
     dependencies:
       '@agentic/ai-sdk':
         specifier: catalog:ai
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)
       '@agentic/core':
         specifier: catalog:ai
-        version: 7.6.5(zod@3.25.36)
+        version: 7.6.5(zod@3.25.28)
       '@ai-sdk/openai':
         specifier: ^1.3.22
-        version: 1.3.22(zod@3.25.36)
+        version: 1.3.22(zod@3.25.28)
       '@ai-sdk/react':
         specifier: ^1.2.12
-        version: 1.2.12(react@19.1.0)(zod@3.25.36)
+        version: 1.2.12(react@19.1.0)(zod@3.25.28)
       '@mcp-server/exa':
         specifier: workspace:*
         version: link:../../packages/mcp_server/exa
@@ -188,7 +188,7 @@ importers:
         version: 5.80.7(react@19.1.0)
       ai:
         specifier: catalog:ai
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+        version: 4.3.16(react@19.1.0)(zod@3.25.28)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -275,7 +275,7 @@ importers:
         version: 11.1.0
       zod:
         specifier: catalog:utils
-        version: 3.25.36
+        version: 3.25.28
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -349,13 +349,13 @@ importers:
     dependencies:
       '@agentic/ai-sdk':
         specifier: catalog:ai
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)
       '@agentic/core':
         specifier: catalog:ai
-        version: 7.6.5(zod@3.25.36)
+        version: 7.6.5(zod@3.25.28)
       ai:
         specifier: catalog:ai
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+        version: 4.3.16(react@19.1.0)(zod@3.25.28)
       dotenv:
         specifier: catalog:utils
         version: 16.5.0
@@ -370,7 +370,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: catalog:utils
-        version: 3.25.36
+        version: 3.25.28
     devDependencies:
       vitest:
         specifier: catalog:test
@@ -380,13 +380,13 @@ importers:
     dependencies:
       '@agentic/ai-sdk':
         specifier: catalog:ai
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)
       '@agentic/core':
         specifier: catalog:ai
-        version: 7.6.5(zod@3.25.36)
+        version: 7.6.5(zod@3.25.28)
       ai:
         specifier: catalog:ai
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+        version: 4.3.16(react@19.1.0)(zod@3.25.28)
       dotenv:
         specifier: catalog:utils
         version: 16.5.0
@@ -398,7 +398,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: catalog:utils
-        version: 3.25.36
+        version: 3.25.28
     devDependencies:
       vitest:
         specifier: catalog:test
@@ -408,13 +408,13 @@ importers:
     dependencies:
       '@agentic/ai-sdk':
         specifier: catalog:ai
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)
       '@agentic/core':
         specifier: catalog:ai
-        version: 7.6.5(zod@3.25.36)
+        version: 7.6.5(zod@3.25.28)
       ai:
         specifier: catalog:ai
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+        version: 4.3.16(react@19.1.0)(zod@3.25.28)
       dotenv:
         specifier: catalog:utils
         version: 16.5.0
@@ -426,7 +426,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: catalog:utils
-        version: 3.25.36
+        version: 3.25.28
     devDependencies:
       vitest:
         specifier: catalog:test
@@ -436,13 +436,13 @@ importers:
     dependencies:
       '@agentic/ai-sdk':
         specifier: catalog:ai
-        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)
+        version: 7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)
       '@agentic/core':
         specifier: catalog:ai
-        version: 7.6.5(zod@3.25.36)
+        version: 7.6.5(zod@3.25.28)
       ai:
         specifier: catalog:ai
-        version: 4.3.16(react@19.1.0)(zod@3.25.36)
+        version: 4.3.16(react@19.1.0)(zod@3.25.28)
       dotenv:
         specifier: catalog:utils
         version: 16.5.0
@@ -460,7 +460,7 @@ importers:
         version: 7.2.0
       zod:
         specifier: catalog:utils
-        version: 3.25.36
+        version: 3.25.28
     devDependencies:
       '@types/jsdom':
         specifier: ^21.1.7
@@ -5674,69 +5674,69 @@ packages:
     peerDependencies:
       zod: ^3.24.4
 
-  zod@3.25.36:
-    resolution: {integrity: sha512-eRFS3i8T0IrpGdL8HQyqFAugGOn7jOjyGgGdtv5NY4Wkhi7lJDk732bNZ609YMIGFbLoaj6J69O1Mura23gfIw==}
+  zod@3.25.28:
+    resolution: {integrity: sha512-/nt/67WYKnr5by3YS7LroZJbtcCBurDKKPBPWWzaxvVCGuG/NOsiKkrjoOhI8mJ+SQUXEbUzeB3S+6XDUEEj7Q==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
 
-  '@agentic/ai-sdk@7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.36))(zod@3.25.36)':
+  '@agentic/ai-sdk@7.6.5(ai@4.3.16(react@19.1.0)(zod@3.25.28))(zod@3.25.28)':
     dependencies:
-      '@agentic/core': 7.6.5(zod@3.25.36)
-      ai: 4.3.16(react@19.1.0)(zod@3.25.36)
+      '@agentic/core': 7.6.5(zod@3.25.28)
+      ai: 4.3.16(react@19.1.0)(zod@3.25.28)
     transitivePeerDependencies:
       - babel-plugin-macros
       - zod
 
-  '@agentic/core@7.6.5(zod@3.25.36)':
+  '@agentic/core@7.6.5(zod@3.25.28)':
     dependencies:
       dedent: 1.6.0
       delay: 6.0.0
       jsonrepair: 3.12.0
       ky: 1.8.1
-      openai-zod-to-json-schema: 1.0.3(zod@3.25.36)
+      openai-zod-to-json-schema: 1.0.3(zod@3.25.28)
       p-throttle: 6.2.0
       type-fest: 4.41.0
-      zod: 3.25.36
-      zod-validation-error: 3.4.1(zod@3.25.36)
+      zod: 3.25.28
+      zod-validation-error: 3.4.1(zod@3.25.28)
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@ai-sdk/openai@1.3.22(zod@3.25.36)':
+  '@ai-sdk/openai@1.3.22(zod@3.25.28)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.36)
-      zod: 3.25.36
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.28)
+      zod: 3.25.28
 
-  '@ai-sdk/provider-utils@2.2.8(zod@3.25.36)':
+  '@ai-sdk/provider-utils@2.2.8(zod@3.25.28)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
-      zod: 3.25.36
+      zod: 3.25.28
 
   '@ai-sdk/provider@1.1.3':
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@1.2.12(react@19.1.0)(zod@3.25.36)':
+  '@ai-sdk/react@1.2.12(react@19.1.0)(zod@3.25.28)':
     dependencies:
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.36)
-      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.36)
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.28)
+      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.28)
       react: 19.1.0
       swr: 2.3.3(react@19.1.0)
       throttleit: 2.1.0
     optionalDependencies:
-      zod: 3.25.36
+      zod: 3.25.28
 
-  '@ai-sdk/ui-utils@1.2.11(zod@3.25.36)':
+  '@ai-sdk/ui-utils@1.2.11(zod@3.25.28)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.36)
-      zod: 3.25.36
-      zod-to-json-schema: 3.24.5(zod@3.25.36)
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.28)
+      zod: 3.25.28
+      zod-to-json-schema: 3.24.5(zod@3.25.28)
 
   '@alloc/quick-lru@5.2.0': {}
 
@@ -7624,15 +7624,15 @@ snapshots:
 
   agent-base@7.1.3: {}
 
-  ai@4.3.16(react@19.1.0)(zod@3.25.36):
+  ai@4.3.16(react@19.1.0)(zod@3.25.28):
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.36)
-      '@ai-sdk/react': 1.2.12(react@19.1.0)(zod@3.25.36)
-      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.36)
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.28)
+      '@ai-sdk/react': 1.2.12(react@19.1.0)(zod@3.25.28)
+      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.28)
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
-      zod: 3.25.36
+      zod: 3.25.28
     optionalDependencies:
       react: 19.1.0
 
@@ -10146,9 +10146,9 @@ snapshots:
       is-inside-container: 1.0.0
       is-wsl: 3.1.0
 
-  openai-zod-to-json-schema@1.0.3(zod@3.25.36):
+  openai-zod-to-json-schema@1.0.3(zod@3.25.28):
     dependencies:
-      zod: 3.25.36
+      zod: 3.25.28
 
   optionator@0.9.4:
     dependencies:
@@ -11593,14 +11593,14 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
-  zod-to-json-schema@3.24.5(zod@3.25.36):
+  zod-to-json-schema@3.24.5(zod@3.25.28):
     dependencies:
-      zod: 3.25.36
+      zod: 3.25.28
 
-  zod-validation-error@3.4.1(zod@3.25.36):
+  zod-validation-error@3.4.1(zod@3.25.28):
     dependencies:
-      zod: 3.25.36
+      zod: 3.25.28
 
-  zod@3.25.36: {}
+  zod@3.25.28: {}
 
   zwitch@2.0.4: {}

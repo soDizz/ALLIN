@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect } from 'react';
-import { LOCAL_STORAGE_KEY } from '../localStorageKey';
 import { ToolManagerContext } from '@/app/tools/ToolManagerContext';
+import { LOCAL_STORAGE_KEY } from '../localStorageKey';
 
 export const LocalStorageSync = () => {
   const toolManager = useContext(ToolManagerContext);
@@ -18,6 +18,7 @@ export const LocalStorageSync = () => {
     if (slackCert) {
       slackTool.setCert(JSON.parse(slackCert));
       slackTool.setIsVerified(true);
+      slackTool.setIsActive(true);
     }
 
     if (slackPointedChannels) {

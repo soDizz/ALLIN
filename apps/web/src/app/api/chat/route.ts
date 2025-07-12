@@ -1,6 +1,5 @@
 import { createAISDKTools } from '@agentic/ai-sdk';
 import { openai } from '@ai-sdk/openai';
-import { WebCrawlerClient } from '@mcp-server/web-crawler';
 import { type Message, streamText, type ToolSet } from 'ai';
 import type { ToolsServerPayload } from '@/app/tools/ToolManager';
 import type { ElementType } from '@/lib/utility-type';
