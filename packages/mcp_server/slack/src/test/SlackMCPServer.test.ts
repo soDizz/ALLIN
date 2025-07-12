@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SlackClient } from '../SlackClient';
 import dotenv from 'dotenv';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { SlackClient } from '../SlackClient';
 
 dotenv.config();
 
@@ -40,7 +40,9 @@ describe('SlackClient test', () => {
         !process.env.__TEST_CHANNEL_ID ||
         !process.env.__TEST_THREAD_TS
       ) {
-        throw new Error('__TEST_USER_ID, __TEST_CHANNEL_ID, __TEST_THREAD_TS must be set');
+        throw new Error(
+          '__TEST_USER_ID, __TEST_CHANNEL_ID, __TEST_THREAD_TS must be set',
+        );
       }
 
       slackClient = new SlackClient({
@@ -69,7 +71,10 @@ describe('SlackClient test', () => {
     });
 
     it('should be able to get channel history', async () => {
-      const response = await slackClient.getChannelHistory({ channel: channelId, limit: 1 });
+      const response = await slackClient.getChannelHistory({
+        channel: channelId,
+        limit: 1,
+      });
       expect(response.ok).toBe(true);
     });
 

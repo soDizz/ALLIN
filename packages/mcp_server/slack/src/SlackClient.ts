@@ -1,7 +1,7 @@
 import { AIFunctionsProvider, aiFunction, assert } from '@agentic/core';
 import ky, { type KyInstance } from 'ky';
 import { defer, EMPTY, expand, filter, lastValueFrom, map, reduce } from 'rxjs';
-import { z } from 'zod';
+import z from 'zod';
 import {
   AddReactionInputSchema,
   type AddReactionResponse,

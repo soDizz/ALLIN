@@ -1,7 +1,7 @@
-import { describe, it } from 'vitest';
-import { ExaClient } from './exa-client';
 import dotenv from 'dotenv';
 import ky from 'ky';
+import { describe, it } from 'vitest';
+import { ExaClient } from './exa-client';
 
 dotenv.config();
 

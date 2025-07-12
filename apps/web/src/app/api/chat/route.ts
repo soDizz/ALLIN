@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   const clientTools = tools ? createTools(tools) : undefined;
 
   const result = streamText({
-    model: openai.responses('gpt-4.1'),
+    model: openai('gpt-4.1'),
     messages,
     tools: {
       ...clientTools,

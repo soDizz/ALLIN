@@ -16,8 +16,7 @@
   },
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
-    "test": "vitest run"
+    "build": "tsup"
   },
   "dependencies": {
     "@agentic/ai-sdk": "catalog:ai",
