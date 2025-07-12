@@ -2,10 +2,10 @@ import { useChat } from '@ai-sdk/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { toolsStatus } from '../store/toolsStatusStore';
 import { Message } from './Message';
 import { createPrompt } from './prompt';
 import { UserInput } from './UserInput';
+import { ToolManager } from '@/app/tools/ToolManager';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
@@ -28,7 +28,7 @@ export const Chat = () => {
   const sendMessage = useCallback(() => {
     reload({
       body: {
-        enabledTools: toolsStatus.getEnabledTools(),
+        tools: ToolManager.getInstance().getServerPayload(),
       },
     });
   }, [reload]);

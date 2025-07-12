@@ -1,32 +1,25 @@
 import { RESOURCE_SERVER } from '@/lib/resourceServerPath';
 import { rx } from '@/lib/rxjs/rx';
 import type { BaseTool } from '../BaseTool';
-import { ToolManager } from '../ToolManager';
 
-const Exa_TOOL_NAME = 'ExaTool';
+export const EXA_TOOL_NAME = 'exa';
 
 export class ExaTool implements BaseTool {
   private static instance: ExaTool;
-  private name: typeof Exa_TOOL_NAME = Exa_TOOL_NAME;
-  private toolManager: ToolManager;
+  private name: typeof EXA_TOOL_NAME = EXA_TOOL_NAME;
 
   #metaData = rx({
     name: this.name,
     imgUrl: `${RESOURCE_SERVER}/tool-image/Exa-icon.png`,
   });
-  #isActive = rx(false);
-  #isVerified = rx(false);
+  #isActive = rx(true);
+  #isVerified = rx(true);
 
   public static getInstance() {
     if (!ExaTool.instance) {
-      ExaTool.instance = new ExaTool(ToolManager.getInstance());
+      ExaTool.instance = new ExaTool();
     }
     return ExaTool.instance;
-  }
-
-  constructor(toolManager: ToolManager) {
-    this.toolManager = toolManager;
-    this.toolManager.registerTool(this);
   }
 
   get metaData() {
@@ -62,12 +55,10 @@ export class ExaTool implements BaseTool {
   public getServerPayload(): ExaToolServerPayload {
     return {
       name: this.name,
-      isActive: this.isActive,
     };
   }
 }
 
 export type ExaToolServerPayload = {
-  name: typeof Exa_TOOL_NAME;
-  isActive: boolean;
+  name: typeof EXA_TOOL_NAME;
 };

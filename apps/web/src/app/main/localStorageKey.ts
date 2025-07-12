@@ -1,15 +1,6 @@
-import type { Slack } from '@/app/main/store/slackStore';
-import type { ToolName } from '@/app/main/store/toolsStatusStore';
-
-export type LocalStorageData = {
-  slack: Slack;
-  time: {
-    active: boolean;
-  };
-  activeTools: ToolName[];
-};
-
 export const LOCAL_STORAGE_KEY = {
+  SLACK_CERT: 'slack-cert',
+  SLACK_POINTED_CHANNELS: 'slack-pointed-channels',
   SLACK: 'slack',
   TIME: 'time',
   ACTIVE_TOOLS: 'active_tools',

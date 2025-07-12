@@ -14,8 +14,6 @@ import {
 } from '@/components/ui/tooltip';
 import { useRxEffect } from '@/lib/rxjs/useRxEffect';
 import { cn } from '@/lib/utils';
-import { selectedSlackChannels$$ } from '../leftPanel/slack/slackSelectedChannelStore';
-import { toolsStatus } from '../store/toolsStatusStore';
 
 export const textAreaFocusTrigger$ = new Subject<void>();
 
@@ -75,16 +73,17 @@ export const UserInput = ({
       return;
     }
 
-    const selectedChannelIds = selectedSlackChannels$$
-      .get()
-      .map(ch => ch.channelId)
-      .toString();
-    const selectedChannelNames = selectedSlackChannels$$
-      .get()
-      .map(ch => ch.channelName)
-      .toString();
+    // const selectedChannelIds = selectedSlackChannels$$
+    //   .get()
+    //   .map(ch => ch.channelId)
+    //   .toString();
+    // const selectedChannelNames = selectedSlackChannels$$
+    //   .get()
+    //   .map(ch => ch.channelName)
+    //   .toString();
 
-    const systemPrompt = `When execute Slack tool, you must search or post in that channels. channelIds: ${selectedChannelIds} channelNames: ${selectedChannelNames}`;
+    // const systemPrompt = `When execute Slack tool, you must search or post in that channels. channelIds: ${selectedChannelIds} channelNames: ${selectedChannelNames}`;
+
     setMessages(prev => [
       ...prev,
       {

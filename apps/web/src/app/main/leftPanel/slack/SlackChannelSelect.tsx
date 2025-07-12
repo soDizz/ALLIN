@@ -9,21 +9,35 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { LoaderCircle, Plus, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
-import { slack$$ } from '../../store/slackStore';
 import type { GetSlackChannelsResponse } from '@mcp-server/slack';
-import { selectedSlackChannels$$, type SlackChannel } from './slackSelectedChannelStore';
-import { useRx } from '@/lib/rxjs/useRx';
+import { useRxValue } from '@/lib/rxjs/useRx';
+import { ToolManager } from '@/app/tools/ToolManager';
+import { useMemo } from 'react';
+import { SlackPointedChannel } from '@/app/tools/slack/SlackTool';
 
 const MAX_CHANNELS = 3;
 
 export function SlackChannelSelect() {
   const [open, setOpen] = React.useState(false);
-  const [selectedChannels, setSelectedChannels] = useRx(selectedSlackChannels$$);
+  const slackTool = useMemo(
+    () => ToolManager.getInstance().getTool('slack'),
+    [],
+  );
+  const pointedChannels = useRxValue(
+    slackTool.pointedChannels$,
+    slackTool.pointedChannels,
+  );
+  const cert = useRxValue(slackTool.cert$, slackTool.cert);
+
   const {
     data: channels,
     isLoading,
@@ -31,31 +45,31 @@ export function SlackChannelSelect() {
   } = useQuery<GetSlackChannelsResponse['channels']>({
     queryKey: ['slack', 'channels'],
     queryFn: () => {
-      return fetch(`/api/slack/channels?workspaceId=${slack$$.get().workspaceId}`, {
+      return fetch(`/api/slack/channels?workspaceId=${cert.WORKSPACE_ID}`, {
         headers: {
-          Authorization: `Bearer ${slack$$.get().token}`,
+          Authorization: `Bearer ${cert.API_KEY}`,
           'Content-Type': 'application/json',
         },
       }).then(res => res.json());
     },
   });
 
-  const onAddChannel = (channel: SlackChannel) => {
-    if (selectedChannels.length >= MAX_CHANNELS) {
+  const onAddChannel = (channel: SlackPointedChannel) => {
+    if (pointedChannels.length >= MAX_CHANNELS) {
       toast.warning(`You can only add up to ${MAX_CHANNELS} channels`, {
         position: 'top-center',
       });
       return;
     }
-    setSelectedChannels(prev => [...prev, channel]);
+    slackTool.setPointedChannels(prev => [...prev, channel]);
   };
 
-  const onRemoveChannel = (channel: SlackChannel) => {
-    setSelectedChannels(prev => prev.filter(c => c.channelId !== channel.channelId));
+  const onRemoveChannel = (channel: SlackPointedChannel) => {
+    slackTool.setPointedChannels(prev => prev.filter(c => c.id !== channel.id));
     toast.message(
       <p>
-        Channel <span className='font-bold italic'>{`${channel.channelName}`}</span> removed from
-        list
+        Channel <span className='font-bold italic'>{`${channel.name}`}</span>{' '}
+        removed from list
       </p>,
       {
         duration: 3500,
@@ -76,9 +90,9 @@ export function SlackChannelSelect() {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant='outline' className='w-full justify-start h-fit'>
-            {selectedChannels.length > 0 ? (
+            {pointedChannels.length > 0 ? (
               <div className='flex flex-col items-start gap-1'>
-                {selectedChannels.map(channel => (
+                {pointedChannels.map(channel => (
                   <Badge
                     aria-label='Remove Channel'
                     className='cursor-pointer'
@@ -86,9 +100,9 @@ export function SlackChannelSelect() {
                       e.stopPropagation();
                       onRemoveChannel(channel);
                     }}
-                    key={channel.channelId}
+                    key={channel.id}
                   >
-                    {channel.channelName}
+                    {channel.name}
                     <X className='size-6' />
                   </Badge>
                 ))}
@@ -103,7 +117,9 @@ export function SlackChannelSelect() {
         </PopoverTrigger>
         <PopoverContent className='p-0' side='right' align='start'>
           <Command>
-            <CommandInput placeholder={isLoading || isError ? 'Loading...' : 'Search'} />
+            <CommandInput
+              placeholder={isLoading || isError ? 'Loading...' : 'Search'}
+            />
             <CommandList>
               <CommandEmpty>
                 {isLoading ? (
@@ -116,15 +132,17 @@ export function SlackChannelSelect() {
               </CommandEmpty>
               <CommandGroup>
                 {channels
-                  ?.filter(c => !selectedChannels.map(tempC => tempC.channelId).includes(c.id))
+                  ?.filter(
+                    c => !pointedChannels.map(tempC => tempC.id).includes(c.id),
+                  )
                   .map(channel => (
                     <CommandItem
                       key={channel.id}
                       value={channel.name}
                       onSelect={channelName => {
                         onAddChannel({
-                          channelName,
-                          channelId: channel.id,
+                          name: channelName,
+                          id: channel.id,
                         });
                         setOpen(false);
                       }}

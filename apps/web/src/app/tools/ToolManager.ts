@@ -1,9 +1,23 @@
 import type { BaseTool } from './BaseTool';
-import type { ToolsServerPayload } from './ServerPayload';
+import type {
+  CRAWLING_TOOL_NAME,
+  CrawlingTool,
+  CrawlingToolServerPayload,
+} from './crawling/CrawlingTool';
+import type {
+  EXA_TOOL_NAME,
+  ExaTool,
+  ExaToolServerPayload,
+} from './exa/ExaTool';
+import type {
+  SLACK_TOOL_NAME,
+  SlackTool,
+  SlackToolServerPayload,
+} from './slack/SlackTool';
 
 export class ToolManager {
   private static instance: ToolManager;
-  private tools: Map<string, BaseTool> = new Map();
+  private tools: Map<ToolName, BaseTool> = new Map();
 
   private constructor() {}
 
@@ -15,11 +29,17 @@ export class ToolManager {
   }
 
   public registerTool(tool: BaseTool): void {
-    this.tools.set(tool.metaData.name, tool);
+    this.tools.set(tool.metaData.name as ToolName, tool);
   }
 
-  public getTool(name: string): BaseTool | undefined {
-    return this.tools.get(name);
+  public getTool<T extends ToolName>(name: T): ToolMap[T] {
+    const tool = this.tools.get(name);
+
+    // 리액트가 init 되기 전에 tool이나 싱글톤들이 초기화 되었다면 이 에러가 발생하면 안됨.
+    if (!tool) {
+      throw new Error(`Tool ${name} not found`);
+    }
+    return tool as ToolMap[T];
   }
 
   public getAllTools(): BaseTool[] {
@@ -32,3 +52,18 @@ export class ToolManager {
       .map(tool => tool.getServerPayload()) as ToolsServerPayload;
   }
 }
+
+export type ToolsServerPayload = Array<
+  SlackToolServerPayload | ExaToolServerPayload | CrawlingToolServerPayload
+>;
+
+export type ToolName =
+  | typeof SLACK_TOOL_NAME
+  | typeof EXA_TOOL_NAME
+  | typeof CRAWLING_TOOL_NAME;
+
+export type ToolMap = {
+  [SLACK_TOOL_NAME]: SlackTool;
+  [EXA_TOOL_NAME]: ExaTool;
+  [CRAWLING_TOOL_NAME]: CrawlingTool;
+};

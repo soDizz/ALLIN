@@ -1,32 +1,25 @@
 import { RESOURCE_SERVER } from '@/lib/resourceServerPath';
 import { rx } from '@/lib/rxjs/rx';
 import type { BaseTool } from '../BaseTool';
-import { ToolManager } from '../ToolManager';
 
-const Crawling_TOOL_NAME = 'CrawlingTool';
+export const CRAWLING_TOOL_NAME = 'crawling';
 
 export class CrawlingTool implements BaseTool {
   private static instance: CrawlingTool;
-  private name: typeof Crawling_TOOL_NAME = Crawling_TOOL_NAME;
-  private toolManager: ToolManager;
+  private name: typeof CRAWLING_TOOL_NAME = CRAWLING_TOOL_NAME;
 
   #metaData = rx({
     name: this.name,
     imgUrl: `${RESOURCE_SERVER}/tool-image/crawling-icon.png`,
   });
-  #isActive = rx(false);
-  #isVerified = rx(false);
+  #isActive = rx(true);
+  #isVerified = rx(true);
 
   public static getInstance() {
     if (!CrawlingTool.instance) {
-      CrawlingTool.instance = new CrawlingTool(ToolManager.getInstance());
+      CrawlingTool.instance = new CrawlingTool();
     }
     return CrawlingTool.instance;
-  }
-
-  constructor(toolManager: ToolManager) {
-    this.toolManager = toolManager;
-    this.toolManager.registerTool(this);
   }
 
   get metaData() {
@@ -62,12 +55,10 @@ export class CrawlingTool implements BaseTool {
   public getServerPayload(): CrawlingToolServerPayload {
     return {
       name: this.name,
-      isActive: this.isActive,
     };
   }
 }
 
 export type CrawlingToolServerPayload = {
-  name: typeof Crawling_TOOL_NAME;
-  isActive: boolean;
+  name: typeof CRAWLING_TOOL_NAME;
 };

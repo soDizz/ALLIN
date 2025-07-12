@@ -7,20 +7,6 @@ import { FeedbackPopup } from './FeedbackPopup';
 import { Initializer } from './initializer/Initializer';
 
 export const Main = () => {
-  // useEffect(() => {
-  //   const exa = new ExaClient({
-  //     apiKey: '6f27502c-27ee-46c0-8af7-9d02b49c8d40',
-  //   });
-
-  //   exa
-  //     .search({
-  //       query: 'what time is it in Seoul?',
-  //     })
-  //     .then(res => {
-  //       console.log(res);
-  //     });
-  // }, []);
-
   return (
     <>
       <Initializer />

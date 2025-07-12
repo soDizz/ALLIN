@@ -1,12 +1,10 @@
 import { HotkeyHandler } from './HotkeyHandler';
-import { LocalStorageSlack } from './LocalStorageSlack';
-import { LocalStorageTime } from './LocalStorageTime';
+import { LocalStorageSync } from './LocalStorageSync';
 
 export const Initializer = () => {
   return (
     <>
-      <LocalStorageSlack />
-      <LocalStorageTime />
+      <LocalStorageSync />
       <HotkeyHandler />
     </>
   );
