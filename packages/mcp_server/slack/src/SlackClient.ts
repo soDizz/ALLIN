@@ -7,7 +7,6 @@ import {
   type AddReactionResponse,
   AddReactionResponseSchema,
   GetChannelHistoryInputSchema,
-  GetSlackChannelsInputSchema,
   type GetSlackChannelsResponse,
   GetSlackChannelsResponseSchema,
   GetThreadRepliesInputSchema,
@@ -19,6 +18,8 @@ import {
   PostMessageInputSchema,
   type PostMessageResponse,
   PostMessageResponseSchema,
+  ReadBookmarksInputSchema,
+  ReadBookmarksResponseSchema,
   ReplyToThreadInputSchema,
   type SlackChannel,
   type SlackChannelHistoryResponse,
@@ -59,7 +60,7 @@ export class SlackClient extends AIFunctionsProvider {
   public async getChannels(
     limit = 200,
     cursor?: string,
-  ): Promise<GetSlackChannelsResponse> {
+  ): Promise<GetSlackChannelsResponse | { ok: false }> {
     const searchParams: Record<string, string> = {
       types: 'public_channel',
       exclude_archived: 'true',
@@ -76,6 +77,13 @@ export class SlackClient extends AIFunctionsProvider {
         searchParams,
       })
       .json<GetSlackChannelsResponse>();
+
+    if (!data.ok) {
+      return {
+        ok: false,
+      };
+    }
+
     return GetSlackChannelsResponseSchema.parse(data);
   }
 
@@ -325,5 +333,37 @@ export class SlackClient extends AIFunctionsProvider {
     });
     const json = await response.json();
     return AddReactionResponseSchema.parse(json);
+  }
+
+  @aiFunction({
+    name: 'read_bookmarks',
+    description: 'read bookmarks of channel.',
+    inputSchema: ReadBookmarksInputSchema,
+  })
+  async getBookmarks({ channelId }: z.infer<typeof ReadBookmarksInputSchema>) {
+    const response = await fetch('https://slack.com/api/bookmarks.list', {
+      method: 'POST',
+      body: JSON.stringify({
+        channel_id: channelId,
+      }),
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const json = (await response.json()) as z.infer<
+      typeof ReadBookmarksResponseSchema
+    >;
+
+    console.log(json);
+
+    if (!json.ok) {
+      return {
+        ok: false,
+      };
+    }
+
+    return ReadBookmarksResponseSchema.parse(json);
   }
 }

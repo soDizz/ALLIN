@@ -140,7 +140,7 @@ app.post(
   },
 );
 
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
+app.get('/', (_req: Request, res: Response, next: NextFunction) => {
   try {
     const uiIndexPath = path.join(publicPath, 'index.html');
     if (fs.existsSync(uiIndexPath)) {
@@ -157,7 +157,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.use((err: Error, req: Request, res: Response<DefaultErrorResponse>, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response<DefaultErrorResponse>, _next: NextFunction) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });

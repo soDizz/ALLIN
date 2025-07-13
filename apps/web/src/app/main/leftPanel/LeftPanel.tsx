@@ -16,7 +16,6 @@ export const LeftPanel = () => {
       wrapperRef.current?.focus();
     }
   }, [open]);
-  console.log(open);
   return (
     <div
       ref={wrapperRef}

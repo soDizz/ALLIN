@@ -28,7 +28,7 @@ describe('SlackClient test', () => {
     let slackClient: SlackClient;
     let userId: string;
     let channelId: string;
-    let threadTs: string;
+    let _threadTs: string;
 
     beforeEach(() => {
       if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_TEAM_ID) {
@@ -52,7 +52,7 @@ describe('SlackClient test', () => {
 
       userId = process.env.__TEST_USER_ID;
       channelId = process.env.__TEST_CHANNEL_ID;
-      threadTs = process.env.__TEST_THREAD_TS;
+      _threadTs = process.env.__TEST_THREAD_TS;
     });
 
     it('should be able to get channels', async () => {

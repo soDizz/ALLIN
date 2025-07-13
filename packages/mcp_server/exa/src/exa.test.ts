@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import ky from 'ky';
 import { describe, it } from 'vitest';
 import { ExaClient } from './exa-client';
 
@@ -11,7 +10,7 @@ describe('exa api test', () => {
       apiKey: process.env.EXA_API_KEY,
     });
 
-    const res = await exaClient.search({
+    const _res = await exaClient.search({
       query: 'What is the weather today in Seoul?',
     });
   });

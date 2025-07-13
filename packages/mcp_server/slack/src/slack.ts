@@ -19,7 +19,8 @@ export const SlackMessageSchema = z.object({
   client_msg_id: z.string().optional(),
   type: z.string(),
   text: z.string(),
-  user: z.string(),
+  // 봇이 보낸 메세지의 경우 User 가 없음
+  user: z.string().optional(),
   ts: z.string(),
   app_id: z.string().optional(),
   blocks: z.array(z.record(z.string(), z.unknown())).optional(),
@@ -327,4 +328,18 @@ export const GetUsersInputSchema = z.object({
 
 export const GetUserProfileInputSchema = z.object({
   userId: z.string().describe('User ID to fetch profile for.'),
+});
+
+export const ReadBookmarksInputSchema = z.object({
+  channelId: z.string().describe('Channel ID to read bookmarks from.'),
+});
+
+export const ReadBookmarksResponseSchema = z.object({
+  ok: z.boolean(),
+  bookmarks: z.array(
+    z.object({
+      title: z.string(),
+      link: z.string(),
+    }),
+  ),
 });

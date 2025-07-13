@@ -1,11 +1,11 @@
 import { useChat } from '@ai-sdk/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Message } from './Message';
-import { createPrompt } from './prompt';
-import { UserInput } from './UserInput';
 import { ToolManager } from '@/app/tools/ToolManager';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { createPrompt } from './prompt';
+import { Thread } from './Thread';
+import { UserInput } from './UserInput';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
@@ -14,7 +14,7 @@ export const Chat = () => {
     id: 'chat',
     api: '/api/chat',
     maxSteps: 5,
-    onFinish: (m, o) => {
+    onFinish: (_m, o) => {
       console.log('==> token Usage', o.usage.totalTokens);
     },
     onError: e => {
@@ -58,9 +58,25 @@ export const Chat = () => {
     }
   }, [status]);
 
+  const chatMessages = messages.filter(msg => msg.role !== 'system');
+  const threads = chatMessages.reduce(
+    (acc, message) => {
+      if (message.role === 'user') {
+        acc.push([message]);
+      }
+      if (message.role === 'assistant') {
+        const lastGroup = acc[acc.length - 1];
+        lastGroup.push(message);
+      }
+
+      return acc;
+    },
+    [] as Array<Array<(typeof chatMessages)[0]>>,
+  );
+
   return (
     <>
-      {messages.filter(msg => msg.role !== 'system').length > 0 && (
+      {threads.length > 0 && (
         <ScrollArea
           ref={scrollViewRef}
           style={
@@ -71,11 +87,13 @@ export const Chat = () => {
           className='prose lg:px-6 max-w-none w-full max-h-[100%] h-0 min-h-0 grow mb-4 [&>div>div]:block! prose-p:my-4 prose-hr:my-4 prose-hr:invisible prose-headings:my-6 prose-li:my-1.5'
         >
           <div className='p-4 gap-4 flex flex-col'>
-            {messages
-              .filter(msg => msg.role !== 'system')
-              .map(message => (
-                <Message key={message.id} message={message} />
-              ))}
+            {threads.map((thread, index) => (
+              <Thread
+                key={`thread-${index}`}
+                thread={thread}
+                isLast={threads.length - 1 === index}
+              ></Thread>
+            ))}
           </div>
         </ScrollArea>
       )}

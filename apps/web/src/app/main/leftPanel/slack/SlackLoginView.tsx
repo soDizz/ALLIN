@@ -1,14 +1,14 @@
-import type { SlackValidateBodyParams } from '@/app/api/slack/validate/route';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import ky from 'ky';
 import { Loader2Icon } from 'lucide-react';
 import { type FormEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { SlackGuide } from './SlackGuide';
+import type { SlackValidateBodyParams } from '@/app/api/slack/validate/route';
 import { ToolManager } from '@/app/tools/ToolManager';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { SlackGuide } from './SlackGuide';
 
 export const SlackLoginView = () => {
   const [isChecking, setIsChecking] = useState(false);
