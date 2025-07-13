@@ -107,7 +107,13 @@ export class SlackClient extends AIFunctionsProvider {
         }
         return EMPTY;
       }),
-      map(response => response.channels as SlackChannel[]),
+      map(response => {
+        if (response.ok) {
+          return response.channels as SlackChannel[];
+        } else {
+          return [];
+        }
+      }),
       reduce<SlackChannel[], SlackChannel[]>(
         (allChannels, pageChannels) => allChannels.concat(pageChannels),
         [],
