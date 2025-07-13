@@ -1,14 +1,14 @@
-import { useRx } from '@/lib/rxjs/useRx';
-import { customerHelpOpen$$, customerHelpText$$ } from './store/customerHelpStore';
-import { Button } from '@/components/ui/button';
 import { Send, X } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useRx } from '@/lib/rxjs/useRx';
+import { feedbackInput$$, feedbackPopupOpen$$ } from './store/feedbackPopup$$';
 
-export const CustomerHelpPopup = () => {
-  const [open, setOpen] = useRx(customerHelpOpen$$);
-  const [text, setText] = useRx(customerHelpText$$);
+export const FeedbackPopup = () => {
+  const [open, setOpen] = useRx(feedbackPopupOpen$$);
+  const [text, setText] = useRx(feedbackInput$$);
 
   const onSubmitFeedback = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,8 +30,14 @@ export const CustomerHelpPopup = () => {
       {open && (
         <div className='fixed bottom-[24px] right-[24px] rounded-lg border shadow-md flex flex-col gap-4 p-4 bg-background'>
           <div className='flex flex-row justify-between items-center'>
-            <h3 className='text-lg leading-none font-medium'>Give us your feedback</h3>
-            <Button variant={'ghost'} size={'icon'} onClick={() => setOpen(false)}>
+            <h3 className='text-lg leading-none font-medium'>
+              Give us your feedback
+            </h3>
+            <Button
+              variant={'ghost'}
+              size={'icon'}
+              onClick={() => setOpen(false)}
+            >
               <X className='size-4' />
             </Button>
           </div>

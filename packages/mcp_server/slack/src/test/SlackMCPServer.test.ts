@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SlackClient } from '../SlackClient';
 import dotenv from 'dotenv';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { SlackClient } from '../SlackClient';
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ describe('SlackClient test', () => {
     let slackClient: SlackClient;
     let userId: string;
     let channelId: string;
-    let threadTs: string;
+    let _threadTs: string;
 
     beforeEach(() => {
       if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_TEAM_ID) {
@@ -40,7 +40,9 @@ describe('SlackClient test', () => {
         !process.env.__TEST_CHANNEL_ID ||
         !process.env.__TEST_THREAD_TS
       ) {
-        throw new Error('__TEST_USER_ID, __TEST_CHANNEL_ID, __TEST_THREAD_TS must be set');
+        throw new Error(
+          '__TEST_USER_ID, __TEST_CHANNEL_ID, __TEST_THREAD_TS must be set',
+        );
       }
 
       slackClient = new SlackClient({
@@ -50,7 +52,7 @@ describe('SlackClient test', () => {
 
       userId = process.env.__TEST_USER_ID;
       channelId = process.env.__TEST_CHANNEL_ID;
-      threadTs = process.env.__TEST_THREAD_TS;
+      _threadTs = process.env.__TEST_THREAD_TS;
     });
 
     it('should be able to get channels', async () => {
@@ -69,7 +71,10 @@ describe('SlackClient test', () => {
     });
 
     it('should be able to get channel history', async () => {
-      const response = await slackClient.getChannelHistory({ channel: channelId, limit: 1 });
+      const response = await slackClient.getChannelHistory({
+        channel: channelId,
+        limit: 1,
+      });
       expect(response.ok).toBe(true);
     });
 

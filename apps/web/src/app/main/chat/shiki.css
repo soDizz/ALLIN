@@ -1,0 +1,10 @@
+.shiki-display-animation {
+  opacity: 1;
+  filter: blur(0px);
+  transition: opacity, filter 0.3s ease-in-out;
+
+  @starting-style {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}

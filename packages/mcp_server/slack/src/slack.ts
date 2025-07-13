@@ -19,7 +19,8 @@ export const SlackMessageSchema = z.object({
   client_msg_id: z.string().optional(),
   type: z.string(),
   text: z.string(),
-  user: z.string(),
+  // 봇이 보낸 메세지의 경우 User 가 없음
+  user: z.string().optional(),
   ts: z.string(),
   app_id: z.string().optional(),
   blocks: z.array(z.record(z.string(), z.unknown())).optional(),
@@ -102,7 +103,9 @@ export const GetSlackChannelsResponseSchema = z.object({
   channels: z.array(SlackChannelSchemaForMCP),
   response_metadata: SlackResponseMetadataSchema,
 });
-export type GetSlackChannelsResponse = z.infer<typeof GetSlackChannelsResponseSchema>;
+export type GetSlackChannelsResponse = z.infer<
+  typeof GetSlackChannelsResponseSchema
+>;
 
 export const SlackChannelHistoryResponseSchema = z.object({
   ok: z.boolean(),
@@ -110,7 +113,9 @@ export const SlackChannelHistoryResponseSchema = z.object({
   has_more: z.boolean(),
   response_metadata: SlackResponseMetadataSchema.optional(),
 });
-export type SlackChannelHistoryResponse = z.infer<typeof SlackChannelHistoryResponseSchema>;
+export type SlackChannelHistoryResponse = z.infer<
+  typeof SlackChannelHistoryResponseSchema
+>;
 
 export const SlackRepliesResponseSchema = z.object({
   ok: z.boolean(),
@@ -242,46 +247,99 @@ export const GetSlackChannelsInputSchema = z.object({
     .number()
     .optional()
     .describe('Maximum number of channels to return (default 100, max 200)'),
-  cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
+  cursor: z
+    .string()
+    .optional()
+    .describe('Cursor to start from (default: empty)'),
 });
 
 export const PostMessageInputSchema = z.object({
-  channel: z.string().describe('Channel ID to send message to. e.g. C1234567890'),
-  text: z.string().describe('The formatted text of the message to be published.'),
+  channel: z
+    .string()
+    .describe('Channel ID to send message to. e.g. C1234567890'),
+  text: z
+    .string()
+    .describe('The formatted text of the message to be published.'),
 });
 
 export const ReplyToThreadInputSchema = z.object({
-  channel: z.string().describe('Channel ID where the thread is. e.g. C1234567890'),
-  thread_ts: z.string().describe('Timestamp of the parent message in the thread.'),
+  channel: z
+    .string()
+    .describe('Channel ID where the thread is. e.g. C1234567890'),
+  thread_ts: z
+    .string()
+    .describe('Timestamp of the parent message in the thread.'),
   text: z.string().describe('The formatted text of the reply to be published.'),
 });
 
 export const GetChannelHistoryInputSchema = z.object({
-  channel: z.string().describe('The Channel ID to fetch history for. e.g. C1234567890'),
-  limit: z.number().optional().default(30).describe('The maximum number of items to return.'),
-  cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
+  channel: z
+    .string()
+    .describe('The Channel ID to fetch history for. e.g. C1234567890'),
+  limit: z
+    .number()
+    .optional()
+    .describe('The maximum number of items to return (default: 30).'),
+  cursor: z
+    .string()
+    .optional()
+    .describe('Cursor to start from (default: empty)'),
 });
 
 export const GetThreadRepliesInputSchema = z.object({
-  channel: z.string().describe('The Channel ID to fetch the thread from. e.g. C1234567890'),
-  ts: z.string().describe('Timestamp of the message to get replies e.g. 1751179745.839049'),
-  limit: z.number().optional().default(10).describe('The maximum number of items to return.'),
-  cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
+  channel: z
+    .string()
+    .describe('The Channel ID to fetch the thread from. e.g. C1234567890'),
+  ts: z
+    .string()
+    .describe('Timestamp of the message to get replies e.g. 1751179745.839049'),
+  limit: z
+    .number()
+    .optional()
+    .describe('The maximum number of items to return (default: 10).'),
+  cursor: z
+    .string()
+    .optional()
+    .describe('Cursor to start from (default: empty)'),
 });
 
 export const AddReactionInputSchema = z.object({
-  channel: z.string().describe('Channel ID where the message is. e.g. C1234567890'),
+  channel: z
+    .string()
+    .describe('Channel ID where the message is. e.g. C1234567890'),
   timestamp: z
     .string()
-    .describe('Timestamp of the message to add reaction to. e.g. 1751179745.839049'),
+    .describe(
+      'Timestamp of the message to add reaction to. e.g. 1751179745.839049',
+    ),
   reaction: z.string().describe('Reaction name. e.g. thumbsup'),
 });
 
 export const GetUsersInputSchema = z.object({
-  limit: z.number().optional().default(100).describe('The maximum number of items to return.'),
-  cursor: z.string().optional().describe('Cursor to start from (default: empty)'),
+  limit: z
+    .number()
+    .optional()
+    .describe('The maximum number of items to return (default: 100).'),
+  cursor: z
+    .string()
+    .optional()
+    .describe('Cursor to start from (default: empty)'),
 });
 
 export const GetUserProfileInputSchema = z.object({
   userId: z.string().describe('User ID to fetch profile for.'),
+});
+
+export const ReadBookmarksInputSchema = z.object({
+  channelId: z.string().describe('Channel ID to read bookmarks from.'),
+});
+
+export const ReadBookmarksResponseSchema = z.object({
+  ok: z.boolean(),
+  bookmarks: z.array(
+    z.object({
+      title: z.string(),
+      link: z.string(),
+    }),
+  ),
 });

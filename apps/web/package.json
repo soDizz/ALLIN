@@ -15,6 +15,8 @@
     "@ai-sdk/react": "^1.2.12",
     "@mcp-server/slack": "workspace:*",
     "@mcp-server/time": "workspace:*",
+    "@mcp-server/exa": "workspace:*",
+    "@mcp-server/web-crawler": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-context-menu": "^2.2.15",
@@ -58,7 +60,8 @@
     "tailwind-merge": "^3.3.0",
     "usehooks-ts": "catalog:utils",
     "uuid": "^11.1.0",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "jsdom": "^26.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

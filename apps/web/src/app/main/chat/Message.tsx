@@ -1,6 +1,6 @@
 import type { Message as AiMessage } from '@ai-sdk/react';
-import { MemoizedUserMessage } from './memoized-user-message';
 import { MemoizedAssistantMessage } from './memoized-assistant-message';
+import { MemoizedUserMessage } from './memoized-user-message';
 
 type MessageItemProps = {
   message: AiMessage;
@@ -41,20 +41,4 @@ export const Message = ({ message }: MessageItemProps) => {
   }
 
   return null;
-
-  // const content = message.parts?.map((part, i) => {
-  //   switch (part.type) {
-  //     case 'text':
-  //       return <MemoizedMarkdown content={part.text} />;
-  //     case 'tool-invocation':
-  //       return (
-  //         <p
-  //           className='text-xs text-muted-foreground'
-  //           key={`${message.id}-${i}`}
-  //         >{`calling ${part.toolInvocation.toolName}...`}</p>
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // });
 };

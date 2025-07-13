@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { memo, useDeferredValue, useMemo } from 'react';
 import { marked } from 'marked';
 import { cn } from '@/lib/utils';
+import './shiki.css';
 
 const CodeHighlight: Components['code'] = ({
   className,
@@ -26,7 +27,7 @@ const CodeHighlight: Components['code'] = ({
     </code>
   ) : (
     <ShikiHighlighter
-      className='text-sm border border-gray-200 rounded-md [&>pre]:p-4!'
+      className='shiki-display-animation text-sm border border-gray-200 rounded-md [&>pre]:p-4!'
       addDefaultStyles={true}
       language={language}
       theme='github-dark'
@@ -52,7 +53,15 @@ const MemoizedMarkdownBlock = memo(
 
     return (
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[
+          [
+            remarkGfm,
+            {
+              // 20~23도부터 40~41도 입니다 에서 ~ 로 인해 취소선이 되는 버그 수정
+              singleTilde: false,
+            },
+          ],
+        ]}
         components={{
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error

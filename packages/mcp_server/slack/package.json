@@ -27,7 +27,7 @@
     "ky": "catalog:utils"
   },
   "devDependencies": {
-    "vitest": "^3.1.4"
+    "vitest": "catalog:test"
   },
   "keywords": [],
   "author": "",

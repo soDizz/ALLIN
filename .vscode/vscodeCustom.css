@@ -1,0 +1,117 @@
+.mtk10 {
+  background-image: linear-gradient(45deg, #ff61d2, #fe908f);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  font-style: italic;
+}
+
+.mtk5 {
+  color: #50fa7b;
+
+  background-image: linear-gradient(45deg, #20d4c7, #38ef7d);
+
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.mtk8 {
+  color: #f1fa8c;
+}
+
+.monaco-editor .detected-link,
+.monaco-editor .detected-link-active {
+  text-decoration: none;
+  border-bottom: 4px dashed #efdf62;
+}
+
+.monaco-workbench
+  .part.editor
+  > .content
+  .editor-group-container
+  > .title
+  .tabs-container
+  > .tab.active.tab-border-top
+  > .tab-border-top-container,
+.monaco-workbench
+  .part.editor
+  > .content
+  .editor-group-container
+  > .title
+  .tabs-container
+  > .tab.selected.tab-border-top
+  > .tab-border-top-container {
+  height: 5px;
+  top: 0;
+  z-index: 6;
+  background-image: linear-gradient(
+    to right,
+    #11998f,
+    #d13abd,
+    #efbd8a,
+    #11998f
+  );
+  background-size: 200% auto;
+  animation: borderTopActive 8s linear infinite;
+}
+
+@keyframes borderTopActive {
+  to {
+    background-position: 200%;
+  }
+}
+
+.quick-input-widget .quick-input-list {
+  transition:
+    opacity 150ms ease-out,
+    scale 100ms ease-out,
+    filter 100ms ease-out;
+
+  transform-origin: top;
+  opacity: 1;
+  filter: blur(0px);
+  scale: 1;
+
+  @starting-style {
+    opacity: 0.6;
+    scale: 0.99;
+    filter: blur(2px);
+  }
+}
+
+.composer-unified-dropdown-model {
+  opacity: 0.7;
+}
+
+.composer-unified-dropdown-model span {
+  background-image: linear-gradient(
+    90deg,
+    rgba(2, 162, 222, 1) 0%,
+    rgba(8, 195, 233, 1) 50%
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.monaco-workbench
+  .part.statusbar
+  > .items-container
+  > .statusbar-item
+  > .statusbar-item-label {
+  color: gray;
+}
+
+.monaco-list.mouse-support .monaco-list-row {
+  color: lightgray;
+}
+
+.monaco-action-bar .action-item {
+  opacity: 0.5;
+
+  &:has(.checked) {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

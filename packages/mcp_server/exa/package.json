@@ -1,0 +1,38 @@
+{
+  "name": "@mcp-server/exa",
+  "description": "Exa",
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agentic/ai-sdk": "catalog:ai",
+    "@agentic/core": "catalog:ai",
+    "ai": "catalog:ai",
+    "dotenv": "catalog:utils",
+    "ky": "catalog:utils",
+    "node-fetch": "^3.3.2",
+    "rxjs": "catalog:utils",
+    "zod": "catalog:utils"
+  },
+  "devDependencies": {
+    "vitest": "catalog:test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
