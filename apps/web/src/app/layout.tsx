@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Uneasy',
+  title: 'ALLIN',
   description: 'Easy to use AI chatbot',
 };
 
@@ -25,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
       <Script
         src={'https://www.googletagmanager.com/gtag/js?id=G-1HGDY9T287'}
         strategy='afterInteractive'
