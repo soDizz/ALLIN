@@ -26,12 +26,13 @@ export const Thread = ({ thread, isLast }: ThreadProps) => {
   return (
     <>
       {userMessages && (
-        <Message key={userMessages[0].id} message={userMessages[0]} />
+        <Message
+          key={userMessages[0].id}
+          message={userMessages[0]}
+          userMessageRef={ref as React.RefObject<HTMLDivElement>}
+        />
       )}
-      <article
-        ref={ref}
-        style={isLast ? { minHeight: 'calc(-264px + 100dvh)' } : {}}
-      >
+      <article style={isLast ? { minHeight: 'calc(-264px + 100dvh)' } : {}}>
         {assistantMessages.map(message => {
           return <Message key={message.id} message={message}></Message>;
         })}
