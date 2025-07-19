@@ -62,7 +62,9 @@
     "tailwind-merge": "^3.3.0",
     "usehooks-ts": "catalog:utils",
     "uuid": "^11.1.0",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "gsap": "catalog:animation",
+    "@gsap/react": "catalog:animation"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
