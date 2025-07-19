@@ -46,8 +46,10 @@ export const Thread = ({ thread, isLast, status }: ThreadProps) => {
           styles.loading,
         )}
       >
-        <Spinner size='xs' />
-        <p className='text-xs !m-0'>{isLast ? 'Generating...' : 'Completed'}</p>
+        <Spinner size='xs' variant='default' className='opacity-50' />
+        <p className='text-xs !m-0 text-muted-foreground opacity-75'>
+          Generating...
+        </p>
       </div>
       <article style={isLast ? { minHeight: 'calc(-264px + 100dvh)' } : {}}>
         {assistantMessages.map(message => {
