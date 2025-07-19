@@ -1,0 +1,11 @@
+.placeholder-animation {
+  &::placeholder {
+    background-image: linear-gradient(30deg, #bcbcbc, #e0e0e0);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+
+    background-size: 200% auto;
+
+    width: fit-content;
+  }
+}

@@ -5,7 +5,7 @@
 //   '최대한 친절한 어투로 대답해.' +
 //   '답변에 약간의 이모지를 추가해줘.';
 
-export const createPrompt = () => {
+export const getInitialPrompt = () => {
   const basic =
     '너는 유용하고 정직한 AI 비서야.' +
     '친절하고 명확하게 대화할 것' +
