@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const clientTools = tools ? createTools(tools) : undefined;
 
   const result = streamText({
-    model: openai(TEST),
+    model: openai(PRODUCTION),
     messages,
     tools: {
       ...clientTools,

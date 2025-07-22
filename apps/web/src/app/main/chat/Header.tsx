@@ -1,4 +1,9 @@
-import { MessageSquare, PanelLeft } from 'lucide-react';
+import {
+  MessageSquare,
+  MessageSquareDiff,
+  MessageSquarePlus,
+  PanelLeft,
+} from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import {
   Tooltip,
@@ -9,6 +14,8 @@ import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
 import { feedbackPopupOpen$$ } from '../store/feedbackPopup$$';
+import { Button } from '@/components/ui/button';
+import { NewChat } from './NewChat';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
@@ -32,6 +39,7 @@ export const Header = () => {
           <p className='text-xs text-gray-300'>Toggle Side Bar</p>
         </TooltipContent>
       </Tooltip>
+      {/* <NewChat /> */}
       <Tooltip delayDuration={500}>
         <TooltipTrigger>
           <Toggle
