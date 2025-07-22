@@ -33,6 +33,9 @@ const createTools = (tools: ToolsServerPayload) => {
   );
 };
 
+const TEST = 'gpt-4.1-nano';
+const PRODUCTION = 'gpt-4.1';
+
 export async function POST(req: Request) {
   const data = (await req.json()) as CreateChatBody;
   const { messages, tools } = data;
@@ -40,7 +43,7 @@ export async function POST(req: Request) {
   const clientTools = tools ? createTools(tools) : undefined;
 
   const result = streamText({
-    model: openai('gpt-4.1'),
+    model: openai(PRODUCTION),
     messages,
     tools: {
       ...clientTools,

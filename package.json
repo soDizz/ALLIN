@@ -10,7 +10,8 @@
     "test": "turbo test",
     "create:mcp": "node inquirer.mjs",
     "build:tools": "pnpm --filter '@mcp-server/*' build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "web": "pnpm --filter 'web'"
   },
   "keywords": [],
   "author": "",

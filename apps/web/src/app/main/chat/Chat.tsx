@@ -1,25 +1,47 @@
-import { useChat } from '@ai-sdk/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { Message, useChat } from '@ai-sdk/react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 import { ToolManager } from '@/app/tools/ToolManager';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { createPrompt } from './prompt';
+import { getInitialPrompt } from './prompt';
 import { Thread } from './Thread';
 import { UserInput } from './UserInput';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
+  const initialMessages = useMemo(
+    () => [
+      {
+        role: 'system',
+        id: crypto.randomUUID(),
+        content: getInitialPrompt(),
+        parts: [
+          {
+            type: 'text',
+            text: getInitialPrompt(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
 
-  const { messages, status, setMessages, reload, stop } = useChat({
+  const { messages, status, setMessages, reload, stop, error } = useChat({
     id: 'chat',
     api: '/api/chat',
     maxSteps: 5,
     onFinish: (_m, o) => {
+      console.log('==> onFinish', o);
+      console.log(_m);
       console.log('==> token Usage', o.usage.totalTokens);
     },
     onError: e => {
       console.log(e);
     },
+    onResponse: res => {
+      console.log('==> in res');
+    },
+    initialMessages: initialMessages as Message[],
     //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
     // Throttle the messages and data updates to 50ms
     experimental_throttle: 50,
@@ -32,25 +54,6 @@ export const Chat = () => {
       },
     });
   }, [reload]);
-
-  useEffect(() => {
-    const presetPrompt = createPrompt();
-
-    setMessages(prev => [
-      ...prev,
-      {
-        role: 'system',
-        id: crypto.randomUUID(),
-        content: presetPrompt,
-        parts: [
-          {
-            type: 'text',
-            text: presetPrompt,
-          },
-        ],
-      },
-    ]);
-  }, [setMessages]);
 
   useEffect(() => {
     if (status === 'error') {
@@ -92,6 +95,7 @@ export const Chat = () => {
                 key={`thread-${index}`}
                 thread={thread}
                 isLast={threads.length - 1 === index}
+                status={status}
               ></Thread>
             ))}
           </div>

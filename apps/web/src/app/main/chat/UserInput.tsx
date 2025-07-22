@@ -3,7 +3,6 @@ import { ChevronUp, Square } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
 import { Subject } from 'rxjs';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ContextMenuShortcut } from '@/components/ui/context-menu';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useRxEffect } from '@/lib/rxjs/useRxEffect';
 import { cn } from '@/lib/utils';
+import { Bear } from './Bear';
 
 export const textAreaFocusTrigger$ = new Subject<void>();
 
@@ -35,6 +35,7 @@ export const UserInput = ({
   const [input, setInput] = useState<string>('');
   const submitRef = useRef<HTMLFormElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const bearControllerRef = useRef<GSAPTimeline | null>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // event.key가 'Enter'이고, Cmd(mac) 또는 Ctrl(windows) 키가 함께 눌렸는지 확인
     // 한글 입력 시 keydown 이 2번 호출되는 문제가 있어서, isComposing 체크
@@ -61,28 +62,19 @@ export const UserInput = ({
   };
 
   const onSubmit = () => {
-    if (status === 'streaming') {
+    if (status === 'streaming' || status === 'submitted') {
       stop();
       return;
     }
 
     if (status === 'ready' && !input) {
-      toast.info('Please enter a question', {
-        duration: 3000,
-      });
+      if (bearControllerRef.current?.progress() === 1) {
+        bearControllerRef.current?.progress(0);
+      }
+
+      bearControllerRef.current?.play();
       return;
     }
-
-    // const selectedChannelIds = selectedSlackChannels$$
-    //   .get()
-    //   .map(ch => ch.channelId)
-    //   .toString();
-    // const selectedChannelNames = selectedSlackChannels$$
-    //   .get()
-    //   .map(ch => ch.channelName)
-    //   .toString();
-
-    // const systemPrompt = `When execute Slack tool, you must search or post in that channels. channelIds: ${selectedChannelIds} channelNames: ${selectedChannelNames}`;
 
     setMessages(prev => [
       ...prev,
@@ -121,20 +113,21 @@ export const UserInput = ({
           ref={textAreaRef}
           autoFocus
           aria-label='ask to ai'
-          placeholder='Ask me'
+          placeholder='Ask anything'
           value={input}
           onChange={onChange}
           onKeyDown={handleKeyDown}
           maxLength={1000}
           className='pr-14 max-h-48'
         />
+        <Bear bearControllerRef={bearControllerRef} />
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               type='button'
               onClick={onSubmit}
               className='cursor-pointer absolute right-3 size-8'
-              variant={'outline'}
+              variant={isStreamingOrSubmitting ? 'default' : 'outline'}
               aria-label={isStreamingOrSubmitting ? 'Stop' : 'Submit'}
             >
               {isStreamingOrSubmitting ? (

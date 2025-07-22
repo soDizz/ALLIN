@@ -4,11 +4,14 @@ import { MemoizedUserMessage } from './memoized-user-message';
 
 type MessageItemProps = {
   message: AiMessage;
+  userMessageRef?: React.RefObject<HTMLDivElement>;
 };
 
-export const Message = ({ message }: MessageItemProps) => {
+export const Message = ({ message, userMessageRef }: MessageItemProps) => {
   if (message.role === 'user') {
-    return <MemoizedUserMessage content={message.content} />;
+    return (
+      <MemoizedUserMessage ref={userMessageRef} content={message.content} />
+    );
   }
 
   if (message.role === 'assistant' && message.parts) {

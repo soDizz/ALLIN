@@ -5,8 +5,15 @@ import { Chat } from './chat/Chat';
 import { Header } from './chat/Header';
 import { FeedbackPopup } from './FeedbackPopup';
 import { Initializer } from './initializer/Initializer';
+import { useEffect } from 'react';
+import { getChannel, getDB } from '../idb/getDB';
 
 export const Main = () => {
+  // useEffect(() => {
+  //   getDB().then(res => {
+  //     console.log(res);
+  //   });
+  // });
   return (
     <>
       <Initializer />
