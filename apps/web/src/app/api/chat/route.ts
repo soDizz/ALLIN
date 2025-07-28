@@ -3,7 +3,7 @@ import { openai } from '@ai-sdk/openai';
 import { type Message, streamText, type ToolSet } from 'ai';
 import type { ToolsServerPayload } from '@/app/tools/ToolManager';
 import type { ElementType } from '@/lib/utility-type';
-import { clientFactory } from './client-factory/clientFactory';
+import { clientFactory } from './helper/clientFactory';
 
 export const maxDuration = 30;
 
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const clientTools = tools ? createTools(tools) : undefined;
 
   const result = streamText({
-    model: openai(PRODUCTION),
+    model: openai(TEST),
     messages,
     tools: {
       ...clientTools,

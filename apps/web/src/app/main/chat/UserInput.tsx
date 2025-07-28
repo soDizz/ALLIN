@@ -117,8 +117,8 @@ export const UserInput = ({
           value={input}
           onChange={onChange}
           onKeyDown={handleKeyDown}
-          maxLength={1000}
-          className='pr-14 max-h-48'
+          maxLength={3000}
+          className='pr-14 max-h-48 scroll-py-2'
         />
         <Bear bearControllerRef={bearControllerRef} />
         <Tooltip>
