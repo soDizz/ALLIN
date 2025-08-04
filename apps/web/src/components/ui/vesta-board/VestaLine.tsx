@@ -16,6 +16,35 @@ type VestaLineProps = {
   style?: React.CSSProperties;
 };
 
+const alignText = ({
+  text,
+  align,
+  maxLength,
+}: {
+  text: string;
+  align: Align;
+  maxLength: number;
+}): string => {
+  const textLength = text.length;
+  const padding = maxLength - textLength;
+  const paddingLeft = Math.floor(padding / 2);
+
+  if (textLength >= maxLength) {
+    return text.slice(0, maxLength);
+  }
+
+  switch (align) {
+    case 'left':
+      return text.padEnd(maxLength, ' ');
+    case 'right':
+      return text.padStart(maxLength, ' ');
+    case 'center':
+      return text.padStart(textLength + paddingLeft).padEnd(maxLength, ' ');
+    default:
+      return text;
+  }
+};
+
 export const VestaLine = React.memo(
   ({
     row,
@@ -66,32 +95,3 @@ export const VestaLine = React.memo(
 );
 
 VestaLine.displayName = 'VestaLine';
-
-const alignText = ({
-  text,
-  align,
-  maxLength,
-}: {
-  text: string;
-  align: Align;
-  maxLength: number;
-}): string => {
-  const textLength = text.length;
-  const padding = maxLength - textLength;
-  const paddingLeft = Math.floor(padding / 2);
-
-  if (textLength >= maxLength) {
-    return text.slice(0, maxLength);
-  }
-
-  switch (align) {
-    case 'left':
-      return text.padEnd(maxLength, ' ');
-    case 'right':
-      return text.padStart(maxLength, ' ');
-    case 'center':
-      return text.padStart(textLength + paddingLeft).padEnd(maxLength, ' ');
-    default:
-      return text;
-  }
-};

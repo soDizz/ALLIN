@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Subject } from 'rxjs';
 import styles from './VestaBlock.module.css';
 import gsap from 'gsap';
-import { isNull } from 'es-toolkit';
 
 type VestaBlockProps = {
   targetChar: string;
@@ -28,7 +27,7 @@ export const VestaBlock = ({
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (targetChar === null || targetChar === undefined) return;
+    if (!targetChar) return;
     subject.next(targetChar);
   }, [targetChar]);
 

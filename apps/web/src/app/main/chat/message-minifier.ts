@@ -106,7 +106,7 @@ class MessageMinifier {
     try {
       const res = await ky.post('/api/chat/summary', {
         json: {
-          messages: messages.filter((m: Message) => m.role !== 'system'),
+          messages: messages.filter(m => m.role !== 'system'),
         },
       });
       const summary = await res.text();
