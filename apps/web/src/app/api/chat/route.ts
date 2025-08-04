@@ -33,17 +33,17 @@ const createTools = (tools: ToolsServerPayload) => {
   );
 };
 
-const TEST = 'gpt-4.1-nano';
-const PRODUCTION = 'gpt-4.1';
+const model =
+  process.env.NODE_ENV === 'production' ? 'gpt-4.1' : 'gpt-4.1-mini';
 
 export async function POST(req: Request) {
   const data = (await req.json()) as CreateChatBody;
   const { messages, tools } = data;
 
   const clientTools = tools ? createTools(tools) : undefined;
-
+  console.log('==> model', model);
   const result = streamText({
-    model: openai(TEST),
+    model: openai(model),
     messages,
     tools: {
       ...clientTools,

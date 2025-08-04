@@ -1,4 +1,4 @@
-import type { useChat } from '@ai-sdk/react';
+import type { Message, useChat } from '@ai-sdk/react';
 import { ChevronUp, Square } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
@@ -12,26 +12,18 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useRxEffect } from '@/lib/rxjs/useRxEffect';
-import { cn } from '@/lib/utils';
 import { Bear } from './Bear';
+import { generateMessage } from './chat-helper';
 
 export const textAreaFocusTrigger$ = new Subject<void>();
 
 type UserInputProps = {
-  messages: ReturnType<typeof useChat>['messages'];
-  setMessages: ReturnType<typeof useChat>['setMessages'];
   stop: ReturnType<typeof useChat>['stop'];
   status: ReturnType<typeof useChat>['status'];
-  sendMessage: () => void;
+  sendMessage: (message: Message) => void;
 };
 
-export const UserInput = ({
-  messages,
-  setMessages,
-  stop,
-  sendMessage,
-  status,
-}: UserInputProps) => {
+export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
   const [input, setInput] = useState<string>('');
   const submitRef = useRef<HTMLFormElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -76,23 +68,8 @@ export const UserInput = ({
       return;
     }
 
-    setMessages(prev => [
-      ...prev,
-      {
-        role: 'user',
-        id: crypto.randomUUID(),
-        content: input,
-        parts: [
-          {
-            type: 'text',
-            text: input,
-          },
-        ],
-      },
-    ]);
-
     // 요청 할때마다 최신 정보를 가져와서 API 를 호출한다. (이게 없으면 리렌더가 되지 않으면 이전 값을 보냄)
-    sendMessage();
+    sendMessage(generateMessage('user', input));
     setInput('');
   };
 
@@ -100,50 +77,44 @@ export const UserInput = ({
     status === 'streaming' || status === 'submitted';
 
   return (
-    <motion.section
-      layout={'position'}
-      className={cn('w-full flex flex-col gap-2 mt-[12px]')}
+    <form
+      ref={submitRef}
+      onSubmit={onSubmit}
+      className='w-full relative flex flex-row gap-2 items-center shrink-0'
     >
-      <form
-        ref={submitRef}
-        onSubmit={onSubmit}
-        className='w-full relative flex flex-row gap-2 items-center shrink-0'
-      >
-        <Textarea
-          ref={textAreaRef}
-          autoFocus
-          aria-label='ask to ai'
-          placeholder='Ask anything'
-          value={input}
-          onChange={onChange}
-          onKeyDown={handleKeyDown}
-          maxLength={3000}
-          className='pr-14 max-h-48 scroll-py-2'
-        />
-        <Bear bearControllerRef={bearControllerRef} />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type='button'
-              onClick={onSubmit}
-              className='cursor-pointer absolute right-3 size-8'
-              variant={isStreamingOrSubmitting ? 'default' : 'outline'}
-              aria-label={isStreamingOrSubmitting ? 'Stop' : 'Submit'}
-            >
-              {isStreamingOrSubmitting ? (
-                <Square onClick={stop} />
-              ) : (
-                <ChevronUp />
-              )}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Submit</p>
-            <ContextMenuShortcut>⌘ Enter</ContextMenuShortcut>
-          </TooltipContent>
-        </Tooltip>
-      </form>
-      {/* <BottomToolList /> */}
-    </motion.section>
+      <Textarea
+        ref={textAreaRef}
+        autoFocus
+        aria-label='ask to ai'
+        placeholder='Ask anything'
+        value={input}
+        onChange={onChange}
+        onKeyDown={handleKeyDown}
+        maxLength={2500}
+        className='pr-14 max-h-48 scroll-py-2'
+      />
+      <Bear bearControllerRef={bearControllerRef} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type='button'
+            onClick={onSubmit}
+            className='cursor-pointer absolute right-3 size-8'
+            variant={isStreamingOrSubmitting ? 'default' : 'outline'}
+            aria-label={isStreamingOrSubmitting ? 'Stop' : 'Submit'}
+          >
+            {isStreamingOrSubmitting ? (
+              <Square onClick={stop} />
+            ) : (
+              <ChevronUp />
+            )}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Submit</p>
+          <ContextMenuShortcut>⌘ Enter</ContextMenuShortcut>
+        </TooltipContent>
+      </Tooltip>
+    </form>
   );
 };
