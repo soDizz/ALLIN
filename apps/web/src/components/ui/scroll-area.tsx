@@ -6,8 +6,17 @@ import { forwardRef } from 'react';
 
 const ScrollArea = forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & {
+    /**
+     * 스크롤바 강제 마운트
+     */
+    forceMount?: true;
+    /**
+     * 스크롤바 클래스 이름
+     */
+    scrollBarClassName?: string;
+  }
+>(({ className, children, forceMount, scrollBarClassName, ...props }, ref) => (
   <ScrollAreaPrimitive.Root
     className={cn('relative overflow-hidden', className)}
     {...props}
@@ -22,7 +31,7 @@ const ScrollArea = forwardRef<
     >
       {children}
     </ScrollAreaPrimitive.Viewport>
-    <ScrollBar />
+    <ScrollBar forceMount={forceMount} className={scrollBarClassName} />
     <ScrollAreaPrimitive.Corner />
   </ScrollAreaPrimitive.Root>
 ));
