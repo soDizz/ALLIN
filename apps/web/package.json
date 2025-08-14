@@ -12,9 +12,9 @@
     "@agentic/ai-sdk": "catalog:ai",
     "@agentic/core": "catalog:ai",
     "@ai-sdk/openai": "catalog:ai",
-    "@ai-sdk/react": "catalog:ai",
     "@ai-sdk/provider": "catalog:ai",
     "@ai-sdk/provider-utils": "catalog:ai",
+    "@ai-sdk/react": "catalog:ai",
     "@gsap/react": "catalog:animation",
     "@mcp-server/exa": "workspace:*",
     "@mcp-server/slack": "workspace:*",
@@ -22,6 +22,7 @@
     "@mcp-server/web-crawler": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-context-menu": "^2.2.15",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
@@ -42,6 +43,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "catalog:utils",
     "embla-carousel-react": "^8.6.0",
+    "es-toolkit": "catalog:utils",
     "gsap": "catalog:animation",
     "idb": "^8.0.3",
     "jsdom": "^26.1.0",
@@ -66,8 +68,7 @@
     "tailwind-merge": "^3.3.0",
     "usehooks-ts": "catalog:utils",
     "uuid": "^11.1.0",
-    "zod": "catalog:utils",
-    "es-toolkit": "catalog:utils"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
