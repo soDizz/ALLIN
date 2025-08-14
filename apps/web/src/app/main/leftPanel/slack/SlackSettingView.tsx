@@ -69,7 +69,6 @@ export const SlackSettingView = () => {
         </div>
         <Switch checked={slackPlugin.active} onCheckedChange={onChange} id='slack-active-status' />
       </div> */}
-
       <p className='text-lg mt-4'>Private Zone</p>
       <div className='flex w-full items-center justify-between rounded-lg border p-3 shadow-xs gap-2'>
         <div className='flex flex-col items-start gap-2'>

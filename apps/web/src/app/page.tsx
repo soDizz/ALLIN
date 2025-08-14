@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 
 export default function Home() {
   return (
-    <div className='flex flex-row h-0 items-center justify-center min-h-screen font-[family-name:var(--font-geist-sans)]'>
+    <div className='flex flex-row h-0 items-center justify-center min-h-screen max-sm:h-[100dvh] font-[family-name:var(--font-geist-sans)]'>
       <QueryClientProvider client={queryClient}>
         <ToolManagerContext value={initToolManager()}>
           <LeftPanel />

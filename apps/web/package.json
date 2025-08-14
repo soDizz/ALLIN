@@ -11,8 +11,10 @@
   "dependencies": {
     "@agentic/ai-sdk": "catalog:ai",
     "@agentic/core": "catalog:ai",
-    "@ai-sdk/openai": "^1.3.22",
-    "@ai-sdk/react": "^1.2.12",
+    "@ai-sdk/openai": "catalog:ai",
+    "@ai-sdk/react": "catalog:ai",
+    "@ai-sdk/provider": "catalog:ai",
+    "@ai-sdk/provider-utils": "catalog:ai",
     "@gsap/react": "catalog:animation",
     "@mcp-server/exa": "workspace:*",
     "@mcp-server/slack": "workspace:*",

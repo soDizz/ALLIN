@@ -1,4 +1,3 @@
-import type { Message } from 'ai';
 import ky from 'ky';
 import {
   generateMessage,
@@ -7,6 +6,7 @@ import {
   threadsToMessages,
 } from './chat-helper';
 import { BehaviorSubject } from 'rxjs';
+import type { MyMessage } from './Chat';
 
 class MessageMinifier {
   private static instance: MessageMinifier;
@@ -30,38 +30,48 @@ class MessageMinifier {
     return this._isMinifying$.asObservable();
   }
 
-  private _cutOffMessages: Message[] = [];
+  private _cutOffMessages: MyMessage[] = [];
 
   public get cutOffMessages() {
     return this._cutOffMessages;
   }
 
-  public async minify(messages: Message[]): Promise<Message[]> {
+  public async minify(messages: MyMessage[]): Promise<MyMessage[]> {
     const leftMessageCount = MessageMinifier.LEFT_MESSAGE_COUNT;
 
     if (this.isMinifying) {
       return messages;
     }
+
     try {
       this._isMinifying$.next(true);
-      const summary = await this.summarizeMessage(messages);
+
+      // 1) 최근 N개를 남기고, 그 이전(cutoff)만 요약 대상으로 사용
       const { systemMessages, threads, cutoffThreads } = this.trimMessage(
         messages,
         leftMessageCount,
       );
 
-      this._cutOffMessages = [
-        ...this._cutOffMessages,
-        ...threadsToMessages(cutoffThreads),
-      ];
+      const cutoffMessages = threadsToMessages(cutoffThreads);
+      if (cutoffMessages.length === 0) {
+        return messages;
+      }
+
+      // 2) 요약은 cutoffMessages를 대상으로 함
+      const summary = await this.summarizeMessage(cutoffMessages);
+      // 요약 실패/빈 결과면 안전하게 원본 유지
+      if (!summary.trim()) {
+        return messages;
+      }
+
+      // 3) 잘린 메세지 누적 관리
+      this._cutOffMessages = [...this._cutOffMessages, ...cutoffMessages];
 
       return [
         ...systemMessages,
         generateMessage(
           'system',
-          `This is the summary of the previous conversation. 
-  Just keep in mind that the user was asking about this:
-  ${summary}`,
+          `This is the summary of the previous conversation:\n${summary}`,
         ),
         ...threadsToMessages(threads),
       ];
@@ -78,10 +88,10 @@ class MessageMinifier {
    * @param count : 최근 메세지 몇개를 남길 것인지
    */
   private trimMessage(
-    messages: Message[],
+    messages: MyMessage[],
     count: number,
   ): {
-    systemMessages: Message[];
+    systemMessages: MyMessage[];
     threads: Thread[];
     cutoffThreads: Thread[];
   } {
@@ -102,7 +112,7 @@ class MessageMinifier {
     };
   }
 
-  private async summarizeMessage(messages: Message[]): Promise<string> {
+  private async summarizeMessage(messages: MyMessage[]): Promise<string> {
     try {
       const res = await ky.post('/api/chat/summary', {
         json: {

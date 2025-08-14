@@ -1,5 +1,6 @@
 import type { Message } from 'ai';
 import type { Brand } from 'ts-brand';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * 이런 구조
@@ -62,11 +63,12 @@ export const threadsToMessages = (threads: Thread[]): Message[] => {
 export const generateMessage = (
   role: 'system' | 'user' | 'assistant',
   content: string,
+  id?: string,
 ): Message => {
   return {
     role,
     content,
-    id: crypto.randomUUID(),
+    id: id ?? uuidv4(),
     parts: [
       {
         type: 'text',

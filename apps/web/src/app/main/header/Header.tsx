@@ -1,9 +1,4 @@
-import {
-  MessageSquare,
-  MessageSquareDiff,
-  MessageSquarePlus,
-  PanelLeft,
-} from 'lucide-react';
+import { PanelLeft } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import {
   Tooltip,
@@ -13,14 +8,11 @@ import {
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
-import { feedbackPopupOpen$$ } from '../store/feedbackPopup$$';
-import { Button } from '@/components/ui/button';
-import { NewChat } from './NewChat';
+import { PromptButtonAndDialog } from './PromptButtonAndDialog';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
-  const [isFeedbackPopupOpen, setIsFeedbackPopupOpen] =
-    useRx(feedbackPopupOpen$$);
+
   return (
     <div className='w-full flex flex-row items-center justify-between'>
       <Tooltip delayDuration={500}>
@@ -39,23 +31,7 @@ export const Header = () => {
           <p className='text-xs text-gray-300'>Toggle Side Bar</p>
         </TooltipContent>
       </Tooltip>
-      {/* <NewChat /> */}
-      <Tooltip delayDuration={500}>
-        <TooltipTrigger>
-          <Toggle
-            pressed={isFeedbackPopupOpen}
-            onPressedChange={setIsFeedbackPopupOpen}
-            aria-label='Help'
-            className='cursor-pointer'
-            asChild
-          >
-            <MessageSquare className='size-5' />
-          </Toggle>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p className='text-xs text-gray-300'>Donate Feedback</p>
-        </TooltipContent>
-      </Tooltip>
+      <PromptButtonAndDialog />
     </div>
   );
 };
