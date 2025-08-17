@@ -1,27 +1,18 @@
-import { UIMessage, useChat } from '@ai-sdk/react';
-import {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type UIMessage, useChat } from '@ai-sdk/react';
+import { motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { filter, firstValueFrom, take } from 'rxjs';
 import { toast } from 'sonner';
-import { ToolManager } from '@/app/tools/ToolManager';
+import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRxValue } from '@/lib/rxjs/useRx';
+import { cn } from '@/lib/utils';
+import { userPrompt$$ } from '../store/userPromptStore';
+import { generateMessage, messagesToThreads } from './chat-helper';
+import { messageMinifier } from './message-minifier';
 import { getInitialPrompt } from './prompt';
 import { Thread } from './Thread';
 import { UserInput } from './UserInput';
-import { generateMessage, messagesToThreads } from './chat-helper';
-import { messageMinifier } from './message-minifier';
-import { filter, firstValueFrom, take } from 'rxjs';
-import { motion } from 'motion/react';
-import { cn } from '@/lib/utils';
-import { VestaBoard } from '@/components/ui/vesta-board/VestaBoard';
-import { useRx, useRxValue } from '@/lib/rxjs/useRx';
-import { userPrompt$$ } from '../store/userPromptStore';
-import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 
 export type MyMessage = UIMessage<MessageMetadata>;
 
@@ -147,44 +138,6 @@ export const Chat = () => {
           </div>
         </ScrollArea>
       )}
-      {/* <button
-        type='button'
-        onClick={async () => {
-          const res = await fetch('/api/chat/summary', {
-            method: 'POST',
-            body: JSON.stringify({ messages }),
-          });
-          const summary = await res.text();
-          console.log(summary);
-        }}
-      >
-        요약하기
-      </button> */}
-      {/* <div className='bg-linear-to-b from-[#000] to-[#2f2f2f] p-1 rounded-sm flex justify-center items-center'>
-        <VestaBoard
-          columnCount={5}
-          style={
-            {
-              '--object-height': '20px',
-              '--object-width': '14px',
-              '--block-gap': '0px',
-              '--crack-h': '0',
-              '--crack-w': '0',
-              '--block-bg': 'transparent',
-            } as CSSProperties
-          }
-          lines={[
-            {
-              text: tokenUsage.toString(),
-              align: 'center',
-              color: '#eee',
-              charset: '0123456789 ',
-            },
-          ]}
-          blockShape='default'
-          theme='default'
-        />
-      </div> */}
       <motion.div
         layout={'position'}
         className={cn('w-full flex flex-row gap-2 mt-[12px]')}

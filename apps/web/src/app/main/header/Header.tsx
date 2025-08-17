@@ -8,7 +8,7 @@ import {
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
-import { PromptButtonAndDialog } from './PromptButtonAndDialog';
+import { ModelButtonAndSwitch } from './ModelButtonAndSwitch';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
@@ -31,7 +31,7 @@ export const Header = () => {
           <p className='text-xs text-gray-300'>Toggle Side Bar</p>
         </TooltipContent>
       </Tooltip>
-      <PromptButtonAndDialog />
+      <ModelButtonAndSwitch />
     </div>
   );
 };
