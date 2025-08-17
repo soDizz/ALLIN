@@ -1,88 +1,113 @@
-import { Message, useChat } from '@ai-sdk/react';
-import {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type UIMessage, useChat } from '@ai-sdk/react';
+import { motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { filter, firstValueFrom, take } from 'rxjs';
 import { toast } from 'sonner';
-import { ToolManager } from '@/app/tools/ToolManager';
+import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRx, useRxValue } from '@/lib/rxjs/useRx';
+import { cn } from '@/lib/utils';
+import { tokenUsage$$ } from '../store/tokenUsage$$';
+import { userPrompt$$ } from '../store/userPromptStore';
+import { generateMessage, messagesToThreads } from './chat-helper';
+import { messageMinifier } from './message-minifier';
 import { getInitialPrompt } from './prompt';
 import { Thread } from './Thread';
 import { UserInput } from './UserInput';
-import { generateMessage, messagesToThreads } from './chat-helper';
-import { messageMinifier } from './message-minifier';
-import { defer, filter, of } from 'rxjs';
-import { MockMessage } from './mockMessage';
-import { motion } from 'motion/react';
-import { cn } from '@/lib/utils';
-import { VestaBoard } from '@/components/ui/vesta-board/VestaBoard';
+
+export type MyMessage = UIMessage<MessageMetadata>;
 
 const ASK_TOKEN_LIMIT = 4500;
+const USER_PROMPT_ID = 'user-prompt';
 
 export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
-  const initialMessages = useMemo(
-    () => [generateMessage('system', getInitialPrompt())],
-    [],
-  );
   const messageMinifierRef = useRef(messageMinifier);
-  const [cutoffMessages, setCutoffMessages] = useState<Message[]>([]);
-  const [tokenUsage, setTokenUsage] = useState(500);
+  const [cutoffMessages, setCutoffMessages] = useState<MyMessage[]>([]);
+  const [tokenUsage, setTokenUsage] = useRx(tokenUsage$$);
+  const userPrompt = useRxValue(userPrompt$$);
 
-  const { messages, status, setMessages, reload, stop, error } = useChat({
+  const {
+    messages,
+    status,
+    setMessages,
+    sendMessage: reload,
+    stop,
+    error,
+  } = useChat<MyMessage>({
     id: 'chat',
-    api: '/api/chat',
-    maxSteps: 5,
-    onFinish: async (_m, o) => {
-      const tokenUsage = o.usage.totalTokens;
-      if (tokenUsage > ASK_TOKEN_LIMIT) {
-        const minifiedMessages =
-          await messageMinifierRef.current.minify(messages);
-        setCutoffMessages(messageMinifierRef.current.cutOffMessages);
-        // slice(-2) 를 하는 이유: onFinish 시점에 아직 messages 가 업데이트 되지 않아서
-        // 마지막 2개의 메세지 (유저 질문, AI 대답) 을 가져오기 위해 추가함
-        setMessages(prev => [...minifiedMessages, ...prev.slice(-2)]);
+    onFinish: async ({ message }) => {
+      const tokenUsage = message.metadata;
+      if (tokenUsage?.totalTokens) {
+        setTokenUsage(tokenUsage.totalTokens);
       }
-      // @ts-expect-error - 디버깅 용도로 사용한다.
-      window.__chat_messages = messages;
     },
     onError: e => {
       toast.error('Error occurred while processing your request.');
     },
-    onResponse: res => {
-      console.log('==> in res');
+    onData: res => {
+      console.log('==> in res', res);
     },
-    initialMessages,
     //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
     // Throttle the messages and data updates to 50ms
     experimental_throttle: 50,
   });
 
-  // useEffect(() => {
-  //   const messages = MockMessage.map(m => generateMessage(m.role, m.content));
-  //   setMessages(prev => [...prev, ...messages]);
-  // }, []);
+  useEffect(() => {
+    setMessages(prev => [
+      ...prev,
+      generateMessage(
+        'system',
+        getInitialPrompt(),
+      ) as UIMessage<MessageMetadata>,
+    ]);
+  }, [setMessages]);
+
+  useEffect(() => {
+    const minifyMessage = async (messages: MyMessage[]) => {
+      const minifiedMessages =
+        await messageMinifierRef.current.minify(messages);
+      setCutoffMessages(messageMinifierRef.current.cutOffMessages);
+      setMessages(minifiedMessages);
+    };
+
+    if (tokenUsage > ASK_TOKEN_LIMIT) {
+      minifyMessage(messages);
+    }
+
+    // @ts-expect-error - 디버깅 용도로 사용한다.
+    window.__chat_messages = messages;
+  }, [tokenUsage, setMessages, setCutoffMessages]);
+
+  useEffect(() => {
+    if (userPrompt) {
+      const systemMessage = generateMessage(
+        'system',
+        userPrompt,
+        USER_PROMPT_ID,
+      );
+
+      setMessages(prev => [
+        ...prev.filter(m => m.id !== USER_PROMPT_ID),
+        systemMessage as UIMessage<MessageMetadata>,
+      ]);
+    }
+  }, [setMessages, userPrompt]);
 
   const sendMessage = useCallback(
-    (newMessage: Message) => {
-      defer(() =>
-        messageMinifierRef.current.isMinifying
-          ? messageMinifierRef.current.isMinifying$.pipe(
-              filter(isMinifying => !isMinifying),
-            )
-          : of(true),
-      ).subscribe(() => {
-        setMessages(prev => [...prev, newMessage]);
-        reload({
-          body: {
-            tools: ToolManager.getInstance().getServerPayload(),
-          },
-        });
-      });
+    async (newMessage: MyMessage) => {
+      // 메세지 최적화 중일 때, 작업이 끝나면 메세지 전송하는 코드
+      if (messageMinifierRef.current.isMinifying) {
+        await firstValueFrom(
+          messageMinifierRef.current.isMinifying$.pipe(
+            filter(isMinifying => !isMinifying),
+            take(1),
+          ),
+        );
+      }
+
+      setMessages(prev => [...prev, newMessage]);
+      reload();
     },
     [reload, setMessages],
   );
@@ -117,44 +142,6 @@ export const Chat = () => {
           </div>
         </ScrollArea>
       )}
-      {/* <button
-        type='button'
-        onClick={async () => {
-          const res = await fetch('/api/chat/summary', {
-            method: 'POST',
-            body: JSON.stringify({ messages }),
-          });
-          const summary = await res.text();
-          console.log(summary);
-        }}
-      >
-        요약하기
-      </button> */}
-      {/* <div className='bg-linear-to-b from-[#000] to-[#2f2f2f] p-1 rounded-sm flex justify-center items-center'>
-        <VestaBoard
-          columnCount={5}
-          style={
-            {
-              '--object-height': '20px',
-              '--object-width': '14px',
-              '--block-gap': '0px',
-              '--crack-h': '0',
-              '--crack-w': '0',
-              '--block-bg': 'transparent',
-            } as CSSProperties
-          }
-          lines={[
-            {
-              text: tokenUsage.toString(),
-              align: 'center',
-              color: '#eee',
-              charset: '0123456789 ',
-            },
-          ]}
-          blockShape='default'
-          theme='default'
-        />
-      </div> */}
       <motion.div
         layout={'position'}
         className={cn('w-full flex flex-row gap-2 mt-[12px]')}

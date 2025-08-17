@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { generateObject, type Message } from 'ai';
+import { generateObject, type UIMessage } from 'ai';
 import { z } from 'zod';
 
 export async function POST(req: Request) {
@@ -7,7 +7,11 @@ export async function POST(req: Request) {
   const { messages } = data;
 
   const conversation = messages
-    .map((m: Message) => `${m.role}: ${m.content}`)
+    .map((m: UIMessage) => {
+      const role = m.role;
+      const content = m.parts[0].type === 'text' ? m.parts[0].text : '';
+      return `${role}: ${content}`;
+    })
     .join('\n');
 
   if (conversation.length === 0) {
@@ -15,7 +19,6 @@ export async function POST(req: Request) {
   }
 
   const ret = await generateObject({
-    maxTokens: 1000,
     model: openai('gpt-4.1-mini'),
     schema: z.object({
       summary: z.string(),

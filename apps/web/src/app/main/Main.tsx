@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { Chat } from './chat/Chat';
-import { Header } from './chat/Header';
+import { Header } from './header/Header';
 import { FeedbackPopup } from './FeedbackPopup';
 import { Initializer } from './initializer/Initializer';
 import { useEffect } from 'react';

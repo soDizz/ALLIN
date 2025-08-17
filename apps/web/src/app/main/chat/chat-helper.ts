@@ -1,5 +1,7 @@
-import type { Message } from 'ai';
+import type { UIMessage } from 'ai';
 import type { Brand } from 'ts-brand';
+import { v4 as uuidv4 } from 'uuid';
+import type { MyMessage } from './Chat';
 
 /**
  * 이런 구조
@@ -28,7 +30,7 @@ import type { Brand } from 'ts-brand';
  */
 export type Thread = Brand<UserOrAssistantMessage[], 'thread'>;
 
-export type UserOrAssistantMessage = Message & {
+export type UserOrAssistantMessage = MyMessage & {
   role: 'user' | 'assistant';
 };
 
@@ -36,7 +38,7 @@ export type UserOrAssistantMessage = Message & {
  * 직선으로 나열된 메세지들을 유저의 질문과 AI 의 답변으로 묶어서 배열로 반환한다.
  * 스레드: 유저의 질문과 AI 의 답변으로 묶인 독립적인 배열
  */
-export const messagesToThreads = (messages: Message[]): Thread[] => {
+export const messagesToThreads = (messages: UIMessage[]): Thread[] => {
   const threads = messages.reduce(
     (acc, message) => {
       if (message.role === 'user') {
@@ -55,18 +57,18 @@ export const messagesToThreads = (messages: Message[]): Thread[] => {
   return threads;
 };
 
-export const threadsToMessages = (threads: Thread[]): Message[] => {
+export const threadsToMessages = (threads: Thread[]): UIMessage[] => {
   return threads.flatMap(t => t);
 };
 
 export const generateMessage = (
   role: 'system' | 'user' | 'assistant',
   content: string,
-): Message => {
+  id?: string,
+): UIMessage => {
   return {
     role,
-    content,
-    id: crypto.randomUUID(),
+    id: id ?? uuidv4(),
     parts: [
       {
         type: 'text',

@@ -1,8 +1,8 @@
 import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { useEffect, useMemo, useRef } from 'react';
 import { Subject } from 'rxjs';
 import styles from './VestaBlock.module.css';
-import gsap from 'gsap';
 
 type VestaBlockProps = {
   targetChar: string;
@@ -100,11 +100,13 @@ export const VestaBlock = ({
             ? charset.length - 1 - currentIndex + desiredIndex
             : desiredIndex - currentIndex;
         // this is how you throw an extra loop in for the stagger
-        const padding = 0;
+        const loops = gsap.utils.random(0, 1, 1); // 0, 1, 2 중 하나
+        const padding = (charset.length - 1) * loops;
         gsap.to(scrubber, {
           delay: 0,
           totalTime: `+=${shift + padding}`,
           ease: 'power1.out',
+          // random 값을 조절해서 애니메이션 조절가능
           duration: (shift + padding) * gsap.utils.random(0.1, 0.12),
         });
       });

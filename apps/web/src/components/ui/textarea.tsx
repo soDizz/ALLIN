@@ -1,6 +1,17 @@
+import { mergeRefs } from '@/lib/mergeRefs';
 import { cn } from '@/lib/utils';
+import { useEffect, useRef } from 'react';
 
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+      ref.current.selectionStart = ref.current.value.length;
+    }
+  }, []);
+
   return (
     <textarea
       data-slot='textarea'
@@ -9,6 +20,7 @@ function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
         className,
       )}
       {...props}
+      ref={mergeRefs(ref, props.ref)}
     />
   );
 }

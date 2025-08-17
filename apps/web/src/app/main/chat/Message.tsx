@@ -1,29 +1,33 @@
-import type { Message as AiMessage } from '@ai-sdk/react';
+import type { UIMessage } from '@ai-sdk/react';
 import { MemoizedAssistantMessage } from './memoized-assistant-message';
 import { MemoizedUserMessage } from './memoized-user-message';
 
 type MessageItemProps = {
-  message: AiMessage;
+  message: UIMessage;
   userMessageRef?: React.RefObject<HTMLDivElement>;
 };
 
 export const Message = ({ message, userMessageRef }: MessageItemProps) => {
   if (message.role === 'user') {
-    return (
-      <MemoizedUserMessage ref={userMessageRef} content={message.content} />
-    );
+    let userMessage = '';
+
+    if (message.parts[0].type === 'text') {
+      userMessage = message.parts[0].text;
+    }
+
+    return <MemoizedUserMessage ref={userMessageRef} content={userMessage} />;
   }
 
   if (message.role === 'assistant' && message.parts) {
     const assistantMessage = message.parts
       .map(part => {
-        if (part.type === 'tool-invocation') {
+        if (part.type === 'dynamic-tool') {
           return (
             <div
               className='text-gray-400 text-xs'
-              key={`tool-${message.id}-${part.toolInvocation.toolCallId}`}
+              key={`tool-${message.id}-${part.toolCallId}`}
             >
-              {part.toolInvocation.toolName}
+              {part.toolName}
             </div>
           );
         }
@@ -32,7 +36,7 @@ export const Message = ({ message, userMessageRef }: MessageItemProps) => {
             <MemoizedAssistantMessage
               key={`text-${message.id}`}
               id={message.id}
-              content={message.content}
+              content={part.text}
             ></MemoizedAssistantMessage>
           );
         }
