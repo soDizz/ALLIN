@@ -1,4 +1,4 @@
-import { PanelLeft } from 'lucide-react';
+import { PanelLeft, Settings, Settings2 } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import {
   Tooltip,
@@ -8,14 +8,13 @@ import {
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
-import { ModelButtonAndSwitch } from './ModelButtonAndSwitch';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
 
   return (
     <div className='w-full flex flex-row items-center justify-between'>
-      <Tooltip delayDuration={500}>
+      <Tooltip delayDuration={200}>
         <TooltipTrigger>
           <Toggle
             pressed={open}
@@ -24,14 +23,13 @@ export const Header = () => {
             className='cursor-pointer'
             asChild
           >
-            <PanelLeft className={cn(!open && 'text-gray-500')} />
+            <Settings className={cn(!open && 'text-gray-500 stroke-2')} />
           </Toggle>
         </TooltipTrigger>
         <TooltipContent>
-          <p className='text-xs text-gray-300'>Toggle Side Bar</p>
+          <p className='text-xs'>설정</p>
         </TooltipContent>
       </Tooltip>
-      <ModelButtonAndSwitch />
     </div>
   );
 };

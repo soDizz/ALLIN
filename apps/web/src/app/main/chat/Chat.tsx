@@ -5,8 +5,9 @@ import { filter, firstValueFrom, take } from 'rxjs';
 import { toast } from 'sonner';
 import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRxValue } from '@/lib/rxjs/useRx';
+import { useRx, useRxValue } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
+import { tokenUsage$$ } from '../store/tokenUsage$$';
 import { userPrompt$$ } from '../store/userPromptStore';
 import { generateMessage, messagesToThreads } from './chat-helper';
 import { messageMinifier } from './message-minifier';
@@ -23,7 +24,7 @@ export const Chat = () => {
   const scrollViewRef = useRef<HTMLDivElement>(null);
   const messageMinifierRef = useRef(messageMinifier);
   const [cutoffMessages, setCutoffMessages] = useState<MyMessage[]>([]);
-  const [tokenUsage, setTokenUsage] = useState(0);
+  const [tokenUsage, setTokenUsage] = useRx(tokenUsage$$);
   const userPrompt = useRxValue(userPrompt$$);
 
   const {
