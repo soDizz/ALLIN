@@ -56,7 +56,10 @@ export const Chat = () => {
   useEffect(() => {
     setMessages(prev => [
       ...prev,
-      generateMessage('system', getInitialPrompt()),
+      generateMessage(
+        'system',
+        getInitialPrompt(),
+      ) as UIMessage<MessageMetadata>,
     ]);
   }, [setMessages]);
 
@@ -86,7 +89,7 @@ export const Chat = () => {
 
       setMessages(prev => [
         ...prev.filter(m => m.id !== USER_PROMPT_ID),
-        systemMessage,
+        systemMessage as UIMessage<MessageMetadata>,
       ]);
     }
   }, [setMessages, userPrompt]);

@@ -1,12 +1,14 @@
+import type { UIMessage } from 'ai';
 import ky from 'ky';
+import { BehaviorSubject } from 'rxjs';
+import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
+import type { MyMessage } from './Chat';
 import {
   generateMessage,
   messagesToThreads,
-  Thread,
+  type Thread,
   threadsToMessages,
 } from './chat-helper';
-import { BehaviorSubject } from 'rxjs';
-import type { MyMessage } from './Chat';
 
 class MessageMinifier {
   private static instance: MessageMinifier;
@@ -52,7 +54,7 @@ class MessageMinifier {
         leftMessageCount,
       );
 
-      const cutoffMessages = threadsToMessages(cutoffThreads);
+      const cutoffMessages = threadsToMessages(cutoffThreads) as MyMessage[];
       if (cutoffMessages.length === 0) {
         return messages;
       }
@@ -72,8 +74,8 @@ class MessageMinifier {
         generateMessage(
           'system',
           `This is the summary of the previous conversation:\n${summary}`,
-        ),
-        ...threadsToMessages(threads),
+        ) as UIMessage<MessageMetadata>,
+        ...(threadsToMessages(threads) as MyMessage[]),
       ];
     } catch (err) {
       console.error(err);

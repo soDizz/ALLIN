@@ -1,10 +1,8 @@
 import type { UIMessage, useChat } from '@ai-sdk/react';
 import { ChevronUp, Square } from 'lucide-react';
-// import { motion } from 'motion/react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
 import { Subject } from 'rxjs';
 import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
-import { AIGlass } from '@/components/ui/ai-glass/AIGlass';
 import { Button } from '@/components/ui/button';
 import { ContextMenuShortcut } from '@/components/ui/context-menu';
 import {
@@ -80,7 +78,7 @@ export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
     }
 
     // 요청 할때마다 최신 정보를 가져와서 API 를 호출한다. (이게 없으면 리렌더가 되지 않으면 이전 값을 보냄)
-    sendMessage(generateMessage('user', input));
+    sendMessage(generateMessage('user', input) as UIMessage<MessageMetadata>);
     setInput('');
   };
 

@@ -1,12 +1,13 @@
-import type { Message as AiMessage, useChat } from '@ai-sdk/react';
+import type { useChat } from '@ai-sdk/react';
 import { useEffect, useRef } from 'react';
-import { Message } from './Message';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
+import type { MyMessage } from './Chat';
+import { Message } from './Message';
 import styles from './Thread.module.css';
 
 type ThreadProps = {
-  thread: Array<AiMessage>;
+  thread: Array<MyMessage>;
   isLast: boolean;
   status: ReturnType<typeof useChat>['status'];
 };

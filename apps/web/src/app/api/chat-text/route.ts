@@ -1,11 +1,16 @@
-import { openai } from '@ai-sdk/openai';
-import { type Message, streamText, type ToolSet } from 'ai';
 import { createAISDKTools } from '@agentic/ai-sdk';
+import { assert } from '@agentic/core';
+import { openai } from '@ai-sdk/openai';
+import { ExaClient } from '@mcp-server/exa';
 import { SlackClient } from '@mcp-server/slack';
 import { TimeClient } from '@mcp-server/time';
+import {
+  convertToModelMessages,
+  streamText,
+  type ToolSet,
+  type UIMessage,
+} from 'ai';
 import { decryptData } from '@/lib/crypo';
-import { ExaClient } from '@mcp-server/exa';
-import { assert } from '@agentic/core';
 
 export const maxDuration = 30;
 
@@ -16,7 +21,7 @@ type Tool = {
 };
 
 type CreateChatBody = {
-  messages: Message[];
+  messages: UIMessage[];
   enabledTools?: Tool[];
 };
 
@@ -78,7 +83,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai.responses('gpt-4.1-mini'),
-    messages,
+    messages: convertToModelMessages(messages),
     tools: {
       ...(enabledTools ? createTools(enabledTools) : {}),
     },
@@ -88,5 +93,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toDataStreamResponse();
+  return result.toTextStreamResponse();
 }
