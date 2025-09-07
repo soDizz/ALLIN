@@ -101,7 +101,7 @@ export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
             value={input}
             onChange={onChange}
             onKeyDown={handleKeyDown}
-            maxLength={2500}
+            maxLength={5000}
             className='max-h-48 min-h-8 scroll-py-2 border-0 rounded-none shadow-none focus-visible:ring-0 p-0 pr-14'
           />
         </div>
