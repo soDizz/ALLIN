@@ -17,7 +17,7 @@ import { UserInput } from './UserInput';
 
 export type MyMessage = UIMessage<MessageMetadata>;
 
-const ASK_TOKEN_LIMIT = 4500;
+const ASK_TOKEN_LIMIT = 10000;
 const USER_PROMPT_ID = 'user-prompt';
 
 export const Chat = () => {
