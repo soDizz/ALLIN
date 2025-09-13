@@ -63,3 +63,6 @@ packages/**/.turbo
 
 # content layer
 .contentlayer
+
+
+.cursor/mcp.json
