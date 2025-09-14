@@ -12,7 +12,10 @@
       "default": "./dist/index.mjs"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "generate:api": "pnpm run clean:generated && orval --config ./orval.config.ts",
+    "clean:generated": "rimraf ./src/generated"
+  },
   "peerDependencies": {
     "react": "catalog:react19",
     "react-dom": "catalog:react19"
@@ -21,14 +24,17 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/express-serve-static-core": "^5.0.6",
-    "@types/lowdb": "^2.0.3"
+    "@types/lowdb": "^2.0.3",
+    "orval": "^7.11.2"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "lowdb": "^7.0.1"
+    "lowdb": "^7.0.1",
+    "zod": "catalog:utils"
   }
 }
