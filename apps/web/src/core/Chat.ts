@@ -98,4 +98,8 @@ export class Chat<UI_MESSAGE extends UIMessage> {
   public getStatus$() {
     return this.chatService.status$.asObservable();
   }
+
+  public async stop() {
+    await this.chatService.stop();
+  }
 }

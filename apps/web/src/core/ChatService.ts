@@ -93,4 +93,9 @@ export class ChatService<UI_MESSAGE extends UIMessage = UIMessage> {
       });
     });
   }
+
+  public async stop() {
+    assert(this.chat, 'Err: chat is not initialized.');
+    this.chat.stop();
+  }
 }

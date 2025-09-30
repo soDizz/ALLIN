@@ -18,13 +18,21 @@ export class ChatManager {
     return ChatManager.instance;
   }
 
-  public static new<UI_MESSAGE extends UIMessage>({ id }: { id: string }) {
+  public static new<UI_MESSAGE extends UIMessage>({
+    id,
+    experimental_throttle,
+    ...props
+  }: {
+    id: string;
+    experimental_throttle: number;
+  } & ChatInit<UI_MESSAGE>) {
     const summarizer = new ChatSummarizer({
       api: process.env.SUMMARIZER_API_URL ?? '',
     });
     const chatService = new ChatService<UI_MESSAGE>({
       id,
-      experimental_throttle: 50,
+      experimental_throttle,
+      ...props,
     });
     const uiMessageStore = new UIMessageStore<UI_MESSAGE>();
     return new Chat<UI_MESSAGE>({
