@@ -61,11 +61,14 @@ export const threadsToMessages = (threads: Thread[]): UIMessage[] => {
   return threads.flatMap(t => t);
 };
 
-export const generateUIMessage = <UI_MESSAGE extends UIMessage>(
-  role: 'system' | 'user' | 'assistant',
+export const generateUIMessage = <
+  UI_MESSAGE extends UIMessage,
+  Role extends UI_MESSAGE['role'],
+>(
+  role: Role,
   content: string,
   id: string = uuidv4(),
-): UI_MESSAGE => {
+) => {
   return {
     role,
     id,
@@ -75,7 +78,7 @@ export const generateUIMessage = <UI_MESSAGE extends UIMessage>(
         text: content,
       },
     ],
-  } as UI_MESSAGE;
+  } as UI_MESSAGE & { role: Role };
 };
 
 export const getTextUIMessage = (message: UIMessage) => {

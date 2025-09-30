@@ -1,5 +1,5 @@
 import type { UIMessage } from '@ai-sdk/react';
-import type { ChatInit } from 'ai';
+import type { ChatInit, HttpChatTransportInitOptions } from 'ai';
 import { Chat } from './Chat';
 import { ChatService } from './ChatService';
 import { ChatSummarizer } from './ChatSummarizer';
@@ -25,7 +25,8 @@ export class ChatManager {
   }: {
     id: string;
     experimental_throttle: number;
-  } & ChatInit<UI_MESSAGE>) {
+  } & ChatInit<UI_MESSAGE> &
+    HttpChatTransportInitOptions<UI_MESSAGE>) {
     const summarizer = new ChatSummarizer({
       api: process.env.SUMMARIZER_API_URL ?? '',
     });

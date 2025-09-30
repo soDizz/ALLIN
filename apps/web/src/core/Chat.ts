@@ -55,12 +55,6 @@ export class Chat<UI_MESSAGE extends UIMessage> {
     return this.chatService.sendMessage(message);
   }
 
-  public subscribeMessages(listener: () => void) {
-    const { unsubscribe } = this.getMessages$().subscribe(listener);
-
-    return () => unsubscribe();
-  }
-
   public getMessages$() {
     return this.uiMessageStore.getMessages$();
   }
@@ -89,10 +83,19 @@ export class Chat<UI_MESSAGE extends UIMessage> {
     return this.chatService.status$.getValue();
   }
 
-  public subscribeStatus(listener: () => void) {
-    const { unsubscribe } = this.getStatus$().subscribe(listener);
+  public subscribeMessages(listener: () => void) {
+    const subscription = this.getMessages$().subscribe(listener);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }
 
-    return () => unsubscribe();
+  public subscribeStatus(listener: () => void) {
+    const subscription = this.getStatus$().subscribe(listener);
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }
 
   public getStatus$() {

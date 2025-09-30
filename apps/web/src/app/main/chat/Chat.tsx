@@ -44,12 +44,9 @@ export const Chat = () => {
       }
     },
     onError: e => {
-      console.log(e);
       toast.error('Error occurred while processing your request.');
     },
-    onData: res => {
-      console.log('==> in res', res);
-    },
+    onData: res => {},
     //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
     // Throttle the messages and data updates to 50ms
     experimental_throttle: 50,
