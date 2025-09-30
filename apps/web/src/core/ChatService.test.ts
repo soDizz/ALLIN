@@ -33,7 +33,7 @@ describe('Summerizer test', () => {
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
         start(controller) {
-          failedResponse.forEach((message, idx) => {
+          successfulResponse.forEach((message, idx) => {
             setTimeout(() => {
               controller.enqueue(encoder.encode(message));
               if (idx === successfulResponse.length - 1) {
@@ -64,15 +64,8 @@ describe('Summerizer test', () => {
       api: '/chat',
     });
 
-    try {
-      await service.sendMessage(generateUIMessage('user', 'Say Hello World.'));
-    } catch (err) {
-      console.log('==> in err', err);
-    }
+    await service.sendMessage(generateUIMessage('user', 'Say Hello World.'));
 
-    service.error$.subscribe(err => {
-      console.log('==> in err', err);
-    });
     const messageResult = service.data$.getValue()!;
     const text = getTextUIMessage(messageResult);
 

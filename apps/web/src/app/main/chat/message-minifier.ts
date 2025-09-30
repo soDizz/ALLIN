@@ -2,13 +2,13 @@ import type { UIMessage } from 'ai';
 import ky from 'ky';
 import { BehaviorSubject } from 'rxjs';
 import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
-import type { MyMessage } from './Chat';
 import {
-  generateMessage,
+  generateUIMessage,
   messagesToThreads,
   type Thread,
   threadsToMessages,
-} from './chat-helper';
+} from '../../../core/helper';
+import type { MyMessage } from './Chat';
 
 class MessageMinifier {
   private static instance: MessageMinifier;
@@ -71,7 +71,7 @@ class MessageMinifier {
 
       return [
         ...systemMessages,
-        generateMessage(
+        generateUIMessage(
           'system',
           `This is the summary of the previous conversation:\n${summary}`,
         ) as UIMessage<MessageMetadata>,
