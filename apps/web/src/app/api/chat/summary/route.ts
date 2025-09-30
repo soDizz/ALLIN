@@ -4,17 +4,9 @@ import { z } from 'zod';
 
 export async function POST(req: Request) {
   const data = await req.json();
-  const { messages } = data;
+  const { text } = data;
 
-  const conversation = messages
-    .map((m: UIMessage) => {
-      const role = m.role;
-      const content = m.parts[0].type === 'text' ? m.parts[0].text : '';
-      return `${role}: ${content}`;
-    })
-    .join('\n');
-
-  if (conversation.length === 0) {
+  if (text.length === 0) {
     return new Response('No conversation', { status: 400 });
   }
 
@@ -23,14 +15,7 @@ export async function POST(req: Request) {
     schema: z.object({
       summary: z.string(),
     }),
-    prompt: `
-아래 대화를 바탕으로,
-유저는 ~~ 에 대해서 물어봤었고, AI 는 어떤 답변을 했다 의 형식으로 모두 요약해줘.
-대답은 꼭 영어로 해줘.
-
-The conversation is as follows:
-${conversation}
-`,
+    prompt: text,
   });
 
   return new Response(ret.object.summary);
