@@ -8,6 +8,7 @@
     "start": "turbo start",
     "build": "turbo build",
     "test": "pnpm --filter 'web' test",
+    "test:watch": "pnpm --filter 'web' test:watch",
     "create:mcp": "node inquirer.mjs",
     "build:tools": "pnpm --filter '@mcp-server/*' build",
     "prepare": "husky",
