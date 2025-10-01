@@ -1,5 +1,4 @@
-import type { UIMessage } from '@ai-sdk/react';
-import type { ChatInit, HttpChatTransportInitOptions } from 'ai';
+import type { ChatInit, HttpChatTransportInitOptions, UIMessage } from 'ai';
 import { Chat } from './Chat';
 import { ChatService } from './ChatService';
 import { ChatSummarizer } from './ChatSummarizer';
@@ -7,7 +6,8 @@ import { UIMessageStore } from './UiMessageStore';
 
 export class ChatManager {
   private static instance: ChatManager;
-  private static chats: Map<string, Chat<UIMessage>> = new Map();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static chats: Map<string, Chat<any>> = new Map();
 
   private constructor() {}
 
@@ -28,7 +28,7 @@ export class ChatManager {
   } & ChatInit<UI_MESSAGE> &
     HttpChatTransportInitOptions<UI_MESSAGE>) {
     const summarizer = new ChatSummarizer({
-      api: process.env.SUMMARIZER_API_URL ?? '',
+      api: '/api/chat/summary',
     });
     const chatService = new ChatService<UI_MESSAGE>({
       id,
@@ -36,17 +36,19 @@ export class ChatManager {
       ...props,
     });
     const uiMessageStore = new UIMessageStore<UI_MESSAGE>();
-    return new Chat<UI_MESSAGE>({
+    const newChat = new Chat<UI_MESSAGE>({
       id,
       chatService,
       summarizer,
       uiMessageStore,
     });
+    ChatManager.chats.set(id, newChat);
+    return newChat;
   }
 
-  public static getChatById(id: string) {
+  public static getChatById<UI_MESSAGE extends UIMessage>(id: string) {
     if (ChatManager.chats.has(id)) {
-      return ChatManager.chats.get(id);
+      return ChatManager.chats.get(id) as Chat<UI_MESSAGE> | undefined;
     }
     return null;
   }

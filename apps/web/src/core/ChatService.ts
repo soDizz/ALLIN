@@ -66,9 +66,15 @@ export class ChatService<UI_MESSAGE extends UIMessage = UIMessage> {
     return this.chat.messages;
   }
 
-  public setMessages(messages: UI_MESSAGE[]): void {
+  public setMessages(
+    messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[]),
+  ): void {
     assert(this.chat, 'Err: chat is not initialized.');
-    this.chat.messages = messages;
+    if (typeof messages === 'function') {
+      this.chat.messages = messages(this.chat.messages);
+    } else {
+      this.chat.messages = messages;
+    }
   }
 
   public async sendMessage(message: UI_MESSAGE & { role: 'user' }) {

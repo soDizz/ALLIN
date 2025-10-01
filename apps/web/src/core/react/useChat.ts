@@ -10,8 +10,12 @@ import { ChatManager } from '@/core/ChatManager';
 type UseChatReturn<UI_MESSAGE extends UIMessage> = {
   sendMessage: (message: UI_MESSAGE & { role: 'user' }) => Promise<void>;
   uiMessages: UI_MESSAGE[];
-  setUiMessages: (messages: UI_MESSAGE[]) => void;
-  setMessageContext: (messageContext: UI_MESSAGE[]) => void;
+  setUiMessages: (
+    messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[]),
+  ) => void;
+  setMessageContext: (
+    messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[]),
+  ) => void;
   stop: () => void;
   // error: Error | null;
   // tokenUsage: {
@@ -36,7 +40,7 @@ export const useChat = <UI_MESSAGE extends UIMessage>({
 }: UseChatParams<UI_MESSAGE>): UseChatReturn<UI_MESSAGE> => {
   const chat = useMemo(() => {
     return (
-      ChatManager.getChatById(id) ??
+      ChatManager.getChatById<UI_MESSAGE>(id) ??
       ChatManager.new<UI_MESSAGE>({
         id,
         experimental_throttle: experimental_throttle ?? 50,
@@ -57,27 +61,26 @@ export const useChat = <UI_MESSAGE extends UIMessage>({
 
   const uiMessages = useSyncExternalStore(
     chat.subscribeMessages.bind(chat),
-    () => chat.getMessages() as UI_MESSAGE[],
-    () => [],
+    () => chat.getMessages(),
+    () => chat.getMessages(),
   );
 
   const status = useSyncExternalStore<ChatStatus>(
     chat.subscribeStatus.bind(chat),
     () => chat.getStatus(),
-    () => 'ready' as ChatStatus,
+    () => chat.getStatus(),
   );
 
   const setUiMessages = useCallback(
-    (messages: UI_MESSAGE[]) => {
+    (messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[])) => {
       chat.setUiMessages(messages);
     },
     [chat],
   );
 
   const setMessageContext = useCallback(
-    (messages: UI_MESSAGE[]) => {
-      chat.setContextMessages(messages);
-    },
+    (messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[])) =>
+      chat.setContextMessages(messages),
     [chat],
   );
 
