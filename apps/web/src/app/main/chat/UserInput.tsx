@@ -1,8 +1,6 @@
-import type { UIMessage, useChat } from '@ai-sdk/react';
 import { ChevronUp, Square } from 'lucide-react';
 import { type ChangeEventHandler, useRef, useState } from 'react';
 import { Subject } from 'rxjs';
-import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 import { Button } from '@/components/ui/button';
 import { ContextMenuShortcut } from '@/components/ui/context-menu';
 import {
@@ -18,17 +16,19 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import type { useChat } from '@/core/react/useChat';
 import { useRxEffect } from '@/lib/rxjs/useRxEffect';
 // import { Bear } from './Bear';
 import { generateUIMessage } from '../../../core/helper';
 import { Bear } from './Bear';
+import type { MyMessage } from './Chat';
 
 export const textAreaFocusTrigger$ = new Subject<void>();
 
 type UserInputProps = {
   stop: ReturnType<typeof useChat>['stop'];
   status: ReturnType<typeof useChat>['status'];
-  sendMessage: (message: UIMessage<MessageMetadata>) => void;
+  sendMessage: ReturnType<typeof useChat<MyMessage>>['sendMessage'];
 };
 
 export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
@@ -78,7 +78,7 @@ export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
     }
 
     // 요청 할때마다 최신 정보를 가져와서 API 를 호출한다. (이게 없으면 리렌더가 되지 않으면 이전 값을 보냄)
-    sendMessage(generateUIMessage('user', input) as UIMessage<MessageMetadata>);
+    sendMessage(generateUIMessage('user', input));
     setInput('');
   };
 

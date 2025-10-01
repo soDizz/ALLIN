@@ -1,6 +1,5 @@
 import type { UIMessage } from 'ai';
 import { v4 } from 'uuid';
-import { _uuidv4 } from 'zod/v4/core';
 import type { ChatService } from './ChatService';
 import type { ChatSummarizer } from './ChatSummarizer';
 import type { UIMessageStore } from './UiMessageStore';
@@ -71,11 +70,15 @@ export class Chat<UI_MESSAGE extends UIMessage> {
     return this.chatService.getMessages();
   }
 
-  public setContextMessages(messages: UI_MESSAGE[]) {
+  public setContextMessages(
+    messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[]),
+  ) {
     this.chatService.setMessages(messages);
   }
 
-  public setUiMessages(messages: UI_MESSAGE[]) {
+  public setUiMessages(
+    messages: UI_MESSAGE[] | ((prev: UI_MESSAGE[]) => UI_MESSAGE[]),
+  ) {
     this.uiMessageStore.setMessages(messages);
   }
 
