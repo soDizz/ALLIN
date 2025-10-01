@@ -1,9 +1,10 @@
 'use client';
 
-import { Toaster } from '@/components/ui/sonner';
-import { Main } from './main/Main';
-import { LeftPanel } from './main/leftPanel/LeftPanel';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/sonner';
+import { LeftPanel } from './main/leftPanel/LeftPanel';
+import { Main } from './main/Main';
+import { RightPanel } from './main/right-panel/RightPanel';
 import {
   initToolManager,
   ToolManagerContext,
@@ -18,6 +19,7 @@ export default function Home() {
         <ToolManagerContext value={initToolManager()}>
           <LeftPanel />
           <Main />
+          {/* <RightPanel /> */}
           <Toaster richColors duration={3000} />
         </ToolManagerContext>
       </QueryClientProvider>

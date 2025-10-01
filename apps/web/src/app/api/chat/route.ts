@@ -2,15 +2,14 @@ import { createAISDKTools } from '@agentic/ai-sdk';
 import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
-  ModelMessage,
   streamText,
-  UIMessage,
   type ToolSet,
+  type UIMessage,
 } from 'ai';
 import type { ToolsServerPayload } from '@/app/tools/ToolManager';
 import type { ElementType } from '@/lib/utility-type';
 import { clientFactory } from './helper/clientFactory';
-import { MessageMetadata } from './messageMetadata';
+import type { MessageMetadata } from './messageMetadata';
 
 export const maxDuration = 30;
 

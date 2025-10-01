@@ -1,7 +1,7 @@
 import type { UIMessage } from 'ai';
 import type { Brand } from 'ts-brand';
 import { v4 as uuidv4 } from 'uuid';
-import type { MyMessage } from './Chat';
+import type { MyMessage } from '../app/main/chat/Chat';
 
 /**
  * 이런 구조
@@ -61,19 +61,33 @@ export const threadsToMessages = (threads: Thread[]): UIMessage[] => {
   return threads.flatMap(t => t);
 };
 
-export const generateMessage = (
-  role: 'system' | 'user' | 'assistant',
+export const generateUIMessage = <
+  UI_MESSAGE extends UIMessage,
+  Role extends UI_MESSAGE['role'],
+>(
+  role: Role,
   content: string,
-  id?: string,
-): UIMessage => {
+  id: string = uuidv4(),
+) => {
   return {
     role,
-    id: id ?? uuidv4(),
+    id,
     parts: [
       {
         type: 'text',
         text: content,
       },
     ],
-  };
+  } as UI_MESSAGE & { role: Role };
+};
+
+export const getTextUIMessage = (message: UIMessage) => {
+  const texts: string[] = [];
+  message.parts.forEach(part => {
+    if (part.type === 'text') {
+      texts.push(part.text);
+    }
+  });
+
+  return texts.join('\n');
 };

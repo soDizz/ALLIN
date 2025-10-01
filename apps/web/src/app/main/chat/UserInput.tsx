@@ -19,9 +19,9 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useRxEffect } from '@/lib/rxjs/useRxEffect';
-import { Bear } from './Bear';
 // import { Bear } from './Bear';
-import { generateMessage } from './chat-helper';
+import { generateUIMessage } from '../../../core/helper';
+import { Bear } from './Bear';
 
 export const textAreaFocusTrigger$ = new Subject<void>();
 
@@ -78,7 +78,7 @@ export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
     }
 
     // 요청 할때마다 최신 정보를 가져와서 API 를 호출한다. (이게 없으면 리렌더가 되지 않으면 이전 값을 보냄)
-    sendMessage(generateMessage('user', input) as UIMessage<MessageMetadata>);
+    sendMessage(generateUIMessage('user', input) as UIMessage<MessageMetadata>);
     setInput('');
   };
 

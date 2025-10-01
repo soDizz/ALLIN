@@ -2,18 +2,11 @@
 
 import { motion } from 'motion/react';
 import { Chat } from './chat/Chat';
-import { Header } from './header/Header';
 import { FeedbackPopup } from './FeedbackPopup';
+import { Header } from './header/Header';
 import { Initializer } from './initializer/Initializer';
-import { useEffect } from 'react';
-import { getChannel, getDB } from '../idb/getDB';
 
 export const Main = () => {
-  // useEffect(() => {
-  //   getDB().then(res => {
-  //     console.log(res);
-  //   });
-  // });
   return (
     <>
       <Initializer />

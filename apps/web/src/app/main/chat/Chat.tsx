@@ -5,11 +5,12 @@ import { filter, firstValueFrom, take } from 'rxjs';
 import { toast } from 'sonner';
 import type { MessageMetadata } from '@/app/api/chat/messageMetadata';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ChatService } from '@/core/ChatService';
 import { useRx, useRxValue } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
+import { generateUIMessage, messagesToThreads } from '../../../core/helper';
 import { tokenUsage$$ } from '../store/tokenUsage$$';
 import { userPrompt$$ } from '../store/userPromptStore';
-import { generateMessage, messagesToThreads } from './chat-helper';
 import { messageMinifier } from './message-minifier';
 import { getInitialPrompt } from './prompt';
 import { Thread } from './Thread';
@@ -45,9 +46,7 @@ export const Chat = () => {
     onError: e => {
       toast.error('Error occurred while processing your request.');
     },
-    onData: res => {
-      console.log('==> in res', res);
-    },
+    onData: res => {},
     //https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
     // Throttle the messages and data updates to 50ms
     experimental_throttle: 50,
@@ -56,7 +55,7 @@ export const Chat = () => {
   useEffect(() => {
     setMessages(prev => [
       ...prev,
-      generateMessage(
+      generateUIMessage(
         'system',
         getInitialPrompt(),
       ) as UIMessage<MessageMetadata>,
@@ -81,7 +80,7 @@ export const Chat = () => {
 
   useEffect(() => {
     if (userPrompt) {
-      const systemMessage = generateMessage(
+      const systemMessage = generateUIMessage(
         'system',
         userPrompt,
         USER_PROMPT_ID,
