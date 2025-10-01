@@ -22,7 +22,6 @@ const ASK_TOKEN_LIMIT = 10000;
 const USER_PROMPT_ID = 'user-prompt';
 
 export const Chat = () => {
-  const scrollViewRef = useRef<HTMLDivElement>(null);
   const messageMinifierRef = useRef(messageMinifier);
   const [cutoffMessages, setCutoffMessages] = useState<MyMessage[]>([]);
   const [tokenUsage, setTokenUsage] = useRx(tokenUsage$$);
@@ -120,7 +119,6 @@ export const Chat = () => {
     <>
       {threads.length > 0 && (
         <ScrollArea
-          ref={scrollViewRef}
           style={
             {
               '--data-streaming': status === 'streaming',
