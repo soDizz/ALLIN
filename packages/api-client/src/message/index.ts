@@ -1,6 +1,8 @@
 import { ApiAgent } from '../ApiAgent';
 import { type CreateMessageInput, type Message, MessageSchema } from './types';
 
+export * from './types';
+
 const apiAgent = ApiAgent.getInstance();
 
 export const createMessage = (json: CreateMessageInput) => {

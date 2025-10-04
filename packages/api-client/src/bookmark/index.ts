@@ -6,6 +6,8 @@ import {
   type CreateBookmarkBody,
 } from './types';
 
+export * from './types';
+
 const apiAgent = ApiAgent.getInstance();
 
 export const listBookmarks = (channelId: string) => {

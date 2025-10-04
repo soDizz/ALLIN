@@ -3,6 +3,8 @@ import { ApiAgent } from '../ApiAgent';
 import type { CreateChannelInput, UpdateChannelInput } from './types';
 import { ChannelSchema } from './types';
 
+export * from './types';
+
 const apiAgent = ApiAgent.getInstance();
 
 export const createChannel = async (json: CreateChannelInput) => {
