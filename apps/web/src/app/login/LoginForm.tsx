@@ -1,5 +1,6 @@
 'use client';
 
+import { loginWithEmail } from '@allin/api-client';
 import { Loader2Icon } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,9 @@ export const LoginForm = () => {
     setIsLoading(true);
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    loginWithEmail({ email }).then(res => {
+      console.log(res);
+    });
   };
 
   return (
