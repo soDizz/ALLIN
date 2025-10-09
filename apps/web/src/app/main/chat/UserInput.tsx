@@ -96,8 +96,8 @@ export const UserInput = ({ stop, sendMessage, status }: UserInputProps) => {
           <Textarea
             ref={textAreaRef}
             autoFocus
-            aria-label='ask to ai'
-            placeholder='Ask anything'
+            aria-label='question input'
+            placeholder='무엇이든 물어보세요!'
             value={input}
             onChange={onChange}
             onKeyDown={handleKeyDown}
