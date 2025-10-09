@@ -1,6 +1,5 @@
-import { useEffect, useId, useMemo } from 'react';
+import React, { useEffect, useId, useMemo } from 'react';
 import { VestaBlock } from './VestaBlock';
-import React from 'react';
 import styles from './VestaLine.module.css';
 
 type Align = 'left' | 'center' | 'right';
@@ -64,12 +63,17 @@ export const VestaLine = React.memo(
 
     useEffect(() => {
       if ('registerProperty' in CSS) {
-        CSS.registerProperty({
-          name: `--line-color-${id}`,
-          syntax: '<color>',
-          inherits: true,
-          initialValue: 'oklch(0.95 0 0)',
-        });
+        try {
+          // InvalidModificationError: Failed to execute 'registerProperty' on 'CSS': The name provided has already been registered. 에러핸들링
+          CSS.registerProperty({
+            name: `--line-color-${id}`,
+            syntax: '<color>',
+            inherits: true,
+            initialValue: 'oklch(0.95 0 0)',
+          });
+        } catch (error) {
+          console.warn(error);
+        }
       }
     }, [id]);
 
