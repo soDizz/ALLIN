@@ -66,3 +66,6 @@ packages/**/.turbo
 
 
 .cursor/mcp.json
+
+localhost.pem
+localhost-key.pem

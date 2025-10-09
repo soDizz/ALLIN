@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { LeftPanel } from './main/leftPanel/LeftPanel';
 import { Main } from './main/Main';
-import { RightPanel } from './main/right-panel/RightPanel';
 import {
   initToolManager,
   ToolManagerContext,

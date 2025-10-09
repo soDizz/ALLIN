@@ -21,3 +21,9 @@ export const UserSchema = z.object({
 });
 
 export type User = z.infer<typeof UserSchema>;
+
+export const LoginWithEmailInputSchema = z.object({
+  email: z.string().email(),
+});
+
+export type LoginWithEmailInput = z.infer<typeof LoginWithEmailInputSchema>;
