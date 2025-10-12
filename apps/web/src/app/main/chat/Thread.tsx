@@ -12,6 +12,8 @@ type ThreadProps = {
   status: ReturnType<typeof useChat>['status'];
 };
 
+const GENERATING_TEXT = '대답 중...';
+
 export const Thread = ({ thread, isLast, status }: ThreadProps) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -49,7 +51,7 @@ export const Thread = ({ thread, isLast, status }: ThreadProps) => {
       >
         <Spinner size='xs' variant='default' className='opacity-50' />
         <p className='text-xs !m-0 text-muted-foreground opacity-75'>
-          Generating...
+          {GENERATING_TEXT}
         </p>
       </div>
       <article style={isLast ? { minHeight: 'calc(-264px + 100dvh)' } : {}}>
