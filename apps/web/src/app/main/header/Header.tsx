@@ -1,4 +1,4 @@
-import { PanelLeft, Settings, Settings2 } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import {
   Tooltip,
@@ -8,6 +8,7 @@ import {
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
+import { LoginEnterance } from './LoginEnterance';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
@@ -30,6 +31,7 @@ export const Header = () => {
           <p className='text-xs'>설정</p>
         </TooltipContent>
       </Tooltip>
+      <LoginEnterance />
     </div>
   );
 };
