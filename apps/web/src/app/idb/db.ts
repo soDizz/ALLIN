@@ -34,7 +34,7 @@ interface ALLIN_DB extends DBSchema {
 
 let db: IDBPDatabase<ALLIN_DB>;
 
-export const getDB = async () => {
+const getDB = async () => {
   if (!db) {
     db = await openDB<ALLIN_DB>(DB_NAME, 1, {
       upgrade(db, oldVersion, newVersion, transaction, event) {
@@ -56,27 +56,27 @@ export const getDB = async () => {
   return db;
 };
 
-export const getChannel = async (id: string) => {
+const getChannel = async (id: string) => {
   const db = await getDB();
   return db.get(DB_STORE.CHANNELS, id);
 };
 
-export const getChannels = async () => {
+const getChannels = async () => {
   const db = await getDB();
   return db.getAll(DB_STORE.CHANNELS);
 };
 
-export const createChannel = async (channel: z.infer<typeof ChannelSchema>) => {
+const createChannel = async (channel: z.infer<typeof ChannelSchema>) => {
   const db = await getDB();
   return db.add(DB_STORE.CHANNELS, channel);
 };
 
-export const getMessagesByChannelId = async (channelId: string) => {
+const getMessagesByChannelId = async (channelId: string) => {
   const db = await getDB();
   return db.getAllFromIndex(DB_STORE.MESSAGES, 'channelId', channelId);
 };
 
-export const addMessage = async (message: DB_MESSAGE) => {
+const addMessage = async (message: DB_MESSAGE) => {
   const db = await getDB();
   const channel = await getChannel(message.channelId);
   if (!channel) {
@@ -86,7 +86,17 @@ export const addMessage = async (message: DB_MESSAGE) => {
   return db.add(DB_STORE.MESSAGES, message);
 };
 
-export const clearStore = async (storeName: DB_STORE) => {
+const clearStore = async (storeName: DB_STORE) => {
   const db = await getDB();
   return db.clear(storeName);
+};
+
+export const DB = {
+  getDB,
+  getChannel,
+  getChannels,
+  createChannel,
+  getMessagesByChannelId,
+  addMessage,
+  clearStore,
 };

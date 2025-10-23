@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useLayoutEffect } from 'react';
-import { createChannel, DEFAULT_CHANNEL_ID, getChannel } from '@/app/idb/db';
+import { DB, DEFAULT_CHANNEL_ID } from '@/app/idb/db';
 import { isDataBaseInitializedAtom } from '@/app/idb/idbStore';
 
 export const DataBaseInitializer = () => {
@@ -8,9 +8,9 @@ export const DataBaseInitializer = () => {
   useLayoutEffect(() => {
     const initializeDb = async () => {
       try {
-        const defaultChannel = await getChannel(DEFAULT_CHANNEL_ID);
+        const defaultChannel = await DB.getChannel(DEFAULT_CHANNEL_ID);
         if (!defaultChannel) {
-          await createChannel({
+          await DB.createChannel({
             id: DEFAULT_CHANNEL_ID,
             name: 'Default Channel',
             createdAt: Date.now(),
