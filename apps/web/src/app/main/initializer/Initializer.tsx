@@ -1,10 +1,10 @@
+import { DataBaseInitializer } from './DataBaseInitializer';
 import { HotkeyHandler } from './HotkeyHandler';
-import { LocalStorageSync } from './LocalStorageSync';
 
 export const Initializer = () => {
   return (
     <>
-      <LocalStorageSync />
+      <DataBaseInitializer />
       <HotkeyHandler />
     </>
   );

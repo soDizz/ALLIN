@@ -3,9 +3,10 @@ import { z } from 'zod';
 import type { MyMessage } from '../main/chat/Chat';
 
 export const DB_NAME = 'ALLIN';
+export const DEFAULT_CHANNEL_ID = 'DEFAULT-CHANNEL';
 
 export const ChannelSchema = z.object({
-  id: z.string().uuid().describe('Id of the channel'),
+  id: z.string(),
   name: z.string().optional().describe('Channel name'),
   description: z.string().optional().describe('Channel description'),
   prompt: z.string().optional().describe('AI system prompt'),
