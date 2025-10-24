@@ -1,29 +1,56 @@
 import { useSetAtom } from 'jotai';
 import { useLayoutEffect } from 'react';
+import { from, map } from 'rxjs';
 import { DB, DEFAULT_CHANNEL_ID } from '@/app/idb/db';
 import { isDataBaseInitializedAtom } from '@/app/idb/idbStore';
+import { currentChannelIdAtom } from '../store/currentChannelStore';
+
+const getLastSelectedChannelId = async () => {
+  const config = await DB.getConfig();
+  return config?.lastSelectedChannelId;
+};
+
+const createDefaultChannel = async () => {
+  return await DB.createChannel({
+    id: DEFAULT_CHANNEL_ID,
+    name: '기본 채널',
+    createdAt: Date.now(),
+  });
+};
+
+const getFirstChannel = async () => {
+  const channels = await DB.getChannels();
+  return channels.length === 0 ? null : channels[0];
+};
+
+const doInit = async () => {
+  const lastSelectedChannelId = await getLastSelectedChannelId();
+  const firstChannel = await getFirstChannel();
+  if (!lastSelectedChannelId && !firstChannel) {
+    const defaultChannelId = await createDefaultChannel();
+    return defaultChannelId;
+  }
+
+  return lastSelectedChannelId ?? firstChannel!.id;
+};
+
+let isInit = false;
 
 export const DataBaseInitializer = () => {
   const setDbInitialized = useSetAtom(isDataBaseInitializedAtom);
+  const setCurrentChannelId = useSetAtom(currentChannelIdAtom);
+
   useLayoutEffect(() => {
-    const initializeDb = async () => {
-      try {
-        const defaultChannel = await DB.getChannel(DEFAULT_CHANNEL_ID);
-        if (!defaultChannel) {
-          await DB.createChannel({
-            id: DEFAULT_CHANNEL_ID,
-            name: 'Default Channel',
-            createdAt: Date.now(),
-          });
-        }
-      } catch (e) {
-        console.error('Failed to initialize db', e);
-      } finally {
-        setDbInitialized(true);
-      }
-    };
-    initializeDb();
-  }, [setDbInitialized]);
+    if (isInit) {
+      return;
+    }
+
+    isInit = true;
+    doInit().then(channelId => {
+      setDbInitialized(true);
+      setCurrentChannelId(channelId);
+    });
+  }, [setCurrentChannelId, setDbInitialized]);
 
   return null;
 };

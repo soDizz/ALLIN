@@ -4,6 +4,7 @@ import type { MyMessage } from '../main/chat/Chat';
 
 export const DB_NAME = 'ALLIN';
 export const DEFAULT_CHANNEL_ID = 'DEFAULT-CHANNEL';
+const DB_VERSION = 2;
 
 export const ChannelSchema = z.object({
   id: z.string(),
@@ -13,11 +14,16 @@ export const ChannelSchema = z.object({
   createdAt: z.number().min(0).describe('Timestamp of creation'),
 });
 
+export const ConfigSchema = z.object({
+  lastSelectedChannelId: z.string().optional(),
+});
+
 export type DB_MESSAGE = MyMessage & { channelId: string };
 
 export enum DB_STORE {
   CHANNELS = 'channels',
   MESSAGES = 'messages',
+  CONFIG = 'config',
 }
 
 interface ALLIN_DB extends DBSchema {
@@ -30,13 +36,17 @@ interface ALLIN_DB extends DBSchema {
     value: DB_MESSAGE;
     indexes: { channelId: string };
   };
+  [DB_STORE.CONFIG]: {
+    key: string;
+    value: { key: string } & z.infer<typeof ConfigSchema>;
+  };
 }
 
 let db: IDBPDatabase<ALLIN_DB>;
 
 const getDB = async () => {
   if (!db) {
-    db = await openDB<ALLIN_DB>(DB_NAME, 1, {
+    db = await openDB<ALLIN_DB>(DB_NAME, DB_VERSION, {
       upgrade(db, oldVersion, newVersion, transaction, event) {
         if (!db.objectStoreNames.contains(DB_STORE.CHANNELS)) {
           db.createObjectStore(DB_STORE.CHANNELS, {
@@ -48,6 +58,12 @@ const getDB = async () => {
             autoIncrement: true,
           });
           messagesStore.createIndex('channelId', 'channelId');
+        }
+        if (oldVersion < 2) {
+          if (db.objectStoreNames.contains(DB_STORE.CONFIG)) {
+            db.deleteObjectStore(DB_STORE.CONFIG);
+          }
+          db.createObjectStore(DB_STORE.CONFIG, { keyPath: 'key' });
         }
       },
     });
@@ -69,6 +85,44 @@ const getChannels = async () => {
 const createChannel = async (channel: z.infer<typeof ChannelSchema>) => {
   const db = await getDB();
   return db.add(DB_STORE.CHANNELS, channel);
+};
+
+const updateChannel = async (
+  id: string,
+  channel: Partial<z.infer<typeof ChannelSchema>>,
+) => {
+  const db = await getDB();
+  const tx = db.transaction(DB_STORE.CHANNELS, 'readwrite');
+  const store = tx.objectStore(DB_STORE.CHANNELS);
+  const existingChannel = await store.get(id);
+
+  if (existingChannel) {
+    const updatedChannel = { ...existingChannel, ...channel };
+    await store.put(updatedChannel);
+  }
+
+  await tx.done;
+};
+
+const CONFIG_KEY = 'userConfig';
+
+const getConfig = async () => {
+  const db = await getDB();
+  return db.get(DB_STORE.CONFIG, CONFIG_KEY);
+};
+
+const updateConfig = async (config: Partial<z.infer<typeof ConfigSchema>>) => {
+  const db = await getDB();
+  const tx = db.transaction(DB_STORE.CONFIG, 'readwrite');
+  const store = tx.objectStore(DB_STORE.CONFIG);
+  const existingConfig = await store.get(CONFIG_KEY);
+  const newConfig = {
+    ...(existingConfig || {}),
+    ...config,
+    key: CONFIG_KEY,
+  };
+  await store.put(newConfig);
+  await tx.done;
 };
 
 const getMessagesByChannelId = async (channelId: string) => {
@@ -96,6 +150,9 @@ export const DB = {
   getChannel,
   getChannels,
   createChannel,
+  updateChannel,
+  getConfig,
+  updateConfig,
   getMessagesByChannelId,
   addMessage,
   clearStore,
