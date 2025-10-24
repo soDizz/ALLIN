@@ -1,5 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { memo } from 'react';
 import { MemoizedMarkdown } from './memoized-markdown';
 
 export const MemoizedAssistantMessage = memo(
