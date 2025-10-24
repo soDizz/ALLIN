@@ -1,4 +1,6 @@
+import { useAtomValue } from 'jotai';
 import { Settings } from 'lucide-react';
+import { isDataBaseInitializedAtom } from '@/app/idb/idbStore';
 import { Toggle } from '@/components/ui/toggle';
 import {
   Tooltip,
@@ -8,9 +10,11 @@ import {
 import { useRx } from '@/lib/rxjs/useRx';
 import { cn } from '@/lib/utils';
 import { leftPanel$$ } from '../leftPanel/leftPanelStore';
+import { ChannelSelector } from './ChannelSelector';
 
 export const Header = () => {
   const [open, setOpen] = useRx(leftPanel$$);
+  const isDBInitialized = useAtomValue(isDataBaseInitializedAtom);
 
   return (
     <div className='w-full flex flex-row items-center justify-between'>
@@ -30,6 +34,7 @@ export const Header = () => {
           <p className='text-xs'>설정</p>
         </TooltipContent>
       </Tooltip>
+      {isDBInitialized && <ChannelSelector />}
     </div>
   );
 };

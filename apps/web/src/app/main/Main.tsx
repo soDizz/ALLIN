@@ -1,12 +1,15 @@
 'use client';
 
+import { useAtomValue } from 'jotai';
 import { motion } from 'motion/react';
+import { isDataBaseInitializedAtom } from '../idb/idbStore';
 import { Chat } from './chat/Chat';
 import { FeedbackPopup } from './FeedbackPopup';
 import { Header } from './header/Header';
 import { Initializer } from './initializer/Initializer';
 
 export const Main = () => {
+  const isDBInitialized = useAtomValue(isDataBaseInitializedAtom);
   return (
     <>
       <Initializer />
@@ -16,7 +19,7 @@ export const Main = () => {
       >
         <Header />
         <div className='w-full h-full md:max-w-2xl lg:max-w-4xl flex justify-center items-center flex-col'>
-          <Chat />
+          {isDBInitialized && <Chat />}
         </div>
       </motion.main>
       <FeedbackPopup />

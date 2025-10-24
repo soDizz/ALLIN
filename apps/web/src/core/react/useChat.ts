@@ -27,6 +27,11 @@ type UseChatReturn<UI_MESSAGE extends UIMessage> = {
 type UseChatParams<UI_MESSAGE extends UIMessage> = {
   id: string;
   experimental_throttle?: number;
+  onBeforeSend?: ({
+    message,
+  }: {
+    message: UI_MESSAGE & { role: 'user' };
+  }) => void;
 } & ChatInit<UI_MESSAGE> &
   HttpChatTransportInitOptions<UI_MESSAGE>;
 
@@ -34,6 +39,7 @@ export const useChat = <UI_MESSAGE extends UIMessage>({
   id,
   api,
   experimental_throttle,
+  onBeforeSend,
   onData,
   onFinish,
   onError,
@@ -54,9 +60,10 @@ export const useChat = <UI_MESSAGE extends UIMessage>({
 
   const sendMessage = useCallback(
     (message: UI_MESSAGE & { role: 'user' }) => {
+      onBeforeSend?.({ message });
       return chat.sendMessage(message);
     },
-    [chat],
+    [chat, onBeforeSend],
   );
 
   const uiMessages = useSyncExternalStore(
