@@ -1,7 +1,8 @@
 {
-  "name": "@allin/auto-clipboard-copy-plugin",
-  "version": "0.0.1",
-  "private": true,
+  "name": "auto_clipboard_copy",
+  "version": "1.0.0",
+  "private": false,
+  "description": "",
   "type": "module",
   "files": [
     "dist"
