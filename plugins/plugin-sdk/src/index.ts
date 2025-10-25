@@ -7,5 +7,6 @@ export interface WebAppAPI {
 export interface Plugin {
   name: string;
   initialize: (api: WebAppAPI) => void;
+  cleanup?: () => void;
   // ... common properties or methods for all plugins
 }

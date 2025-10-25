@@ -1,6 +1,6 @@
 import type { Plugin } from '@allin/plugin-sdk';
 
-const MyFirstPlugin: Plugin = {
+const AutoClipboardCopyPlugin: Plugin = {
   name: 'My First Plugin',
   initialize: api => {
     console.log('My First Plugin initialized!');
@@ -16,4 +16,4 @@ const MyFirstPlugin: Plugin = {
   },
 };
 
-export default MyFirstPlugin;
+export { AutoClipboardCopyPlugin };

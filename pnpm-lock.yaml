@@ -157,6 +157,9 @@ importers:
       '@ai-sdk/react':
         specifier: catalog:ai
         version: 2.0.8(react@19.1.0)(zod@3.25.76)
+      '@allin/auto-clipboard-copy-plugin':
+        specifier: workspace:*
+        version: link:../../plugins/auto_clipboard_copy
       '@allin/plugin-sdk':
         specifier: workspace:*
         version: link:../../plugins/plugin-sdk
@@ -369,7 +372,7 @@ importers:
         specifier: catalog:test
         version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.0)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.11.3(@types/node@20.19.0)(typescript@5.8.3))(tsx@4.20.5)(yaml@2.8.1)
 
-  plugins/my-first-plugin:
+  plugins/auto_clipboard_copy:
     devDependencies:
       '@allin/plugin-sdk':
         specifier: workspace:*
