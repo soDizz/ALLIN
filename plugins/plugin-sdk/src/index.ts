@@ -1,12 +1,26 @@
+import type { OptionValues, PluginOption } from './options';
+
+export type {
+  NumberInputOption,
+  OptionValues,
+  PluginOption,
+  SliderOption,
+  TextareaOption,
+  ToggleOption,
+} from './options';
+
 export interface WebAppAPI {
   sendMessage: (text: string) => void;
   showToast: (message: string, type: 'success' | 'error') => void;
-  // ... other functions to expose to plugins
 }
 
-export interface Plugin<T extends string = string> {
-  name: T;
+// The definitive Plugin interface
+export interface Plugin<Name extends string = string> {
+  name: Name;
+  description?: string;
+  options?: readonly PluginOption[];
   initialize: (api: WebAppAPI) => void;
+  // Called whenever an option value changes
+  onOptionChange?: (values: OptionValues) => void;
   cleanup?: () => void;
-  // ... common properties or methods for all plugins
 }
