@@ -1,22 +1,25 @@
 import type { Plugin } from '@allin/plugin-sdk';
-import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
+import type { PluginName } from '@/app/plugins/registry';
 import { Switch } from '@/components/ui/switch';
 import { pluginManagerAtom } from '../store/pluginStore';
 
 export const PluginPanel = () => {
   const pluginManager = useAtomValue(pluginManagerAtom);
-  const [plugins, setPlugins] = useState<Plugin[]>([]);
-  const [activePlugins, setActivePlugins] = useState<string[]>([]);
+  const [activePlugins, setActivePlugins] = useState<PluginName[]>([]);
+
+  const plugins = useMemo(() => {
+    return pluginManager?.getPlugins() ?? [];
+  }, [pluginManager]);
 
   useEffect(() => {
     if (pluginManager) {
-      setPlugins(pluginManager.getPlugins());
       setActivePlugins(pluginManager.getActivePlugins());
     }
   }, [pluginManager]);
 
-  const handleToggle = (pluginName: string, checked: boolean) => {
+  const handleToggle = (pluginName: PluginName, checked: boolean) => {
     if (checked) {
       pluginManager?.startPlugin(pluginName);
     } else {

@@ -1,24 +1,25 @@
 import type { Plugin, WebAppAPI } from '@allin/plugin-sdk';
+import type { PluginName } from './registry';
 
 export class PluginManager {
-  private plugins: Plugin[] = [];
-  private activePlugins = new Set<string>();
+  private plugins: ReadonlyArray<Plugin<PluginName>>;
+  private activePlugins = new Set<PluginName>();
   private api: WebAppAPI;
 
-  constructor(api: WebAppAPI, plugins: Plugin[]) {
+  constructor(api: WebAppAPI, plugins: ReadonlyArray<Plugin<PluginName>>) {
     this.api = api;
     this.plugins = plugins;
   }
 
-  getPlugins() {
+  getPlugins(): ReadonlyArray<Plugin<PluginName>> {
     return this.plugins;
   }
 
-  getActivePlugins() {
+  getActivePlugins(): PluginName[] {
     return Array.from(this.activePlugins);
   }
 
-  startPlugin(pluginName: string) {
+  startPlugin(pluginName: PluginName) {
     const plugin = this.plugins.find(p => p.name === pluginName);
     if (plugin && !this.activePlugins.has(pluginName)) {
       plugin.initialize(this.api);
@@ -27,7 +28,7 @@ export class PluginManager {
     }
   }
 
-  stopPlugin(pluginName: string) {
+  stopPlugin(pluginName: PluginName) {
     const plugin = this.plugins.find(p => p.name === pluginName);
     if (plugin && this.activePlugins.has(pluginName)) {
       plugin.cleanup?.();

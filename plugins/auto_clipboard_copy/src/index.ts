@@ -1,18 +1,9 @@
 import type { Plugin } from '@allin/plugin-sdk';
 
-const AutoClipboardCopyPlugin: Plugin = {
-  name: 'My First Plugin',
+const AutoClipboardCopyPlugin: Plugin<'auto-clipboard-copy'> = {
+  name: 'auto-clipboard-copy',
   initialize: api => {
-    console.log('My First Plugin initialized!');
-
-    // Example of using the API
-    api.showToast('My First Plugin is loaded!', 'success');
-
-    // Example of adding a command
-    // This is a hypothetical example, the API would need to support this
-    // api.registerCommand('helloPlugin', () => {
-    //   api.sendMessage('Hello from My First Plugin!');
-    // });
+    api.showToast('Auto Clipboard Copy Plugin is loaded!', 'success');
   },
 };
 

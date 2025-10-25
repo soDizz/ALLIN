@@ -4,8 +4,8 @@ export interface WebAppAPI {
   // ... other functions to expose to plugins
 }
 
-export interface Plugin {
-  name: string;
+export interface Plugin<T extends string = string> {
+  name: T;
   initialize: (api: WebAppAPI) => void;
   cleanup?: () => void;
   // ... common properties or methods for all plugins
