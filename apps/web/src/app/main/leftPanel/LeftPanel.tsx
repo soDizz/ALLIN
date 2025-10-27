@@ -1,6 +1,6 @@
 'use client';
 
-import { ActivitySquare, FlaskConical } from 'lucide-react';
+import { ActivitySquare, FlaskConical, ToyBrick } from 'lucide-react';
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import { useResizeObserver } from 'usehooks-ts';
 import {
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { DevelopmentPanel } from './development/DevelopmentPanel';
 import { leftPanel$$ } from './leftPanelStore';
 import { MonitorPanel } from './monitor/MonitorPanel';
+import { PluginPanel } from './PluginPanel';
 
 const _PropertyList = [
   {
@@ -27,6 +28,12 @@ const _PropertyList = [
     Icon: ActivitySquare,
     title: 'Monitor',
     Component: MonitorPanel,
+    disabled: false,
+  },
+  {
+    Icon: ToyBrick,
+    title: 'Plugins',
+    Component: PluginPanel,
     disabled: false,
   },
 ] as const;

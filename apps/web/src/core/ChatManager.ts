@@ -48,7 +48,7 @@ export class ChatManager {
 
   public static getChatById<UI_MESSAGE extends UIMessage>(id: string) {
     if (ChatManager.chats.has(id)) {
-      return ChatManager.chats.get(id) as Chat<UI_MESSAGE> | undefined;
+      return ChatManager.chats.get(id) as Chat<UI_MESSAGE>;
     }
     return null;
   }

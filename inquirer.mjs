@@ -1,22 +1,21 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import inquirer from "inquirer";
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import inquirer from 'inquirer';
 
 const questions = [
   {
-    type: "input",
-    name: "slug",
-    message:
-      "MCP 서버 플러그인 이름을 입력해주세요. (띄어쓰기는 _ 로 대체됩니다.)",
-    filter: (input) => {
-      return input.toLowerCase().replace(/\s+/g, "_");
+    type: 'input',
+    name: 'slug',
+    message: '플러그인 이름을 입력해주세요. (띄어쓰기는 _ 로 대체됩니다.)',
+    filter: input => {
+      return input.toLowerCase().replace(/\s+/g, '_');
     },
   },
   {
-    type: "input",
-    name: "description",
-    message: "플러그인 설명을 입력해주세요.",
-    default: (answers) => `MCP server for ${answers.slug} with AI SDK`,
+    type: 'input',
+    name: 'description',
+    message: '플러그인 설명을 입력해주세요.',
+    default: answers => `MCP server for ${answers.slug} with AI SDK`,
   },
 ];
 
@@ -25,48 +24,44 @@ const getConfig = (slug, description) => {
 
   // package.json
   const packageJson = {
-    name: `@mcp-server/${slug}`,
+    name: `@allin-plugin/${slug}`,
     description: description,
-    version: "1.0.0",
-    type: "module",
-    files: ["dist"],
+    version: '0.0.1',
+    type: 'module',
+    files: ['dist'],
     exports: {
-      ".": {
-        types: "./dist/index.d.ts",
-        import: "./dist/index.js",
-        require: "./dist/index.cjs",
-        default: "./dist/index.cjs",
+      '.': {
+        types: './dist/index.d.ts',
+        import: './dist/index.js',
+        require: './dist/index.cjs',
+        default: './dist/index.cjs',
       },
     },
     scripts: {
-      dev: "tsup --watch",
-      build: "tsup",
-      test: "vitest run",
+      dev: 'tsup --watch',
+      build: 'tsup',
+      test: 'vitest run',
     },
     dependencies: {
-      "@agentic/ai-sdk": "catalog:ai",
-      "@agentic/core": "catalog:ai",
-      ai: "catalog:ai",
-      dotenv: "catalog:utils",
-      zod: "catalog:utils",
-      rxjs: "catalog:utils",
-      ky: "catalog:utils",
+      zod: 'catalog:utils',
+      rxjs: 'catalog:utils',
+      ky: 'catalog:utils',
     },
     devDependencies: {
-      vitest: "catalog:test",
+      vitest: 'catalog:test',
     },
     keywords: [],
-    author: "",
-    license: "ISC",
+    author: '',
+    license: 'ISC',
   };
 
   // tsconfig.json
   const tsconfig = {
-    extends: "../../../tsconfig.json",
+    extends: '../../../tsconfig.json',
     compilerOptions: {
-      baseUrl: ".",
+      baseUrl: '.',
     },
-    include: ["src"],
+    include: ['src'],
   };
 
   // tsup.config.ts
@@ -81,49 +76,6 @@ export default defineConfig(options => ({
   minify: !options.watch,
 }));`;
 
-  // README.md
-  const readme = `# @mcp-server/${slug}
-
-This package provides a robust, type-safe ${pascalCaseName} client designed for integration with AI agents, built on top of \`@agentic/core\`. It offers a suite of methods for interacting with the ${pascalCaseName} API, all of which are exposed as AI-callable functions.
-
-** It optimizes API response for less token usage. **
-So, you can use it as a tool for AI agents without any additional processing.
-
-## How to get ${pascalCaseName} API Token
-
-1. Go to ${pascalCaseName} developer portal
-2. Create a new app
-3. Generate API token
-4. Copy the token
-
-## Features
-
-- **AI-Ready:** All public methods are decorated with \`@aiFunction\`, making them instantly available to AI agents.
-- **Type-Safe:** Leverages \`zod\` to validate API responses, ensuring data integrity and providing strong type safety.
-- **Modern Asynchronous API:** Built with \`async/await\` and modern JavaScript features.
-
-## Test Code (optional)
-
-This package has a test code that tests the client. To run the test, you need to set the following environment variables. (\`.env\` file)
-
-- \`${slug.toUpperCase()}_TOKEN\`
-
-## Usage
-
-\`\`\`typescript
-import { ${pascalCaseName}Client } from '@mcp-server/${slug}';
-
-const client = new ${pascalCaseName}Client({
-  token: 'your-api-token',
-});
-
-// Use with AI agents
-const result = await client.exampleFunction({
-  message: 'Hello, world!',
-});
-\`\`\`
-`;
-
   return {
     packageJson,
     tsconfig,
@@ -133,13 +85,13 @@ const result = await client.exampleFunction({
 };
 
 const projectRoot = path.resolve();
-const dirPath = (slug) => path.join(projectRoot, `packages/mcp_server/${slug}`);
-const changeToPascal = (slug) => {
-  if (!slug || typeof slug !== "string") return "";
+const dirPath = slug => path.join(projectRoot, `packages/plugins/${slug}`);
+const changeToPascal = slug => {
+  if (!slug || typeof slug !== 'string') return '';
   return slug
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("");
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
 };
 
 const createDirectory = async (slug, description) => {
@@ -150,7 +102,7 @@ const createDirectory = async (slug, description) => {
     );
 
     const componentDir = dirPath(slug);
-    const srcPath = path.join(componentDir, "src");
+    const srcPath = path.join(componentDir, 'src');
 
     // Create directories
     await fs.mkdir(componentDir, { recursive: true });
@@ -158,15 +110,14 @@ const createDirectory = async (slug, description) => {
 
     // Create files
     await fs.writeFile(
-      path.join(componentDir, "package.json"),
+      path.join(componentDir, 'package.json'),
       JSON.stringify(packageJson, null, 2),
     );
     await fs.writeFile(
-      path.join(componentDir, "tsconfig.json"),
+      path.join(componentDir, 'tsconfig.json'),
       JSON.stringify(tsconfig, null, 2),
     );
-    await fs.writeFile(path.join(componentDir, "tsup.config.ts"), tsupConfig);
-    await fs.writeFile(path.join(componentDir, "README.md"), readme);
+    await fs.writeFile(path.join(componentDir, 'tsup.config.ts'), tsupConfig);
 
     return true;
   } catch (error) {
@@ -175,14 +126,14 @@ const createDirectory = async (slug, description) => {
   }
 };
 
-const prettyLog = (slug) => {
-  console.log("\n ✅ MCP 서버 플러그인이 성공적으로 생성되었습니다!");
+const prettyLog = slug => {
+  console.log('\n ✅ 플러그인이 성공적으로 생성되었습니다!');
   console.log(`📁 위치: ${dirPath(slug)}`);
-  console.log(`📦 패키지 이름: @mcp-server/${slug}`);
-  console.log("\n🚀 다음 단계:");
+  console.log(`📦 패키지 이름: @allin-plugin/${slug}`);
+  console.log('\n🚀 다음 단계:');
   console.log(`1. cd ${dirPath(slug)}`);
-  console.log("2. src/ 디렉토리에 필요한 파일들을 추가하세요");
-  console.log("3. npm run dev 로 개발 모드를 시작하세요");
+  console.log('2. src/ 디렉토리에 필요한 파일들을 추가하세요');
+  console.log('3. pnpm dev 로 개발 모드를 시작하세요');
 };
 
 async function createProject() {

@@ -7,12 +7,14 @@ import { Chat } from './chat/Chat';
 import { FeedbackPopup } from './FeedbackPopup';
 import { Header } from './header/Header';
 import { Initializer } from './initializer/Initializer';
+import { PluginInitializer } from './initializer/PluginInitializer';
 
 export const Main = () => {
   const isDBInitialized = useAtomValue(isDataBaseInitializedAtom);
   return (
     <>
       <Initializer />
+      <PluginInitializer />
       <motion.main
         className='w-full h-full gap-[12px] p-8 grow flex flex-col items-center sm:p-4'
         layout={'position'}

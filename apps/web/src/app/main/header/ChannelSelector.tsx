@@ -99,7 +99,12 @@ export const ChannelSelector = () => {
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setCreateChannelDialogOpen(true)}>
+          <DropdownMenuItem
+            onClick={() => {
+              setCreateChannelDialogOpen(true);
+              setDropdownOpen(false);
+            }}
+          >
             <Plus className='w-4 h-4 mr-2' />
             채널 추가
           </DropdownMenuItem>
