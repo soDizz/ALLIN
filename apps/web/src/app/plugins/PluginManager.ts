@@ -1,4 +1,9 @@
-import type { OptionValues, Plugin, WebAppAPI } from '@allin/plugin-sdk';
+import type {
+  OptionValue,
+  OptionValues,
+  Plugin,
+  WebAppAPI,
+} from '@allin/plugin-sdk';
 import type { PluginName } from './registry';
 
 export class PluginManager {
@@ -56,7 +61,7 @@ export class PluginManager {
   public updatePluginOption(
     pluginName: PluginName,
     optionName: string,
-    newValue: any,
+    newValue: OptionValue,
   ) {
     const currentOptions = this.pluginOptionValues.get(pluginName);
     if (currentOptions) {

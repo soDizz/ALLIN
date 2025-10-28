@@ -42,4 +42,5 @@ export type PluginOption =
   | TextareaOption;
 
 // A record of option names to their current values
-export type OptionValues = Record<string, string | number | boolean>;
+export type OptionValue = string | number | boolean;
+export type OptionValues = Record<string, OptionValue>;
