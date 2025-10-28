@@ -18,6 +18,6 @@
     "downlevelIteration": true,
     "noImplicitAny": false
   },
-  "include": ["packages"],
+  "include": ["plugins", "apps"],
   "exclude": ["**/node_modules", "**/dist", "**/.turbo"]
 }
