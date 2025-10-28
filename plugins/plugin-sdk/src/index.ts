@@ -1,7 +1,8 @@
-import type { OptionValues, PluginOption } from './options';
+import type { OptionValue, OptionValues, PluginOption } from './options';
 
 export type {
   NumberInputOption,
+  OptionValue,
   OptionValues,
   PluginOption,
   SliderOption,

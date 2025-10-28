@@ -1,4 +1,4 @@
-import type { PluginOption } from '@allin/plugin-sdk';
+import type { OptionValue, PluginOption } from '@allin/plugin-sdk';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import type { PluginName } from '@/app/plugins/registry';
@@ -19,7 +19,7 @@ const PluginOptionControl = ({
     () => pluginManager?.getPluginOptions(pluginName)[option.name],
   );
 
-  const handleValueChange = (newValue: any) => {
+  const handleValueChange = (newValue: OptionValue) => {
     setValue(newValue);
     pluginManager?.updatePluginOption(pluginName, option.name, newValue);
   };
